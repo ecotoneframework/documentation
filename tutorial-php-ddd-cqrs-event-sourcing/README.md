@@ -10,6 +10,10 @@ The best way to get started with `Ecotone` is to actually build something realis
 Therefore we will build a small back-end for Shopping System during this tutorial. \
 The techniques we will learn in the tutorial are **fundamental to building any application using Ecotone**.&#x20;
 
+{% hint style="success" %}
+To contribute to documentation, create Pull Request in [Documentation repository](https://github.com/ecotoneframework/documentation).
+{% endhint %}
+
 ## Lessons
 
 The tutorial is divided into several lessons:
