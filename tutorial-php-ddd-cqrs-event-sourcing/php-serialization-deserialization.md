@@ -12,7 +12,7 @@ Not having code for _Lesson 3?_ \
 
 ### Conversion
 
-Command, queries and events are not always objects. When they travel via different channels, coming from outside, they are mostly converted to simplified format, like `JSON` or `XML`.  \
+Command, queries and events are not always objects. When they travel via different asynchronous channels, they are converted to simplified format, like `JSON` or `XML`.  
 At the level of application however we want to deal with it in `PHP` format, as objects or arrays.
 
 Moving from one format to another requires conversion. `Ecotone` does provide extension point in which we can integrate different [Media Type](https://pl.wikipedia.org/wiki/Typ\_MIME) converters.&#x20;
