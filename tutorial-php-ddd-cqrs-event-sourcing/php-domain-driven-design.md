@@ -53,27 +53,27 @@ class Product
 }
 ```
 
-1. **Aggregate** annotation marks class to be known as Aggregate
-2. **Identifier** marks properties as identifiers of specific Aggregate instance. Each _Aggregate_ must contains at least one identifier.&#x20;
+1. **Aggregate** attribute marks class to be known as Aggregate
+2. **Identifier** marks properties as identifiers of specific Aggregate instance. Each _Aggregate_ must contains at least one identifier.
 3. **CommandHandler** enables command handling on specific method just as we did in [Lesson 1](php-messaging-architecture.md). \
-   If method is static, it's treated as [factory method](https://en.wikipedia.org/wiki/Factory\_method\_pattern) and must return new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](broken-reference).
+   If method is static, it's treated as a [factory method](https://en.wikipedia.org/wiki/Factory\_method\_pattern) and must return a new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](broken-reference).
 4. **QueryHandler** enables query handling on specific method just as we did in Lesson 1.
 
 {% hint style="info" %}
 If you want to known more details about _Aggregate_ start with chapter [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate)
 {% endhint %}
 
-Now remove `App\Domain\Product\ProductService` as it contains handlers for same command and query classes. \
+Now remove `App\Domain\Product\ProductService` as it contains handlers for the same command and query classes. \
 Before we will run our test scenario, we need to register `Repository`.
 
 {% hint style="info" %}
-Usually you will mark `services` as Query Handlers not `aggregates.However`Ecotone does not block possibility to place Query Handler on _Aggregate_. It's up to you to decide.
+Usually you will mark `services` as Query Handlers not `aggregates` .However Ecotone does not block possibility to place Query Handler on _Aggregate_. It's up to you to decide.
 {% endhint %}
 
 ### Repository
 
 Repositories are used for retrieving and saving the aggregate to persistent storage. \
-We will build in memory implementation for now.
+We will build an in-memory implementation for now.
 
 ```php
 namespace App\Domain\Product;
@@ -113,11 +113,11 @@ class InMemoryProductRepository implements StandardRepository // 2
 }
 ```
 
-1. **Repository** annotation marks class to be known to `Ecotone` as Repository.
-2. We need to implement some methods in order to allow `Ecotone`, retrieve and save Aggregate. Based on implemented interface, `Ecotone` knowns, if _Aggregate_ is state-stored or event sourced. &#x20;
-3. **canHandle** tells which classes can be handled by this specific repository
+1. **Repository** attribute marks class to be known to `Ecotone` as Repository.
+2. We need to implement some methods in order to allow `Ecotone` to retrieve and save Aggregate. Based on implemented interface, `Ecotone` knowns, if _Aggregate_ is state-stored or event sourced.
+3. **canHandle** tells which classes can be handled by this specific repository.
 4. **findBy**  return found aggregate instance or null. As there may be more, than single indentifier per aggregate, identifiers are array.
-5. **save** saves passed aggregate instance. You do not need to bother right what is `$metadata` and `$expectedVersion`
+5. **save** saves an aggregate instance. You do not need to bother right what is `$metadata` and `$expectedVersion`.
 
 {% hint style="info" %}
 If you want to known more details about _Repository_ start with chapter [Repository](../modelling/command-handling/repository.md)
@@ -173,7 +173,7 @@ Good job, scenario ran with success!
 ```
 {% endhint %}
 
-Have you noticed, what are we missing here? Our `Event Handler` was not called, as we do not publish `ProductWasRegistered` event at this moment.&#x20;
+Have you noticed what we are missing here? Our `Event Handler` was not called, as we do not publish the `ProductWasRegistered` event anymore.
 
 ### Event Publishing
 
@@ -205,7 +205,7 @@ class Product
 ```
 
 {% hint style="info" %}
-You may implement your own method for returning events, if you do not want to couple with framework.
+You may implement your own method for returning events, if you do not want to be coupled with the framework.
 {% endhint %}
 
 {% hint style="success" %}
@@ -222,7 +222,7 @@ Good job, scenario ran with success!
 
 {% hint style="success" %}
 Congratulations, we have just finished Lesson 2.\
-In this lesson we learnt how to make use of Aggregates and Repositories.\
+In this lesson we have learnt how to make use of Aggregates and Repositories.\
 \
 Now we will learn about Converters and Metadata
 {% endhint %}
