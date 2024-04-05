@@ -5,11 +5,17 @@ description: PHP Interceptors Middlewares
 # Interceptors (Middlewares)
 
 `Ecotone` provide possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting\_concern) via `Interceptors`. \
-`Interceptor` as name the suggest, intercepts the process of handling the message. \
-You may enrich the [message](../../messaging/messaging-concepts/message.md), stop or modify usual processing cycle, call some shared functionality, add additional behavior to existing code without modifying the code itself.&#x20;
+`Interceptor` intercepts the process of handling the message, this means we can do actions like:&#x20;
+
+* Enriching the [message](../../messaging/messaging-concepts/message.md)
+* Stopping or modify usual processing cycle
+* Calling some shared functionality or adding additional behavior\
+
+
+This all can be done without modifying the code itself, as we hook into the existing flows.
 
 {% hint style="info" %}
-If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented\_programming) or Middleware pattern (used in most of PHP CQRS frameworks) you may find some similarities.
+If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented\_programming) you will find a lot of similarities.
 {% endhint %}
 
 ## Interceptor
@@ -27,7 +33,9 @@ class AdminVerificator
 }
 ```
 
-`Before` - Type of Interceptor more about it [Interceptor Types section](interceptors.md#interceptor-types)
+### Before Attribute
+
+Type of Interceptor more about it [Interceptor Types section](interceptors.md#interceptor-types)
 
 ### Precedence
 
@@ -47,28 +55,32 @@ Every interceptor has `Pointcut` attribute, which describes for specific interce
 There are four types of interceptors. Each interceptor has it role and possibilities. \
 Interceptors are called in following order:
 
-* Before
-* Around
-* After
-* Presend&#x20;
+* **Before**
+* **Around**
+* **After**
+* **Presend**&#x20;
 
 ## Before Interceptor
 
-### Exceptional Interceptor&#x20;
+Before Interceptor is called after message is sent to the channel, before execution of Endpoint.
 
-`Before interceptor` is called before endpoint is executed. \
+![](../../.gitbook/assets/before-interceptor.svg)
+
+### - Exceptional Interceptor&#x20;
+
+**Before interceptor** is called before endpoint is executed. \
 Before interceptors can used in order to `stop the flow`, `throw an exception` or `enrich the` [`Message.`](../../messaging/messaging-concepts/message.md)\
 \
-We will intercept Command Handler with verification if executor is an administrator.
-
-Let's start by creating `Attribute` called `IsAdministrator` in new namepace.
+\
+To understand it better, let's follow an example, where we will intercept Command Handler with verification if executor is an administrator.\
+Let's start by creating **Attribute** called **RequireAdministrator** in new namepace.
 
 ```php
 #[\Attribute]
 class RequireAdministrator {}
 ```
 
-Let's create our first `Before Interceptor.`&#x20;
+Let's create our first **Before Interceptor.**&#x20;
 
 ```php
 class AdminVerificator
@@ -83,27 +95,30 @@ class AdminVerificator
 }
 ```
 
-We are using in here [Pointcut](interceptors.md#pointcut) here which is looking for `#[RequireAdministrator]` annotation in each of registered [Endpoints](../../messaging/messaging-concepts/message-endpoint/).\
+We are using in here [Pointcut](interceptors.md#pointcut) which is looking for **#\[RequireAdministrator]** annotation in each of registered [Endpoints](../../messaging/messaging-concepts/message-endpoint/).\
 The `void return type` is expected in here. It tells `Ecotone`that, this Before Interceptor is not modifying the Message and message will be passed through. The message flow however can be interrupted by throwing exception.
 
 Now we need to annotate our Command Handler:
 
 ```php
 #[CommandHandler]
-#[RequireAdministrator] 
+#[RequireAdministrator] // Our Application level defined Attribute
 public function changePrice(ChangePriceCommand $command) : void
 {
    // do something with $command
 }
 ```
 
-Whenever we call our command handler, it will be intercepted by AdminVerificator now.\
-There is one thing worth to mention. Our `Command Handler` is using `ChangePriceCommand`class and our `AdminVerificator interceptor` is using `array $payload`. They are both the same payload of the [Message](../../messaging/messaging-concepts/message.md), but converted in the way [Endpoint](../../messaging/messaging-concepts/message-endpoint/) expected.&#x20;
+Whenever we call our command handler, it will be intercepted by AdminVerificator now.
 
-### Payload Enriching Interceptor
+{% hint style="info" %}
+Our `Command Handler` is using `ChangePriceCommand`class and our `AdminVerificator interceptor` is using `array $payload`. They are both referencing payload of the [Message](../../messaging/messaging-concepts/message.md), yet if we define a class as type hint, Ecotone will do the Conversion for us.
+{% endhint %}
 
-If return type is `not void` new modified based on previous Message will be created from the returned type. \
-We will enrich [Message](../../messaging/messaging-concepts/message.md) payload with timestamp.
+### - Payload Enriching Interceptor
+
+If return type is `not void` new Message will be created from the returned type. \
+Let's follow an example, where we will enrich [Message](../../messaging/messaging-concepts/message.md) payload with timestamp.
 
 ```php
 #[\Attribute]
@@ -137,7 +152,7 @@ public function changePrice(ChangePriceCommand $command) : void
 }
 ```
 
-### Header Enriching Interceptor
+### - Header Enriching Interceptor
 
 Suppose we want to add executor Id, but as this is not part of our Command, we want add it to our [Message](../../messaging/messaging-concepts/message.md) Headers.
 
@@ -157,7 +172,7 @@ class TimestampService
 }
 ```
 
-If return type is `not void` new modified based on previous Message will be created from the returned type. If we additionally add `changeHeaders: true`it will tell Ecotone, that we we want to modify Message headers instead of payload.&#x20;
+If return type is `not void` new modified based on previous Message will be created from the returned type. If we additionally add **changeHeaders: true** it will tell Ecotone, that we we want to modify Message headers instead of payload.&#x20;
 
 ```php
 #[CommandHandler]
@@ -168,7 +183,7 @@ public function changePrice(ChangePriceCommand $command, array $metadata) : void
 }
 ```
 
-### Message Filter Interceptor
+### - Message Filter Interceptor
 
 Use `Message Filter`, to eliminate undesired messages based on a set of criteria.\
 This can be done by returning null from interceptor, if the flow should proceed, then payload should be returned.
@@ -206,9 +221,9 @@ public function sendNewPriceNotification(ChangePriceCommand $event) : void
 
 ## Around Interceptor
 
-The `Around Interceptor` have access to actual `Method Invocation.`This does allow for starting some procedure and ending after the invocation is done.  At this moment all conversions are done, so we can't convert payload to different type.&#x20;
+The `Around Interceptor` have access to actual `Method Invocation.`This does allow for starting action before method invocation is done, and finishing it after. &#x20;
 
-`Around interceptor`is a good place for handling transactions or logic shared between different endpoints, that need to access invoked object.&#x20;
+`Around interceptor`is a good place for handling actions like Database Transactions or logic that need to access invoked object.&#x20;
 
 ```php
 class TransactionInterceptor
@@ -278,6 +293,8 @@ class IsOwnerVerificator
 }
 ```
 
+We've passed the executd Aggregate instance - Person to our Interceptor. This way we can get the context of the executed object in order to perform specific logic.
+
 ## After Interceptor
 
 `After interceptor` is called after endpoint execution has finished. \
@@ -310,9 +327,9 @@ class AddResultSet
 
 We will intercept all endpoints within Order\ReadModel namespace, by adding result coming from the endpoint under `result` key.
 
-### Access attribute from interceptor
+## Access attribute from interceptor
 
-You may access attribute from the intercepted endpoint in order to perform specific action
+We may access attribute from the intercepted endpoint in order to perform specific action
 
 ```php
 #[\Attribute]
@@ -360,20 +377,10 @@ class ProductsService
 In synchronous channel there is no difference between `Before` and `Presend.` \
 The difference is seen when the channel is [asynchronous](../asynchronous-handling/scheduling.md).
 
-#### &#x20;Before Interceptor
+![Presend Interceptor is called exactly before message is sent to the channel. ](../../.gitbook/assets/presend-interceptor.svg)
 
-![](../../.gitbook/assets/before-interceptor.svg)
-
-Before Interceptor is called after message is sent to the channel, before execution of Endpoint.
-
-#### &#x20;Presend Interceptor
-
-![](../../.gitbook/assets/presend-interceptor.svg)
-
-Presend Interceptor is called exactly before message is sent to the channel. \
 \
-`Presend Interceptor` can be used for example, when Command Bus is called from HTTP Controller. \
-Then we may want to verify if data is correct and if not filter out the Message, or we may want to check, if user has enough permissions to do the action or validate payload.\
+`Presend Interceptor` can used to verify if data is correct before sending to asynchronous channel, or we may want to check if user has enough permissions to do given action.\
 This will keep our asynchronous channel free of incorrect messages.
 
 ```php
