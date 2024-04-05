@@ -3,7 +3,7 @@
 ## Converting Results
 
 In rich business domains we will want to work with higher level objects than associate arrays. \
-Suppose we have PersonNameDTO and defined [Ecotone's Converter](../../../../messaging/conversion/conversion.md) for it.
+Suppose we have PersonNameDTO and defined [Ecotone's Converter](../../../../messaging/conversion/conversion/) for it.
 
 ```php
 class PersonNameDTOConverter

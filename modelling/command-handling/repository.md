@@ -175,7 +175,7 @@ This provides integration with [Eloquent ORM](https://laravel.com/docs/5.0/eloqu
 
 ### - Document Store Repository
 
-This provides integration [Document Store](../document-store.md) using relational databases. It will serialize your aggregate to json and deserialize on load using [Converters](../../messaging/conversion/conversion.md).\
+This provides integration [Document Store](../document-store.md) using relational databases. It will serialize your aggregate to json and deserialize on load using [Converters](../../messaging/conversion/conversion/).\
 To enable it read in [Dbal Module Section](../../modules/dbal-support.md#document-store).
 
 ### - Event Sourcing Repository

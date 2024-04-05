@@ -11,7 +11,7 @@ Ecotone provides inbuilt Conversion for Date Time based objects.&#x20;
 public function add(string $personId, \DateTimeImmutable $time): void;
 ```
 
-By default Ecotone will convert time using `Y-m-d H:i:s.u` format. We may override this using [Custom Converters](../../../../messaging/conversion/conversion.md).
+By default Ecotone will convert time using `Y-m-d H:i:s.u` format. We may override this using [Custom Converters](../../../../messaging/conversion/conversion/).
 
 ## Default Class Conversion
 
@@ -34,7 +34,7 @@ final readonly class PersonId
 }
 ```
 
-We may override this using [Custom Converters](../../../../messaging/conversion/conversion.md).
+We may override this using [Custom Converters](../../../../messaging/conversion/conversion/).
 
 ## Converting Array to JSON
 
@@ -77,7 +77,7 @@ final class PersonRoleConverter
 ```
 
 {% hint style="info" %}
-Read more about Ecotone's [in Converters related section.](../../../../messaging/conversion/conversion.md)
+Read more about Ecotone's [in Converters related section.](../../../../messaging/conversion/conversion/)
 {% endhint %}
 
 Then we will be able to use our Business Method with PersonRole, which will be converted to given Media Type before being saved:

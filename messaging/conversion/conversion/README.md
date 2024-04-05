@@ -15,7 +15,7 @@ Moving from one format to another requires conversion. `Ecotone` does it automat
 
 Ecotone comes with configured Media Type Converters, if you don't want to build your own.
 
-* [JMS Converter](../../modules/jms-converter.md)
+* [JMS Converter](../../../modules/jms-converter.md)
 
 ## Media Type Converter
 
@@ -69,19 +69,19 @@ $this->commandBus->sendWithRouting(
 ```
 
 `Ecotone`does delay the conversion to the time, when it's actually needed. In that case it will be just before `placeOrder` method will be called. \
-Then Payload of [Message](../messaging-concepts/message.md), which will be `{"productIds": [1,2]}` with content Type `application/json` will be converted to `PlaceOrderCommand` and content Type `application/x-php` (default for PHP types).&#x20;
+Then Payload of [Message](../../messaging-concepts/message.md), which will be `{"productIds": [1,2]}` with content Type `application/json` will be converted to `PlaceOrderCommand` and content Type `application/x-php` (default for PHP types).&#x20;
 
 Converter that `matches` JSON to PHP conversion will be used to do the conversion:
 
 ```php
-    public function convert($source, TypeDescriptor $sourceType, MediaType $sourceMediaType, TypeDescriptor $targetType, MediaType $targetMediaType)
-    {
-       // $source - {"productIds": [1,2]}
-       // $sourceType - string
-       // $sourceMediaType - application/json
-       // $targetType - PlaceOrderCommand
-       // $targetMediaType - application/x-php
-    }
+ public function convert($source, TypeDescriptor $sourceType, MediaType $sourceMediaType, TypeDescriptor $targetType, MediaType $targetMediaType)
+ {
+    // $source - {"productIds": [1,2]}
+    // $sourceType - string
+    // $sourceMediaType - application/json
+    // $targetType - PlaceOrderCommand
+    // $targetMediaType - application/x-php
+ }
 ```
 
 ## How to build your own Media Type Converter
@@ -188,7 +188,7 @@ In order to handle such conversion, we do not need to do anything more. We have 
 
 ## Serializer
 
-You may want to serialize/deserialize on the level of your application code using Converters you have already registered. In order to do that `Ecotone` comes with `Serializer` [`Gateway`](../messaging-concepts/messaging-gateway.md)
+You may want to serialize/deserialize on the level of your application code using Converters you have already registered. In order to do that `Ecotone` comes with `Serializer` [`Gateway`](../../messaging-concepts/messaging-gateway.md)
 
 Serializer Gateway is built from simple interface
 

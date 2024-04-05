@@ -63,7 +63,7 @@ $this->assertEquals(
 );
 ```
 
-We provide list of converters, you may provide your [custom serialization](../../messaging/conversion/conversion.md) too.\
+We provide list of converters, you may provide your [custom serialization](../../messaging/conversion/conversion/) too.\
 We need to set up repository that we will be using for tests.
 
 1. When using `bootstrapFlowTestingWithEventStore` Ecotone will bootstrap In Memory Event Store for you and provide default configuration for your best development experience.

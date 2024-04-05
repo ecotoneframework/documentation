@@ -95,7 +95,7 @@ But the message payload may contains `JSON`:
 {"productId": 123, "price": 100}
 ```
 
-The message may contains of special header `contentType`which describes content type of Message as [media type](https://en.wikipedia.org/wiki/Media\_type). Based on this information, if payload of message is not compatible with parameter's type hint, `Ecotone` do the [conversion](conversion.md).
+The message may contains of special header `contentType`which describes content type of Message as [media type](https://en.wikipedia.org/wiki/Media\_type). Based on this information, if payload of message is not compatible with parameter's type hint, `Ecotone` do the [conversion](conversion/).
 
 {% hint style="success" %}
 Thanks to conversion on the level of endpoint, Ecotone does not expect running `Command Bus` with specific class instance. It may receive anything `xml, json etc` as long as Converter for specific Media Type is registered in the system.

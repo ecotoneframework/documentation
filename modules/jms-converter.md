@@ -107,7 +107,7 @@ private \ArrayObject $data;
 The difference between Native Conversion is that you take control of deserialization mechanism for specific class. You may call factory method, which will validate correctness of the data or you may provide some default based on your business logic. \
 Besides you may find it useful when there is a need to make conversion from `class` to simple type like `string` or `int`.
 
-`JMS Converter`make use of Converters registered as Converters in order to provide all the conversion types described in [Conversion Table](jms-converter.md#conversion-table). You can read how to register new`Converter` in [Conversion section.](../messaging/conversion/conversion.md#conversions-on-php-level)
+`JMS Converter`make use of Converters registered as Converters in order to provide all the conversion types described in [Conversion Table](jms-converter.md#conversion-table). You can read how to register new`Converter` in [Conversion section.](../messaging/conversion/conversion/#conversions-on-php-level)
 
 ### Example usage
 
@@ -250,7 +250,7 @@ Serialization naming strategy (`string "identicalPropertyNamingStrategy" || "cam
 
 ## Serialize Nulls for specific conversion
 
-If you want to make convert nulls for [given conversion](../messaging/conversion/conversion.md#serializer), then you can provide Media Type parameters&#x20;
+If you want to make convert nulls for [given conversion](../messaging/conversion/conversion/#serializer), then you can provide Media Type parameters&#x20;
 
 ```php
 $this->serializer->convertFromPHP(

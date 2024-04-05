@@ -139,7 +139,7 @@ public function notifyAbout(OrderWasPlaced $event): void
 By default all your Messages will be serialized using PHP native serialization. However this is not recommended way, as native PHP serialization requires class to be kept the same on deserialization, if we will change the class name, we will fail to deserialize.&#x20;
 
 \
-We may register our our own different [Media Converters](../../messaging/conversion/conversion.md), yet you may use inbuilt solution using [Ecotone JMS](../jms-converter.md), to serialize to JSON without any additional configuration.
+We may register our our own different [Media Converters](../../messaging/conversion/conversion/), yet you may use inbuilt solution using [Ecotone JMS](../jms-converter.md), to serialize to JSON without any additional configuration.
 
 ```php
 #[ServiceContext]

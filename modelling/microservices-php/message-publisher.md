@@ -29,7 +29,7 @@ interface MessagePublisher
 
 1. `send` - Send a `string type` via Publisher. It does not need any conversion, you may add additional `Media Type` of `$data`.
 2. `sendWithMetadata` - Does the same as `send,` allows for sending additional [Meta data](../../tutorial-php-ddd-cqrs-event-sourcing/php-metadata-method-invocation.md#metadata).
-3. `convertAndSend` - Allow for sending types, which needs conversion. Allow for sending objects and array, `Ecotone` make use of [Conversion system](../../messaging/conversion/conversion.md) to convert `$data`.
+3. `convertAndSend` - Allow for sending types, which needs conversion. Allow for sending objects and array, `Ecotone` make use of [Conversion system](../../messaging/conversion/conversion/) to convert `$data`.
 4. `convertAndSendWithMetadata` - Does the same as `convertAndSend,` allow for sending additional [Meta data](../../tutorial-php-ddd-cqrs-event-sourcing/php-metadata-method-invocation.md#metadata).
 
 ## How to use Message Publisher
