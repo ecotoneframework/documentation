@@ -58,52 +58,7 @@ Saga just as Aggregates are stored using [Repository](repository.md) implementat
 
 ## Targeting Identifier from Event/Command
 
-As Saga is identified by identifier just like an Aggregate, events that trigger actions on the Saga needs to be correlated with specific instance.\
-When we do have event like `PaymentWasFinishedEvent` we need to tell `Ecotone` which instance of `OrderFulfillment` it should be retrieve from [Repository](repository.md) to call method on.
-
-This is done automatically, when property name in `Event` is the same as property marked as       `#[Identifier]` in Saga.&#x20;
-
-```php
-#[Saga]
-class OrderFulfillment
-{
-    #[Identifier] 
-    private string $orderId;
-```
-
-Then if Event contains of orderId, the mapping will be done automatically:
-
-```php
-class PaymentWasFinishedEvent
-{
-    private string $orderId;
-}
-```
-
-If the property name is different we need to give `Ecotone` a hint, how to correlate identifiers.&#x20;
-
-```php
-class SomeEvent
-{
-    #[TargetIdentifier("orderId")] 
-    private string $purchaseId;
-}
-```
-
-## Targeting Identifier from Metadata
-
-When there is no property to correlate inside `Command` or `Event`, we can make use of `Before` or `Presend` [Interceptors](../extending-messaging-middlewares/interceptors.md) to enrich event's metadata with required identifier. \
-When we've the identifier inside `Metadata` then we can use `identifierMetadataMapping.`\
-\
-Suppose the `orderId` identifier is available in metadata under key `orderNumber`, then we can tell Message Handler to use this mapping:
-
-```php
-#[EventHandler(identifierMetadataMapping: ["orderId" => "orderNumber"])]
-public function failPayment(PaymentWasFailedEvent $event, CommandBus $commandBus) : self 
-{
-   // do something with $event
-}
-```
+We need to correlate Saga which we are using with Events/Command coming in. For this we can leverage Ecotone's support for [Identifier Mapping](identifier-mapping.md).
 
 ## Unordered Events
 

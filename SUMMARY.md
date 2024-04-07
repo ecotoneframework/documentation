@@ -42,6 +42,7 @@
       * [Converting Parameters](modelling/command-handling/business-interface/working-with-database/converting-parameters.md)
       * [Converting Results](modelling/command-handling/business-interface/working-with-database/converting-results.md)
   * [Saga Introduction](modelling/command-handling/saga.md)
+  * [Identifier Mapping](modelling/command-handling/identifier-mapping.md)
 * [Extending Messaging (Middlewares)](modelling/extending-messaging-middlewares/README.md)
   * [Message Headers](modelling/extending-messaging-middlewares/message-headers.md)
   * [Interceptors (Middlewares)](modelling/extending-messaging-middlewares/interceptors.md)

@@ -12,7 +12,7 @@ We will be using Command Handlers in this section, so ensure reading [External C
 Working with Aggregate Command Handlers is the same as with [External Command Handlers](../external-command-handlers/).\
 We mark given method with `Command Handler` attribute and Ecotone will register it as Command Handler.
 
-However Aggregates need to be [fetched from repository](../repository.md) in order to be executed. Often Command Handlers are used as boilerplate code, which fetch the aggregate, execute it and then save it.
+In most common scenarios, Command Handlers are used as boilerplate code, which fetch the aggregate, execute it and then save it.
 
 ```php
 $product = $this->repository->getById($command->id());
@@ -34,17 +34,18 @@ class Product
 By providing `Identifier` attribute on top of property in your Aggregate, we state that this is identifier of this Aggregate (Entity in Symfony/Doctrine world, Model in Laravel world). \
 This is then used by Ecotone to fetch your aggregate automatically.
 
+However Aggregates need to be [fetched from repository](../repository.md) in order to be executed. \
 When we will send an Command, Ecotone will use property with same name from the Command instance to fetch the Aggregate.
 
 ```php
 class ChangePriceCommand
 {
-    private string $productId;
+    private string $productId; // same property name as Aggregate's Identifier
     private Money $priceAmount;
 ```
 
-{% hint style="info" %}
-You may use multiple aggregate identifiers or identifier as object (e.g. Uuid) as long as they provide `__toString` method.
+{% hint style="success" %}
+You may read more about Identifier Mapping and more advanced scenarios  in [related section](../identifier-mapping.md).
 {% endhint %}
 
 When identifier is resolved, Ecotone use `repository` to fetch the aggregate and then call the method and then save it. So basically do all the boilerplate for you.
@@ -99,11 +100,6 @@ class Product
 1. `Aggregate` tells Ecotone, that this class should be registered as Aggregate Root.
 2.  `Identifier` is the external reference point to Aggregate.&#x20;
 
-    This field tells Ecotone to which Aggregate a given Command is targeted.\
-    You may also you expose identifier over public method by annotating it with attribute&#x20;
-
-    ```
-    #[AggregateIdentifierMethod("productId")]
-    ```
+    This field tells Ecotone to which Aggregate a given Command is targeted.
 3. `CommandHandler` defined on static method acts as _factory method_. Given command it should return _new instance_ of specific aggregate, in that case new Product.
 4. `CommandHandler` defined on non static class method is place where you would make changes to existing aggregate, fetched from repository.
