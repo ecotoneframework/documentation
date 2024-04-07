@@ -125,7 +125,7 @@ public function block(BlockUser $command) : void
 }
 ```
 
-3. Suppose we receive external order id, however we do have in database our internal order id that should be used as Identifier. We could then have a Service called registered in DI under **"orderIdExchange":**
+3. Suppose we receive external order id, however we do have in database our internal order id that should be used as Identifier. We could then have a Service registered in DI under **"orderIdExchange":**
 
 ```php
 class OrderIdExchange
@@ -145,7 +145,7 @@ Then we can make use of it in our identifier Mapping
 #[EventHandler(identifierMapping: [
    "orderId" => "reference('orderIdExchange').exchange(payload.externalOrderId())"
 ])]
-public function failPayment(OrderCancelled $event) : void
+public function when(OrderCancelled $event) : void
 {
    // do something with $event
 }
