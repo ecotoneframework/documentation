@@ -79,6 +79,26 @@ public function failPayment(PaymentWasFailedEvent $event, CommandBus $commandBus
 We can make use of `Before` or `Presend` [Interceptors](../extending-messaging-middlewares/interceptors.md) to enrich event's metadata with required identifiers.
 {% endhint %}
 
+## Dynamic Identifier
+
+We may provide Identifier dynamically using Command Bus. This way we can state explicitly what Aggregate/Saga instance we do refer too. Thanks to we don't need to define Identifier inside the Command and we can skip any kind of mapping.
+
+In some scenario we won't be in deal to create an Command class at all. For example we may provide block user action, which changes the status:
+
+```php
+$this->commandBus->sendWithRouting('user.block', metadata: p
+    'aggregate.id' => $userId // This way we provide dynamic identifier
+])
+```
+
+```php
+#[CommandHandler('user.block')]
+public function block() : void
+{
+    $this->status = 'blocked';
+}
+```
+
 ## Advanced Identifier Mapping
 
 There may be cases where more advanced mapping may be needed. In those cases we can use identifier mapping based on [Expression Language](https://symfony.com/doc/current/components/expression\_language.html).
