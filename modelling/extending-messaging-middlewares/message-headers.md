@@ -108,6 +108,10 @@ Using Message Id, Correlation Id are especially useful find out what have happen
 Using already propagated Headers, we may build our own tracing solution on top of what Ecotone provides or use inbuilt support for [OpenTelemetry](../recovering-tracing-and-monitoring/opentelemetry-tracing-and-metrics.md).
 {% endhint %}
 
+### Id
+
+Each Message receives it's own unique Id, which is Uuid generated value. This is used by Ecotone to provide capabilities like [Message Deduplication](../recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md), [Tracing](../recovering-tracing-and-monitoring/opentelemetry-tracing-and-metrics.md) and Message identification for [Retries and Dead Letter](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md).
+
 ### Parent Id
 
 **"parentId"** header refers to Message that was direct ancestor of it. In our case that can be correlation of Command and Event. As a result of sending an Command, we publish an Event Message.&#x20;
