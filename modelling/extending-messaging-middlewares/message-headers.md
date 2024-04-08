@@ -98,7 +98,7 @@ public function closeTicket(
 When publishing Events from Aggregates or Sagas, metadata will be propagated automatically too.
 {% endhint %}
 
-## Tracing capabilities
+## Message Identification and Correlation
 
 When using Messaging we may want to be able to trace where given Message came from, who was the parent how it was correlated with other Messages. \
 In Ecotone all Messages contains of **Message Id**, **Correlation Id** and **Parent Id** within Metadata. Those are automatically assigned and propagated by the Framework, so from application level code we don’t need to deal manage those Messaging level Concepts.
