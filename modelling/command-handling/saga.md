@@ -49,8 +49,65 @@ To enable given Class as Saga, we mark it with **Saga** or **EventSourcingSaga**
 
 In order to trigger the saga, whenever given Event happens, we use **EventHandler** Attribute. It works like normal Event Handler, yet it will load the Saga and the save it, just like it would be done with Aggregates.
 
-In above example we the "**start" method** is factory method for Saga. It will create new instance of given Saga, whenever specific Event happen.\
-On other hand **"whenPaymentWasDone" method** is action method, which expects Saga to be already initialized.
+* In above example we the "**start" method** is factory method for Saga. It will create new instance of given Saga, whenever specific Event happen.\
+
+* On other hand **"whenPaymentWasDone" method** is action method, which expects Saga to be already initialized.
+
+## Handling Events
+
+Sagas are typically subscribing to Events and then publishing Commands. We do it by marking given method with **EventHandler.**
+
+```php
+#[EventHandler] 
+public function whenPaymentWasDone(PaymentWasFinishedEvent $event, CommandBus $commandBus) : self 
+{
+   if ($this->isFinished) {
+       return;
+   }
+
+    $this->isFinished = true;
+    $commandBus->send(new ShipOrderCommand($this->orderId));
+}
+```
+
+This Saga will be triggered whenever **PaymentWasFinishedEvent** will be published. Saga will be correlated based on the provided Identifier just like it's [done for Aggregates](state-stored-aggregate/).
+
+After this method is called, Saga will be [persisted in the Repository](saga.md#storing-sagas-state), therefore we can change internal state accordingly to our needs.\
+If we want we can inject any kind of Service into Saga's method, therefore if we will inject **CommandBus** we can send an **Commands** as a result of this method execution.
+
+## Handling Commands
+
+In case of Ecotone we may trigger Sagas using Command too.\
+This is especially useful when some flows needs to be manually kicked off, or require some acceptance steps along the way.
+
+We may have for example Verification process, which starts by Customer being registered, yet require manual confirmation is Customer Credit Profile is trustworthy.
+
+```php
+#[Saga] 
+class CustomerVerificationProcess
+{
+    #[Identifier] 
+    private string $customerId;
+    private bool $creditProfileAccepted = false;
+
+    private function __construct(string $customerId)
+    {
+        $this->customerId = $customerId;
+    }
+
+    #[EventHandler] 
+    public static function start(CustomerRegistered $event) : self
+    {
+        return new self($event->getCustomerId());
+    }
+    
+    #[CommandHandler]
+    public function acceptCreditProfile(AcceptCreditProfile $command) : void 
+    {
+        $this->creditProfileAccepted = true;
+    }
+}
+```
 
 ## Storing Saga's State
 
@@ -178,43 +235,9 @@ EventHandler(dropMessageOnNotFound=true)
 
 If this saga instance will be not found, then this event will be dropped and our `whenNewOrderWasPlaced` method will not be called.
 
-{% hint style="info" %}
-Options we used in here, can also be applied to Command Handlers
+{% hint style="success" %}
+This option can also be used together with Command Handlers.
 {% endhint %}
-
-## Handling Commands
-
-In case of Ecotone we may trigger Sagas using Command too.\
-This is especially useful when some flows needs to be manually kicked off, or require some acceptance steps along the way.
-
-We may have for example Verification process, which starts by Customer being registered, yet require manual confirmation is Customer Credit Profile is trustworthy.
-
-```php
-#[Saga] 
-class CustomerVerificationProcess
-{
-    #[Identifier] 
-    private string $customerId;
-    private bool $creditProfileAccepted = false;
-
-    private function __construct(string $customerId)
-    {
-        $this->customerId = $customerId;
-    }
-
-    #[EventHandler] 
-    public static function start(CustomerRegistered $event) : self
-    {
-        return new self($event->getCustomerId());
-    }
-    
-    #[CommandHandler]
-    public function acceptCreditProfile(AcceptCreditProfile $command) : void 
-    {
-        $this->creditProfileAccepted = true;
-    }
-}
-```
 
 ## Time based Actions
 
