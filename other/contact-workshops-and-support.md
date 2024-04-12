@@ -4,16 +4,18 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 
 # Contact, Workshops and Support
 
-<figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption><p>Ecotone -Because Business matters</p></figcaption></figure>
+
+{% hint style="success" %}
+Just as Ecotone in Nature which connects different Eco-Systems together, Ecotone Framework connects different business functionalities while respecting their boundaries. \
+The aim is to allow each Business Functionality to focus on it's own responsibility, yet allows it to be part of something wider, an part of whole System. \
+\
+This is where Ecotone shines, giving us foundation for stable and resilient communication and allowing us to build Systems and Modules which connects together in seamless way.
+{% endhint %}
 
 ## Sponsorship
 
 Become sponsor of Ecotone's author - [Dariusz Gafka](https://medium.com/@dariuszgafka).
-
-{% hint style="success" %}
-**Dariusz Gafka**:\
-"Ecotone is open-source licenced under MIT, which means you will be always able to use it free of charge. The sponsorship is therefore optional, yet I highly appreciate it. This is a way of saying thanks, for my personal investment of almost 7 years of continues work. Work which I put into building Resilient Messaging Patterns based on [EIP](https://www.enterpriseintegrationpatterns.com/) and all the other features Ecotone provides, which are now available for the community."
-{% endhint %}
 
 {% embed url="https://github.com/sponsors/dgafka" %}
 

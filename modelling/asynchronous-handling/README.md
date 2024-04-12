@@ -214,5 +214,6 @@ You may find demo implementation [here](https://github.com/ecotoneframework/quic
 ### Links
 
 * [Asynchronous PHP To Support Stability Of Your Application](https://blog.ecotone.tech/asynchronous-php/) \[Article]
+* [Asynchronous Messaging in Laravel](https://blog.ecotone.tech/ddd-and-messaging-with-laravel-and-ecotone/) \[Article]
 * [Testing Asynchronous Messaging](../testing-support/testing-asynchronous-messaging.md) \[Documentation]
 * [Testing Asynchronous Message Driven Architecture](https://blog.ecotone.tech/testing-messaging-architecture-in-php/) \[Article]

@@ -53,7 +53,7 @@ When identifier is resolved, Ecotone use `repository` to fetch the aggregate and
 {% hint style="success" %}
 To implement repository reference to [this section](../repository.md).\
 You may use inbuilt repositories, so you don't need to implement your own.\
-Ecotone provides [`Event Sourcing Repository`](../../event-sourcing/), [`Document Store Repository`](../../document-store.md#storing-aggregates-in-your-document-store), integration with [Doctrine ORM](../../../modules/symfony/doctrine-orm.md) or [Eloquent](../../../modules/laravel/eloquent.md).
+Ecotone provides [`Event Sourcing Repository`](../../event-sourcing/), [`Document Store Repository`](../../../messaging/document-store.md#storing-aggregates-in-your-document-store), integration with [Doctrine ORM](../../../modules/symfony/doctrine-orm.md) or [Eloquent](../../../modules/laravel/eloquent.md).
 {% endhint %}
 
 ## State-Stored Aggregate

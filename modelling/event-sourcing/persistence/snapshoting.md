@@ -47,7 +47,7 @@ public function aggregateSnapshots()
 ```
 
 {% hint style="info" %}
-Ecotone make use of [Document Store](../../document-store.md) to store snapshots, by default it's enabled with event-sourcing package. \
+Ecotone make use of [Document Store](../../../messaging/document-store.md) to store snapshots, by default it's enabled with event-sourcing package. \
 \
 If you want to clean the snapshots, you can do it manually. Snapshots are stored in `aggregate_snapshots` collection.
 {% endhint %}
