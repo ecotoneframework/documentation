@@ -20,5 +20,6 @@ You may be interested in theory - [DDD and CQRS](../modelling-1.md) chapter firs
 
 * [Build Symfony and Doctrine ORM Applications with ease](https://blog.ecotone.tech/build-symfony-application-with-ease-using-ecotone/) \[Article]
 * [Build Laravel Application using DDD and CQRS](https://blog.ecotone.tech/build-laravel-application-using-ddd-and-cqrs/) \[Article]
+* [DDD and  Message based communication with Laravel](https://blog.ecotone.tech/ddd-and-messaging-with-laravel-and-ecotone/) \[Article]
 * [Going into CQRS with PHP](https://blog.ecotone.tech/cqrs-in-php/) \[Article]
 * [Event Handling in PHP](https://blog.ecotone.tech/event-handling-in-php/) \[Article]
