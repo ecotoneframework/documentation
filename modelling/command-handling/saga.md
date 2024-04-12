@@ -56,6 +56,11 @@ On other hand **"whenPaymentWasDone" method** is action method, which expects Sa
 
 Saga just as Aggregates are stored using [Repository](repository.md) implementation, you may store Saga as event stream or use only current state using Standard Repositories.
 
+{% hint style="success" %}
+Doctrine ORM or Eloquent Model can be an Saga too. \
+You may find out about inbuilt Repositories, that can be used out of the box in [Repositories Introduction](repository.md#inbuilt-repositories).
+{% endhint %}
+
 ## Targeting Identifier from Event/Command
 
 We need to correlate Saga which we are using with Events/Command coming in. For this we can leverage Ecotone's support for [Identifier Mapping](identifier-mapping.md).
