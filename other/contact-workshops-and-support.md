@@ -7,10 +7,9 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 <figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption><p>Ecotone -Because Business matters</p></figcaption></figure>
 
 {% hint style="success" %}
-Just as Ecotone in Nature which connects different Eco-Systems together, Ecotone Framework connects different business functionalities while respecting their boundaries. \
-The aim is to allow each Business Functionality to focus on it's own responsibility, yet allows it to be part of something wider, an part of whole System. \
-\
-This is where Ecotone shines, giving us foundation for stable and resilient communication and allowing us to build Systems and Modules which connects together in seamless way.
+An Ecotone is a transition area between Eco-Systems, where they meet and integrate.\
+Ecotone Framework follows on that and provide abstraction, which allows us to join different Business functionality in seamless way.\
+Each Business functionality can work as autonomous unit, where Ecotone respect it's boundary, yet allowing it to connect to the wider part of the System.
 {% endhint %}
 
 ## Sponsorship
