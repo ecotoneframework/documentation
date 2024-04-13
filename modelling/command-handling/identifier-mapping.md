@@ -86,7 +86,7 @@ We may provide Identifier dynamically using Command Bus. This way we can state e
 In some scenario we won't be in deal to create an Command class at all. For example we may provide block user action, which changes the status:
 
 ```php
-$this->commandBus->sendWithRouting('user.block', metadata: p
+$this->commandBus->sendWithRouting('user.block', metadata:
     'aggregate.id' => $userId // This way we provide dynamic identifier
 ])
 ```
@@ -98,6 +98,10 @@ public function block() : void
     $this->status = 'blocked';
 }
 ```
+
+{% hint style="success" %}
+Event so we are using "aggregate.id" in the metadata, this will work exactly the same for Sagas. Therefore if we want to trigger Message Handler on the Saga, we can use "aggregate.id" too.
+{% endhint %}
 
 ## Advanced Identifier Mapping
 
