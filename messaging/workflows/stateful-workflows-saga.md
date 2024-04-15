@@ -270,3 +270,9 @@ This solution will prevent us from depending on the order of events, without int
 Whenever Event or Command comes in to Saga, we need to correlate it with given Saga's instance. \
 For this we can leverage Ecotone's support for [Identifier Mapping](../../modelling/command-handling/identifier-mapping.md). \
 This will give us ability to map Saga using different possibilites.
+
+## Using Correlation Id as Saga's Identifier
+
+We may want to use Message Correlation Id as Saga's Identifier. This allows us to always map given Saga if Message contains of given Correlation Id.&#x20;
+
+As Ecotone [automatically propagate Correlation Id](../../modelling/extending-messaging-middlewares/message-headers.md#automatic-header-propagation) between Messages, this creates good solution for Workflows that branches and join together at later stage.
