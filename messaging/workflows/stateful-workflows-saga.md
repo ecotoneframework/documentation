@@ -10,7 +10,11 @@ Not all Workflows need to maintain state. In case of step by step Workflows we m
 * Our Workflow involves manual steps, like approving / declining before Workflow can resume or make the decision
 * Our Workflow is long running process, which can take hours or days and we would like to have high visibility of the current state
 
-For above cases when Stateful Workflow is needed, we can make use of [Sagas](../../modelling/command-handling/saga.md).
+For above cases when Stateful Workflow is needed, we can make use of Sagas.
+
+{% hint style="info" %}
+It's good to read [Aggregate Introduction](../../modelling/command-handling/state-stored-aggregate/) and [Stateless Workflows](the-basics-stateless-workflows.md) section first, to get wider context about Ecotone's Messaging, before diving into Sagas.
+{% endhint %}
 
 ## Saga - Stateful Workflow
 
