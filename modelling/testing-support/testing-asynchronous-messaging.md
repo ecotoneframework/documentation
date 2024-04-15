@@ -138,7 +138,7 @@ By default In Memory Queue Channel will do the serialization to PHP native seria
 If you don't want to use serialization however, you may set type to `conversionMediaType: MediaType::createApplicationXPHP()`
 {% endhint %}
 
-## Dealing with delayed messages
+## Testing Delayed Messages
 
 Our Handlers may be delayed in time and we may want to run peform few actions and then release the message, to verify production like flow.
 

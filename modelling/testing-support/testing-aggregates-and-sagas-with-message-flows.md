@@ -179,6 +179,63 @@ In general all your Ecotone's production code will work in your test scenarios.\
 This ensures tests will be as close to production as it's possible.
 {% endhint %}
 
+## Testing Output Channels
+
+When we want to test given Aggregate or Sagas, yet we want to do it in isolation and we do use of Ecotone's [Input/Output Pipes support](../../messaging/workflows/). Then we may want to verify if given Message was send to given channel. Consider below example:
+
+```php
+#[Saga]
+final class OrderProcessSaga
+{
+    use WithEvents;
+
+    public function __construct(
+        #[Identifier] private string $orderId,
+    )
+    {
+        $this->recordThat(new OrderProcessSagaStarted($orderId));
+    }
+
+    #[EventHandler]
+    public static function whenOrderWasPlaced(OrderWasPlaced $event): self
+    {
+        return new self($event->orderId);
+    }
+
+    #[EventHandler(outputChannelName: "takePayment")]
+    public function triggerPayment(OrderProcessSagaStarted $event): TakePayment
+    {
+        return new TakePayment($event->orderId);
+    }
+}
+```
+
+When Saga was started we will send an **instance of TakePayment** to "**takePayment"** output channel.\
+However if our test suite does not include given Message Handler and we still want to hook to get if given Message was sent, we can do it as below:
+
+```php
+public function test_workflow_with_separated_output_command_handler(): void
+{
+    $ecotoneLite = EcotoneLite::bootstrapFlowTesting(
+        [OrderProcessSaga::class]
+    );
+
+    $orderId = '123';
+
+    $this->assertEquals(
+        [new TakePayment($orderId)],
+        $ecotoneLite
+            ->publishEvent(new OrderWasPlaced($orderId))
+            // This will fetch Message Payloads that have been sent to given channel name
+            ->getRecordedMessagePayloadsFrom('takePayment')
+    );
+}
+```
+
+{% hint style="success" %}
+Even if given Message is an Command from the perspective of outputChannel is just a simple Message. That's it won't be recorded as Command and we need to use `getRecordedMessagePayloadsFrom` instead.
+{% endhint %}
+
 ## Testing with Real State-Stored Repository
 
 By default Ecotone Lite provides for testing purposes In Memory Repositories.\

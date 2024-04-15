@@ -8,7 +8,7 @@ This helps in scenarios when we have multiple Event Handler and we would like to
 You may delay handling given asynchronous message by adding `#[Delayed]` attribute.
 
 ```php
-#[Delayed(50000)]
+#[Delayed(new TimeSpan(seconds: 50))]
 #[Asynchronous("notifications")]
 #[EventHandler(endpointId: "welcomeEmail")]
 public function sendWelcomeNotificationlWhen(UserWasRegistered $event): void
@@ -16,6 +16,8 @@ public function sendWelcomeNotificationlWhen(UserWasRegistered $event): void
    // handle welcome notification
 }
 ```
+
+The delay is defined in milliseconds.
 
 ## Dynamic Delay
 
@@ -25,6 +27,10 @@ We may send an Message and tell Ecotone to delay it using **deliveryDelay** Mess
 $commandBus->sendWithRouting(
     "askForOrderReview", 
     "userId", 
-    metadata: ["deliveryDelay" => 3 * 24 * 60 * 60 * 1000]
+    metadata: ["deliveryDelay" => new TimeSpan(days: 1)]
 );
 ```
+
+{% hint style="info" %}
+[Asynchronous Message Channel ](./)need to support this option to be used
+{% endhint %}

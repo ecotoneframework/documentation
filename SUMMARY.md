@@ -73,6 +73,7 @@
   * [Ecotone Pulse (Service Dashboard)](modelling/recovering-tracing-and-monitoring/ecotone-pulse-service-dashboard.md)
 * [Asynchronous Handling and Scheduling](modelling/asynchronous-handling/README.md)
   * [Delaying Messages](modelling/asynchronous-handling/delaying-messages.md)
+  * [Time to Live](modelling/asynchronous-handling/time-to-live.md)
   * [Message Priority](modelling/asynchronous-handling/message-priority.md)
   * [Scheduling](modelling/asynchronous-handling/scheduling.md)
 * [Distributed Bus and MicroServices](modelling/microservices-php/README.md)
@@ -88,6 +89,10 @@
 ## Messaging and Ecotone In Depth <a href="#messaging" id="messaging"></a>
 
 * [Overview](messaging/overview.md)
+* [Workflows](messaging/workflows/README.md)
+  * [The Basics - Stateless Workflows](messaging/workflows/the-basics-stateless-workflows.md)
+  * [Stateful Workflows - Saga](messaging/workflows/stateful-workflows-saga.md)
+  * [Handling Failures](messaging/workflows/handling-failures.md)
 * [Multi-Tenancy Support](messaging/multi-tenancy-support/README.md)
   * [Getting Started](messaging/multi-tenancy-support/getting-started/README.md)
     * [Any Framework Configuration](messaging/multi-tenancy-support/getting-started/any-framework-configuration.md)
@@ -105,7 +110,7 @@
   * [Message](messaging/messaging-concepts/message.md)
   * [Message Channel](messaging/messaging-concepts/message-channel.md)
   * [Message Endpoints/Handlers](messaging/messaging-concepts/message-endpoint/README.md)
-    * [Service Activator](messaging/messaging-concepts/message-endpoint/service-activator.md)
+    * [Internal Message Handler](messaging/messaging-concepts/message-endpoint/service-activator.md)
     * [Message Router](messaging/messaging-concepts/message-endpoint/message-routing.md)
     * [Splitter](messaging/messaging-concepts/message-endpoint/splitter.md)
   * [Consumer](messaging/messaging-concepts/consumer.md)

@@ -11,7 +11,7 @@ Router must return name of the channel, where the message should be routed too. 
 ```php
 class OrderRouter
 {
-    #[Router("order")] 
+    #[Router("make.order")] 
     public function orderSpecificType(string $orderType) : string
     {
         return $orderType === 'coffee' ? "orderInCoffeeShop" : "orderInGeneralShop";
@@ -24,6 +24,24 @@ class OrderRouter
 * `endpointId` - Endpoint identifier&#x20;
 * `inputChannnelName` - Required option, defines to which channel endpoint should be connected
 * `isResolutionRequired` - If true, will throw exception if there was no channel name returned
+
+## Routing to multiple Message Channels
+
+```php
+class OrderRouter
+{
+    #[Router("order.bought")] 
+    public function distribute(string $order) : array
+    {
+        // list of Channel names to distribute Message too
+        return [
+            'audit.store',
+            'notification.send',
+            'order.close'
+        ];
+    }
+}
+```
 
 ## What can be Router used for?  &#x20;
 

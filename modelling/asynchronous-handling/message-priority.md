@@ -40,3 +40,7 @@ $commandBus->sendWithRouting(
     metadata: ["priority" => 100]
 );
 ```
+
+{% hint style="info" %}
+[Asynchronous Message Channel ](./)need to support this option to be used
+{% endhint %}

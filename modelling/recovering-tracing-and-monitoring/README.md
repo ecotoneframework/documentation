@@ -7,6 +7,10 @@ Ecotone provides solutions to handle failures within the system that helps in:
 * Ensuring Data Consistency ([Resilient Message Sending](resiliency/resilient-sending.md), [Outbox pattern](resiliency/outbox-pattern.md), [Message Deduplication](resiliency/idempotent-consumer-deduplication.md))
 * Recovering ([Dead Letter](resiliency/error-channel-and-dead-letter.md), [Tracing](opentelemetry-tracing-and-metrics.md), [Monitoring](ecotone-pulse-service-dashboard.md))
 
+{% hint style="success" %}
+To find out more about different use-cases, read related section about [Handling Failures in Workflows](../../messaging/workflows/handling-failures.md).
+{% endhint %}
+
 ## Materials
 
 ### Demo implementation

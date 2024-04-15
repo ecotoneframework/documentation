@@ -8,7 +8,7 @@ description: Asynchronous PHP
 
 `Ecotone` does allow for easy change from synchronous to asynchronous execution of given `Message Handler`.
 
-In order to run Endpoint asynchronously we need to mark it as `Asynchronous`.
+In order to run Command Handler asynchronously we need to mark it as `Asynchronous`.
 
 ```php
 #[Asynchronous("orders")]
@@ -19,6 +19,8 @@ public function placeOrder(PlaceOrderCommand $command) : void
 }
 ```
 
+The same way we define for Event Handlers:
+
 ```php
 #[Asynchronous("orders")]
 #[EventHandler(endpointId: "order_was_placed")
@@ -28,9 +30,33 @@ public function when(OrderWasPlaced $event) : void
 }
 ```
 
-We need to add `endpointId` on our endpoint's annotation, this will be used to route the Message in isolation to your `Message Handler`.\
-`Asynchronous` attribute has channel name `orders,` we need to register this channel with the implementation of our choice. \
-In order to do it, we need to use one of the Modules, that provides `pollable channels`. \
+We need to add **endpointId** on our endpoint's annotation, this will be used to route the Message in isolation to our **Message Handlers**.
+
+## Message Channel Name
+
+```php
+#[Asynchronous("orders")]
+```
+
+The "orders" string is actually a name of our Message Channel. This way we reference to specific implementation which we would like to use. To provide specific implementation like for example Database Channel, we would use **ServiceContext**.
+
+```php
+final readonly class EcotoneConfiguration
+{
+    #[ServiceContext]
+    public function databaseChannel()
+    {
+        return DbalBackedMessageChannelBuilder::create('orders');
+    }
+}
+```
+
+This is basically all we need to configure. Now database channel called **orders** will be used, whenever we will use Attribute with this name.
+
+There are multiple different implementation which we can use:
+
+## Available Asynchronous Message Channels
+
 At this moment following modules with pollable channels are available:
 
 * [AMQP Support (RabbitMQ)](../../modules/amqp-support-rabbitmq.md#message-channel)
@@ -204,6 +230,23 @@ You may put `Asynchronous` on the class, level so all the endpoints within a cla
 
 All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint` \
 If you want to [intercept](../extending-messaging-middlewares/interceptors.md) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors.md#pointcut) on this.
+
+## Endpoint Id
+
+Each Asynchronous Message Handler requires us to define **"endpointId"**.  It's unique identifier of your Message Handler.
+
+```php
+#[Asynchronous("orders")]
+#[EventHandler(endpointId: "order_was_placed") // Your important endpoint Id
+public function when(OrderWasPlaced $event) : void {}
+```
+
+Endpoint Id goes in form of Headers to your Message Queue. After Message is consumed from the Queue, Message will be directed to your Message Handler having given endpoint Id. \
+This decouples the Message completely from the Message Handler Class and Method and Command/Event Class.&#x20;
+
+{% hint style="success" %}
+EndpointId ensures we can freely refactor our code and it will be backward compatible with Messages in the Queues. This means we can move the method and class to different namespaces, change the Command class names and as long as **endpointId** is kept the same Message will be delivered correctly.&#x20;
+{% endhint %}
 
 ## Materials
 
