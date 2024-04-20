@@ -87,8 +87,13 @@ However running consumer as separate process is not advised, as it `requires boo
 
 ## Polling Metadata
 
-By default Message Consumer will be running up to `100ms` or will `stop on error` in test mode.\
-You may customize the behaviour by providing `ExecutionPollingMetadata`.
+By default Ecotone will optimize for your test scenario:
+
+* If **real Message Channel** like RabbitMQ, SQS, Redis will be used in test, then Message Consumer will be running up to **100ms** and will **stop on error**.
+* If **In Memory Channel** will be used, then Message Consumer will be running **till it fetches all Messages** or **error will happen**.
+
+The above default configuration ensures, tests will be kept stable and will run finish quickly.\
+However if in case of need this behaviour can be customized by providing `ExecutionPollingMetadata`.
 
 ```php
 $ecotoneTestSupport->run(
