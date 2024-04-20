@@ -94,12 +94,12 @@ Every document is stored inside the "`ecotone_document_store`" table.&#x20;
 You may enable support for [storing standard aggregates](dbal-support.md#standard-aggregate-repository).
 
 ```php
-    #[ServiceContext]
-    public function getDbalConfiguration(): DbalConfiguration
-    {
-        return DbalConfiguration::createWithDefaults()
-                ->withDocumentStore(enableDocumentStoreAggregateRepository: true);
-    }
+#[ServiceContext]
+public function getDbalConfiguration(): DbalConfiguration
+{
+    return DbalConfiguration::createWithDefaults()
+            ->withDocumentStore(enableDocumentStoreAggregateRepository: true);
+}
 ```
 
 ### In Memory Document Store&#x20;
@@ -107,12 +107,28 @@ You may enable support for [storing standard aggregates](dbal-support.md#standar
 For testing purposes you may want to enable `In Memory implementation`.
 
 ```php
-    #[ServiceContext]
-    public function configuration()
-    {
-        return DbalConfiguration::createWithDefaults()
-                    ->withDocumentStore(inMemoryDocumentStore: true);
-    }
+#[ServiceContext]
+public function configuration()
+{
+    return DbalConfiguration::createWithDefaults()
+                ->withDocumentStore(inMemoryDocumentStore: true);
+}
+```
+
+### Document Store related Aggregates
+
+To enable specific Aggregates for Document Store Repository:
+
+```php
+#[ServiceContext]
+public function getDbalConfiguration(): DbalConfiguration
+{
+    return DbalConfiguration::createWithDefaults()
+            ->withDocumentStore(
+                    enableDocumentStoreAggregateRepository: true,
+                    documentStoreRelatedAggregates: [Ticket::class]
+            );
+}
 ```
 
 ### Table initialization

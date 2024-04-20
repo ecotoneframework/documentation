@@ -181,3 +181,13 @@ To enable it read in [Dbal Module Section](../../modules/dbal-support.md#documen
 ### - Event Sourcing Repository
 
 Ecotone provides inbuilt Event Sourcing Repository, which will set up Event Store and Event Streams. To enable it read [Event Sourcing Section](../event-sourcing/).
+
+## Using Multiple Repositories
+
+By default Ecotone when we have only one Standard and Event Sourcing Repository registered, Ecotone will use them for our Aggregate by default. \
+This comes from simplification, as if there is only one Repository of given type, then there is nothing else to be choose from. \
+\
+However, if we register multiple Repositories, then we need to take over the process and tell which Repository will be used for which Aggregate.&#x20;
+
+* In case of [Custom Repositories](repository.md#set-up-your-own-implementation) we do it using **canHandle** method.
+* In case of inbuilt Repositories, we should follow configuration section for given type

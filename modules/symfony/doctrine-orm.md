@@ -117,6 +117,24 @@ class Person
     private ?int $personId = null;
 ```
 
+### Enable Repository for given Aggregates
+
+To enable Doctrine ORM for given set of Aggregates use DbalConfiguration:
+
+```php
+class EcotoneConfiguration
+{
+    #[ServiceContext]
+    public function getDbalConfiguration(): DbalConfiguration
+    {
+        return DbalConfiguration::createWithDefaults()
+            ->withDoctrineORMRepositories(
+                true,
+                [Article::class]
+            );
+    }
+```
+
 ### Demo
 
 Read more about integration in [following blog post](https://blog.ecotone.tech/build-symfony-application-with-ease-using-ecotone/).
