@@ -50,6 +50,6 @@ Consulting session happens online at previously scheduled day for up to 5 hours.
 ## **Contact:**
 
 * [**Twitter**](https://twitter.com/EcotonePHP)
-* **EcotoneFramework@gmail.com**
+* **ecotone@simplycodedsoftware.com**
 * [**Community on Discord**](https://discord.com/invite/CctGMcrYnV)
 
