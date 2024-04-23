@@ -68,10 +68,10 @@ class Ticket
 This way of handling events allow for similarity with [State Stored Aggregates](../command-handling/state-stored-aggregate/).
 
 ```php
-#[EventSourcingAggregate(true)] // 1
+#[EventSourcingAggregate] 
 class Basket
 {
-    use WithAggregateEvents;
+    use WithEvents; // 1
     use WithAggregateVersioning;
 
     #[Identifier]
@@ -100,7 +100,7 @@ class Basket
 }
 ```
 
-1. In order to make use of alternative way of handling events, we need to set attribute to true`EventSourcingAggregate(true)`
+1. In order to make use of alternative way of handling events, we need to provide trait **WithEvents**.
 2. Command Handlers instead of returning events are acting the same as [State Stored Aggregates](../command-handling/state-stored-aggregate/).\
    All events which will be published using `recordThat`will be passed to the [`Repository`](../command-handling/repository.md) to be stored.&#x20;
 
