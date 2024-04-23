@@ -72,9 +72,30 @@ final readonly class CustomerController extends Controller
 
 This way we are telling Ecotone, that we want to execute this Command in context of **tenant\_a**.
 
-## Defining Message Handlers
+## Accessing Tenant's Connection
 
-We define Message Handler the same way we would do it for Single Tenant application. Yet we need to be aware that we need to make use of correct Entity Manager for the job.
+To access current Tenant's Connection, we will be using Atribute:
+
+```php
+final readonly class CustomerService
+{
+    #[CommandHandler]
+    public function handle(
+        RegisterCustomer $command,
+        // Injecting Connection for current Tenant
+        #[MultiTenantConnection] Connection $connection
+    ): void
+    {
+        // do something
+    }
+}
+```
+
+By marking **Connection** with **MultiTenantConnection**, Ecotone will understand that it should inject Connection for Tenant in current context.
+
+## Accessing Tenant's Object Manager
+
+To access current Tenant's Object Manager, we will be using Atribute:
 
 ```php
 final readonly class CustomerService
