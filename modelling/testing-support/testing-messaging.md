@@ -183,8 +183,13 @@ In case you're not interested in current messages, you may clean up `Message Col
 $ecotoneLite->discardRecordedMessages();
 ```
 
-## Performance Considerations
+## Caching Configuration
 
 Ecotone Lite tests are quick to run as the boot minimal version of Ecotone which is supposed to handle given set of classes. This way we avoid booting whole Application in order to run tests that cover specific scenario.
 
 The only part which add extra milliseconds to the tests execution, is bootstrapping the configuration. However Ecotone does cache it between the test runs and mark it as stale when related test files does change. This means we may have great volume of tests using Ecotone Lite, and execution speed will be preserved.
+
+{% hint style="success" %}
+By default if not changed Ecotone Lite, will store the config in temporary folder under ecotone catalog: "/tmp/ecotone".\
+Ecotone will reload cache on configuration changes, yet we may always remove the catalog manually in case.
+{% endhint %}
