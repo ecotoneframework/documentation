@@ -4,11 +4,8 @@ description: Event Sourcing PHP
 
 # Event Sourcing
 
-`Ecotone` comes with [Prooph Event Store](http://getprooph.org/) integration. This is well known and stable solution providing event storage over databases like `Postgres`, `MySQL` or `MariaDB`. \
-\
-`Ecotone` provides Event Sourced [Aggregates](../modelling-1.md#aggregates), which are stored as series of events. \
-Thanks to that we will be able to have the whole history of what happened with specific Aggregate.\
-And build up projections, that targets specific view, in order to keep our code simple, even with really complicated queries. This divide Commands from Queries (CQRS).&#x20;
+`Ecotone` comes with in-built integration for Event Sourcing which works with databases like `Postgres`, `MySQL` or `MariaDB` for storing Events and allows for building and storing Projected Views in any storage we decide.  \
+Read more in following chapters.
 
 ## Materials
 

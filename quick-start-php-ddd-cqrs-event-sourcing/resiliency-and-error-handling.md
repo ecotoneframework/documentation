@@ -12,6 +12,6 @@ description: Outbox pattern implementation in PHP
 
 ## Read Blog Post
 
-[Building Reactive Message-Driven Systems in PHP](../modelling/event-sourcing/installation-and-first-steps.md)
+[Building Reactive Message-Driven Systems in PHP](broken-reference)
 
 [Ensuring data consistency with outbox pattern](https://blog.ecotone.tech/implementing-outbox-pattern-in-php-symfony-laravel-ecotone/)

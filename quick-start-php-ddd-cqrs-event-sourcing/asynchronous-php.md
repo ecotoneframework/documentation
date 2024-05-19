@@ -16,7 +16,7 @@ Step by step refactor from synchronous code to full resilient asynchronous code
 
 [Read more about Asynchronous in PHP and Ecotone](https://blog.ecotone.tech/asynchronous-php/)
 
-[Building Reactive Message-Driven Systems in PHP](../modelling/event-sourcing/installation-and-first-steps.md)
+[Building Reactive Message-Driven Systems in PHP](broken-reference)
 
 ## Code Example
 

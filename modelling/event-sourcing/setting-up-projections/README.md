@@ -14,12 +14,7 @@ This is powerful concept as it allow for building views quickly and discarding t
 #[Projection("inProgressTicketList", Ticket::class] // 1
 class InProgressTicketList
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
+    public function __construct(private Connection $connection) {}
 
     #[EventHandler] // 2
     public function addTicket(TicketWasRegistered $event, array $metadata) : void

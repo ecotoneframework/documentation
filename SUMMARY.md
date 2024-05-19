@@ -47,7 +47,7 @@
   * [Message Headers](modelling/extending-messaging-middlewares/message-headers.md)
   * [Interceptors (Middlewares)](modelling/extending-messaging-middlewares/interceptors.md)
 * [Event Sourcing](modelling/event-sourcing/README.md)
-  * [Installation and First Steps](modelling/event-sourcing/installation-and-first-steps.md)
+  * [Event Sourcing Introduction](modelling/event-sourcing/event-sourcing-introduction.md)
   * [Setting up Projections](modelling/event-sourcing/setting-up-projections/README.md)
     * [Choosing Event Streams for Projection](modelling/event-sourcing/setting-up-projections/choosing-event-streams-for-projection.md)
   * [Persistence](modelling/event-sourcing/persistence/README.md)
