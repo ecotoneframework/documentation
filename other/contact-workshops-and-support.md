@@ -35,8 +35,9 @@ We will touch important topics like **Messaging, asynchronous processing, system
 
 **Price: 1500 EUR** \
 **Place: Online**\
-**Duration: Up to 5 hours**\
-**Seats available: Up to 10 people**
+**Duration: Up to 5 hours**
+
+**To get the most out of workshop, it's suggested to bring up to 10 people.**&#x20;
 
 ## **Consulting**
 
