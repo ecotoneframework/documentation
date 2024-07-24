@@ -47,8 +47,11 @@ The precedence is done within a specific [interceptor type](interceptors.md#inte
 Every interceptor has `Pointcut` attribute, which describes for specific interceptor, which endpoints it should intercept.
 
 * `CLASS_NAME` - indicates intercepting specific class or interface or class containing attribute on method or class level
+* `CLASS_NAME::METHOD_NAME` - indicates intercepting specific method of class
 * `NAMESPACE*` - Indicating all [Endpoints](../../messaging/messaging-concepts/message-endpoint/) starting with namespace prefix e.g. `App\Domain\*`
-* `expression||expression` - Indicating one expression or another e.g. `Product\*||Order\*`&#x20;
+* `expression || expression` - Indicating one expression or another e.g. `Product\*||Order\*`&#x20;
+* `expression && expression` - Indicating one expression and another e.g.\
+  `App\Domain\* && App\Attribute\RequireAdministrator`
 
 ## Interceptor Types
 
