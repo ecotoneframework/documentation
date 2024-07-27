@@ -98,5 +98,23 @@ public static function create(CreateProduct $command) : array
 }
 ```
 
-What actually will happen after is to store this Event in related Event Stream
+What actually will happen under the hood is that this Event will be applied to the Event Stream:
 
+```php
+$eventStore->appendTo(
+    Product::class, // Stream name
+    [
+        Event::create(
+            $event,
+            metadata: [
+                '_aggregate_id' => 1,
+                '_aggregate_version' => 1,
+                '_aggregate_type' => Product::class,
+            ]
+        )
+    ]
+);
+```
+
+As storing in Event Store is abstracted away, the code stays clean and contains only of the business part. \
+We can [customize](making-stream-immune-to-changes.md) the Stream Name, Aggregate Type and even Event Names when needed.
