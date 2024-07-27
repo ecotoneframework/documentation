@@ -1,6 +1,6 @@
 # Applying Events
 
-As [mentioned earlier](./), Events are stored in form of a Event Stream.\
+As [mentioned earlier](../), Events are stored in form of a Event Stream.\
 Event Stream is audit of Events, which happened in the past. \
 However to protect our business invariants, we may want to work with current state of the Aggregate to know, if given action is possible or not (business invariants).&#x20;
 

@@ -33,7 +33,7 @@ class EventSourcingConfiguration
 2. `$thresholdTrigger` - amount of events for interval of taking a snapshot
 3. `$documentStore` - reference to document store which will be used for saving/retrieving snapshots
 
-To set up snapshots we will define [ServiceContext](../../../messaging/service-application-configuration.md) configuration.
+To set up snapshots we will define [ServiceContext](../../../../messaging/service-application-configuration.md) configuration.
 
 ```php
 #[ServiceContext]
@@ -47,7 +47,7 @@ public function aggregateSnapshots()
 ```
 
 {% hint style="info" %}
-Ecotone make use of [Document Store](../../../messaging/document-store.md) to store snapshots, by default it's enabled with event-sourcing package. \
+Ecotone make use of [Document Store](../../../../messaging/document-store.md) to store snapshots, by default it's enabled with event-sourcing package. \
 \
 If you want to clean the snapshots, you can do it manually. Snapshots are stored in `aggregate_snapshots` collection.
 {% endhint %}

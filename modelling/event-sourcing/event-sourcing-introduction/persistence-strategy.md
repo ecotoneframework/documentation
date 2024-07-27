@@ -2,7 +2,7 @@
 description: PHP Event Sourcing Persistence Strategy
 ---
 
-# Persistence Strategy
+# Event Stream Persistence Strategy
 
 ## Persistence Strategy
 
@@ -94,35 +94,5 @@ public function eventSourcingConfiguration(): EventSourcingConfiguration
 The above will make the Simple Stream Strategy as default however, for `some_stream` Event Store will use the Aggregate Stream Strategy.
 
 {% hint style="warning" %}
-Please, be aware that you won't be able to set Custom Strategy that way.
-{% endhint %}
-
-## Custom Stream Name
-
-If you want to make use of a custom stream name (the default is Aggregate class name), then you can apply `Stream` attribute to your aggregate.
-
-```php
-#[Stream("basket_stream")]
-class Basket
-```
-
-Then tell the projection to make use of it:
-
-```php
-#[Projection(self::PROJECTION_NAME, "basket_stream")]
-class BasketList
-```
-
-## Custom Aggregate Type
-
-By default events in the stream will hold Aggregate Class name as `AggregateType`. \
-You may customize this by applying `AggregateType` attribute to your Aggregate.
-
-```php
-#[AggregateType("basket")]
-class Basket
-```
-
-{% hint style="success" %}
-Setting this up will allow you to refactor the aggregate class name or namespace and still load the same Aggregate.
+Please, be aware that we won't be able to set Custom Strategy that way.
 {% endhint %}

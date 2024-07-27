@@ -51,7 +51,7 @@ interface TicketCounterGateway
 ```
 
 The first parameter of the attribute is the projection name, so Ecotone can know, which state it should look for.\
-This [Gateway](../../messaging/messaging-concepts/messaging-gateway.md) will automatically convert the state to your defined return type.&#x20;
+This [Gateway](../../../messaging/messaging-concepts/messaging-gateway.md) will automatically convert the state to your defined return type.&#x20;
 
 {% hint style="success" %}
 Gateways are automatically registered in your Dependency Container, so you can fetch it like any other service.

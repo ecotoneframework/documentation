@@ -22,7 +22,7 @@ This will ensure atomic consistency between your aggregate and projection.
 You may run your projection in the background. \
 It will query the database within constant time intervals, to look if new events have been registered. \
 Each projection is running as **separate process**. \
-To register Polling Projection make use of [ServiceContext](../../../messaging/service-application-configuration.md).
+To register Polling Projection make use of [ServiceContext](../../../../messaging/service-application-configuration.md).
 
 ```php
 #[ServiceContext]
@@ -56,7 +56,7 @@ $messagingSystem->run("basket_list");
 
 ### Asynchronously Event Driven Projection
 
-You may pass your projections in event driven manner using [asynchronous channels](../../asynchronous-handling/).
+You may pass your projections in event driven manner using [asynchronous channels](../../../asynchronous-handling/).
 
 ```php
 #[Asynchronous("asynchronous_projections")]

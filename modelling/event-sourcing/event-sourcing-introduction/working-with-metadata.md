@@ -133,7 +133,7 @@ class Ticket
     }
 ```
 
-## \[Enterprise] Accessing Metadata in Event Sourcing Handler
+## \[Enterprise] Accessing Metadata during Event Application
 
 {% hint style="success" %}
 This feature is available as part of **Ecotone Enterprise.**

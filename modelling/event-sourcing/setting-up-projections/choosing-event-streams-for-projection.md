@@ -39,7 +39,7 @@ class Logger
 
 ### From Category
 
-In case if using [`Stream Per Aggregate Persistence Strategy`](../persistence/persistence-strategy.md#stream-per-aggregate-strategy) we will need to use categories to target.\
+In case if using [`Stream Per Aggregate Persistence Strategy`](../event-sourcing-introduction/persistence-strategy.md#stream-per-aggregate-strategy) we will need to use categories to target.\
 If we would listen on `Domain\Ticket` stream using `Stream Per Aggregate` then we would not target any event, as the streams that are created are suffixed by the identifier `Domain\Ticket-123`.&#x20;
 
 In that case we can make use of categories in order to target `Domain\Ticket-*.`
@@ -49,7 +49,7 @@ In that case we can make use of categories in order to target `Domain\Ticket-*.`
 class FromCategoryUsingAggregatePerStreamProjection
 ```
 
-## Storing And Handling Events By Names
+## Handling Events By Names
 
 If you want to avoid storing class names of your events in the `Event Store` you may mark them with name.
 
