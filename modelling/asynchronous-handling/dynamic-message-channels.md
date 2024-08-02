@@ -1,7 +1,7 @@
 # Dynamic Message Channels
 
 \
-This chapter provides more details about advanced Message Channel functionalities using Dynamic Message Channels. This may be useful to&#x20;
+This chapter provides more details about advanced Message Channel functionalities using Dynamic Message Channels. Dynamic Channels can be used to:
 
 * Simplify deployment strategy&#x20;
 * Optimize system resources&#x20;
