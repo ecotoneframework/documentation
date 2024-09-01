@@ -1,8 +1,8 @@
 # Inbound and Outbound Adapters and Message Channel
 
-[Inbound Channel Adapters ](../../messaging-concepts/inbound-outbound-channel-adapter.md#inbound-channel-adapter)are entrypoint for Messaging System. It connects to external source and consume external messages, which are converted to Ecotone's Message.
+[Inbound Channel Adapters ](../../messaging-concepts/inbound-outbound-channel-adapter.md#inbound-channel-adapter)are entrypoint for Messaging System. They do connect to external sources and consume Messages from them, which then are converted to Ecotone's Messages.
 
-[Outbound Channel Adapter](../../messaging-concepts/inbound-outbound-channel-adapter.md#outbound-channel-adapter) are sending Ecotone's Messages to external sources.
+On other hand, [Outbound Channel Adapters](../../messaging-concepts/inbound-outbound-channel-adapter.md#outbound-channel-adapter) are sending Ecotone's Messages to external sources, by converting to Messages specific to given integration.
 
 ### Inbound Channel Adapter
 
@@ -46,28 +46,33 @@ final class SqsInboundChannelAdapterBuilder extends EnqueueInboundChannelAdapter
         return new self($queueName, $endpointId, $requestChannelName, $connectionReferenceName);
     }
 
-    // 3. Building SqsInboundChannelAdapter
-    public function createInboundChannelAdapter(ChannelResolver $channelResolver, ReferenceSearchService $referenceSearchService, PollingMetadata $pollingMetadata): EnqueueInboundChannelAdapter
+    // 3. Building SqsInboundChannelAdapter    
+    public function compile(MessagingContainerBuilder $builder): Definition
     {
         // 4. connection factory
-        /** @var SqsConnectionFactory $connectionFactory */
-        $connectionFactory = $referenceSearchService->get($this->connectionReferenceName);
-        // 5. Conversion Service
-        /** @var ConversionService $conversionService */
-        $conversionService = $referenceSearchService->get(ConversionService::REFERENCE_NAME);
+        $connectionFactory = new Definition(CachedConnectionFactory::class, [
+            new Definition(HttpReconnectableConnectionFactory::class, [
+                new Reference($this->connectionReferenceName),
+            ]),
+        ], 'createFor');
+        // 5. Inbound Message Converter
+        $inboundMessageConverter = new Definition(InboundMessageConverter::class, [
+            $this->endpointId,
+            $this->acknowledgeMode,
+            // 6. Header Mapper
+            DefaultHeaderMapper::createWith($this->headerMapper, []),
+            EnqueueHeader::HEADER_ACKNOWLEDGE,
+            Reference::to(LoggingGateway::class),
+        ]);
 
-        // 6. Header Mapper
-        $headerMapper = DefaultHeaderMapper::createWith($this->headerMapper, [], $conversionService);
-
-        return new SqsInboundChannelAdapter(
-            CachedConnectionFactory::createFor(new HttpReconnectableConnectionFactory($connectionFactory)),
-            $this->buildGatewayFor($referenceSearchService, $channelResolver, $pollingMetadata),
+        return new Definition(SqsInboundChannelAdapter::class, [
+            $connectionFactory,
             $this->declareOnStartup,
             $this->messageChannelName,
             $this->receiveTimeoutInMilliseconds,
-            // 7. Inbound Message Converter
-            new InboundMessageConverter($this->getEndpointId(), $this->acknowledgeMode, $headerMapper)
-        );
+            $inboundMessageConverter,
+            new Reference(ConversionService::REFERENCE_NAME),
+        ]);
     }
 }
 ```
@@ -80,19 +85,14 @@ final class SqsInboundChannelAdapterBuilder extends EnqueueInboundChannelAdapter
 * `requestChannelName` - This is the message channel that message will be send to. For now we don't need to bother about this
 * `connectionReferenceName` - This provide the default name, under which the connection factory will be registered in Dependency Container. This is how we will be looking it up.
 
-3\. `Building channel adapter` - This method will build our Channel Adapter, using available configuration.
-
-* `ChannelResolver` - Provides possibility to retrieve Message Channels, if needed for rebuilding Adapter
-* `ReferenceSearchService` - This is internal implementation of Dependency Container in Ecotone, under the hood, it use Container from your application
-* `PollingMetadata` - This are instructions on how to run this consumer. You may customize it for example to run once and exit.
+3\. `Building channel adapter` - This method will build our Channel Adapter, using available configuration.\
+The compile part is way of defining an DI Service within Ecotone.  We tell Ecotone how given object should be constructed and run time time this configuration will be used to construct the object.
 
 4\. `Connection Factory` - Connection factory is retrieved from DI Container based on `connectionReferenceName`.
 
-5\. `Conversion Service` - This is a service created internally by Ecotone, to handle serialization and deserialization.
+5\. `Inbound Message Converter` - It converts incoming message to `Ecotone's Message`, so we can make use of it for our Messaging communication.
 
 6\. `Header Mapper` - Tells how we should map headers in our incoming message. Can be customized, if needed.
-
-7\. `Inbound Message Converter` - It converts incoming message to `Ecotone's Message`, so we can make use of it for our Messaging communication.
 
 {% hint style="success" %}
 Ecotone make use of Builder patterns for the configurations. \
@@ -151,21 +151,30 @@ final class SqsOutboundChannelAdapterBuilder extends EnqueueOutboundChannelAdapt
     {
         return new self($queueName, $connectionFactoryReferenceName);
     }
-
-    public function build(ChannelResolver $channelResolver, ReferenceSearchService $referenceSearchService): SqsOutboundChannelAdapter
+    public function compile(MessagingContainerBuilder $builder): Definition
     {
-        /** @var SqsConnectionFactory $connectionFactory */
-        $connectionFactory = $referenceSearchService->get($this->connectionFactoryReferenceName);
-        /** @var ConversionService $conversionService */
-        $conversionService = $referenceSearchService->get(ConversionService::REFERENCE_NAME);
+        $connectionFactory = new Definition(CachedConnectionFactory::class, [
+            new Definition(HttpReconnectableConnectionFactory::class, [
+                new Reference($this->connectionFactoryReferenceName),
+            ]),
+        ], 'createFor');
 
-        $headerMapper = DefaultHeaderMapper::createWith([], $this->headerMapper, $conversionService);
-        return new SqsOutboundChannelAdapter(
-            CachedConnectionFactory::createFor(new HttpReconnectableConnectionFactory($connectionFactory)),
+        $outboundMessageConverter = new Definition(OutboundMessageConverter::class, [
+            $this->headerMapper,
+            $this->defaultConversionMediaType,
+            $this->defaultDeliveryDelay,
+            $this->defaultTimeToLive,
+            $this->defaultPriority,
+            [],
+        ]);
+
+        return new Definition(SqsOutboundChannelAdapter::class, [
+            $connectionFactory,
             $this->queueName,
             $this->autoDeclare,
-            new OutboundMessageConverter($headerMapper, $conversionService, $this->defaultConversionMediaType, $this->defaultDeliveryDelay, $this->defaultTimeToLive, $this->defaultPriority, [])
-        );
+            $outboundMessageConverter,
+            new Reference(ConversionService::REFERENCE_NAME),
+        ]);
     }
 }
 ```
