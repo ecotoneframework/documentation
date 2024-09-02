@@ -161,6 +161,16 @@ AmqpMessagePublisherConfiguration::create(
 
 ## Message Consumer
 
+We can bind given method as Message Consumer
+
+```php
+#[MessageConsumer('orders_consumer')] // name of endpoint id
+public function handle(string $payload): void
+{
+    // do something
+}
+```
+
 To connect consumer directly to a AMQP Queue, we need to provide `Ecotone` with information, how the Queue is configured.&#x20;
 
 ```php
@@ -173,7 +183,7 @@ class AmqpConfiguration
             AmqpQueue::createWith("orders"), // 1
             AmqpExchange::createDirectExchange("system"), // 2
             AmqpBinding::createFromNames("system", "orders", "placeOrder"), // 3
-            AmqpMessageConsumerConfiguration::create("consumer", "orders") // 4
+            AmqpMessageConsumerConfiguration::create("orders_consumer", "orders") // 4
         ];
     }
 }
@@ -182,9 +192,9 @@ class AmqpConfiguration
 1. `AmqpQueue::createWith(string $name)` - Registers Queue with specific name
 2. `AmqpExchange::create*(string $name)` - Registers of given type with specific name
 3. `AmqpBinding::createFromName(string $exchangeName, string $queueName, string $routingKey)`- Registering binding between exchange and queue
-4. Provides Consumer that will be registered at given name `"consumer"` and will be polling `"orders"` queue
+4. Provides Consumer that will be registered at given name `"orders_consumer"` and will be polling `"orders"` queue
 
-### Available Exchange configurations
+## Available Exchange configurations
 
 ```php
 $amqpExchange = AmqpExchange::createDirectExchange
@@ -197,7 +207,7 @@ $amqpExchange = $amqpExchange
     ->withAutoDeletion() // exchange is deleted when last queue is unbound from it
 ```
 
-### Available Queue configurations
+## Available Queue configurations
 
 ```php
 $amqpQueue = AmqpQueue::createDirectExchange
