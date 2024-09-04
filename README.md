@@ -16,13 +16,16 @@ This allows us to build systems in a way, which connects different components, m
 
 ## Business Oriented Architecture
 
-[Ecotone](https://blog.ecotone.tech/revolutionary-boa-framework-ecotone/) embrace the concept of Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes.&#x20;
-
+[Ecotone](https://blog.ecotone.tech/revolutionary-boa-framework-ecotone/) embrace the concept of Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes. \
 **Business Oriented Architecture** is built around three main pillars:
+
+<figure><img src=".gitbook/assets/image (4).png" alt="" width="563"><figcaption><p>When all thee pillars are solved by Ecotone, what is left to write is Business Oriented Code</p></figcaption></figure>
 
 1. **Resilient Messaging** **-** At the heart of Ecotone lies a resilient messaging system that enables loose coupling, fault tolerance, and self-healing capabilities.
 2. **Declarative Configuration -** Introduces declarative programming which simplifies development, reduces boilerplate code, and promotes code readability. It empowers developers to express their intent clearly, resulting in more maintainable and expressive codebases.
 3. **Building Blocks -** Building blocks like Message Handlers, Aggregates, Sagas, facilitate the implementation of the business logic. By making it possible to bind Building Blocks with Resilient Messaging, Ecotone makes it easy to build and connect even the most complex business workflows.
+
+By providing all those three Pillars, Ecotone provides an foundation which then allows us to fully focus on the business side of the things.
 
 {% hint style="success" %}
 To start with Ecotone there is no need for big impact refactor. You may introduce it in your existing code base and start using it from day one, even for a single feature.&#x20;
