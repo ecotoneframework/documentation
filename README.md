@@ -11,7 +11,7 @@ Ecotone brings powerful concepts like **Messaging** based on [**Enterprise Integ
 
 {% hint style="success" %}
 Ecotone just as Frameworks from other programming languages ([NServiceBus](https://particular.net/nservicebus), [Axon Framework](https://docs.axoniq.io/reference-guide/), and [Spring Integration](https://spring.io/projects/spring-integration)) introduces implementation of [**Enterprise Integration Patterns**](https://www.enterpriseintegrationpatterns.com/)**.** \
-This allows us to build systems in a way which can connect different components, modules or even Applications is a decoupled, seamless way. Together with higher level DDD patterns, it creates environment in which building complex workflows and business logic becomes really easy to implement and maintain in the long term.
+This allows us to build systems in a way, which connects different components, modules or even Applications in a decoupled, seamless way. Together with higher level DDD patterns, it creates environment in which building complex workflows and business logic becomes really easy to implement and maintain in the long term.
 {% endhint %}
 
 ## Business Oriented Architecture
