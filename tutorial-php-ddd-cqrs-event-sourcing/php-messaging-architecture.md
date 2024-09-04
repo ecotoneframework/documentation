@@ -10,16 +10,15 @@ Not having code for _Lesson 1?_&#x20;
 `git checkout lesson-1`
 {% endhint %}
 
-## Key concepts / background
+Key concepts / background\
 
+
+
+_Ecotone_ from the ground is built around messaging to provide a simple model that **allows to connects components, modules or even different Applications together, in seamless and easy way**. \
+To achieve that fundamental messaging blocks are implemented using [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com)On top of what we get support for higher level patterns like CQRS, Events, DDD  - which **help us build systems that make the business logic explicit and maintainable, even in the long term.**\
+\
 In this first lesson, we will learn fundamental blocks in messaging architecture and we will start building back-end for Shopping System using CQRS. \
-
-
-_Ecotone_ from the ground is built around messaging to provide a simple model for building integration solutions while maintaining the separation of concerns that is essential for producing maintainable, testable code. To achieve that, fundamental messaging blocks are implemented using [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com) (EIP). In order to use higher level of abstraction, CQRS and DDD support, we need to briefly get known with those patterns. This will help us understand, how specific parts of _Ecotone_ does work together.&#x20;
-
-{% hint style="success" %}
-Frameworks such as [NServiceBus](https://particular.net/nservicebus), [Axon Framework](https://docs.axoniq.io/reference-guide/), and [Spring Integration](https://spring.io/projects/spring-integration) have transformed messaging capabilities across different programming languages, paving the way for the development of robust and scalable systems. Entering this innovative arena, Ecotone introduces these advanced concepts to PHP, taking cues from its predecessors to **significantly enhance messaging and system design within PHP projects**.
-{% endhint %}
+Before we will dive into implementation, let's briefly understand main concepts behind Ecotone.
 
 ### Message
 
@@ -278,15 +277,15 @@ class ProductService
 ```
 
 {% hint style="success" %}
-Some CQRS frameworks expects Handlers be defined as a class, not method. This is somehow limiting and producing a lot of boilerplate. `Ecotone` does allow for full flexibility, if you want to have only one handler per class, so be it, if more just annotate next methods.
+Some CQRS frameworks expects Handlers be defined as a class, not method. This is somehow limiting and producing a lot of boilerplate. `Ecotone` does allow for full flexibility, if you want to have only one handler per class, so be it, otherwise just annotate next methods.
 {% endhint %}
 
 {% tabs %}
 {% tab title="Laravel" %}
 ```php
 # As default auto wire of Laravel creates new service instance each time 
-# service is requested from Depedency Container, we need to register 
-# ProductService as singleton.
+# service is requested from Depedency Container, for our examples 
+# we want to register ProductService as singleton.
 
 # Go to bootstrap/QuickStartProvider.php and register our ProductService
 
@@ -329,11 +328,17 @@ Synchronous channels are created automatically for our Message Handlers.\
 We will learn easily can they be replaced with asynchronous channels in next lessons.
 {% endhint %}
 
-We need to create [`Message`](php-messaging-architecture.md#message) and send it to correct [`Message Channel`](php-messaging-architecture.md#message-channel). \
-In order to do it we will use [Messaging Gateway](php-messaging-architecture.md#messaging-gateway). Message Gateways are responsible for creating `Message` from given parameters and send it to the correct `channel`.\
-For sending Commands we will use **Command Bus.**\
-For sending Queries we will use **Query Bus.** \
+We need to create [`Message`](php-messaging-architecture.md#message) and send it to correct [`Message Channel`](php-messaging-architecture.md#message-channel).&#x20;
+
+{% hint style="info" %}
+In order to send Message we will use [Messaging Gateway](php-messaging-architecture.md#messaging-gateway). \
+Message Gateways are responsible for creating `Message` from given parameters and send them to the correct `channel`.\
 \
+Special types of Gateways are Command and Query Buses:\
+\- For sending Commands we will use **Command Bus.**\
+\- For sending Queries we will use **Query Bus.**&#x20;
+{% endhint %}
+
 Let's inject and call Query and Command bus into EcotoneQuickstart class.&#x20;
 
 ```php
@@ -368,8 +373,8 @@ class EcotoneQuickstart
 }
 ```
 
-1. **Gateways** are auto registered in Dependency Container and available for auto-wire.  `Ecotone` comes with few Gateways out of the box like Command and Query buses. \
-   You will be able to extend them or create your own ones, if needed.
+1. **Gateways** are auto registered in Dependency Container and available for auto-wire.  \
+   `Ecotone` comes with few Gateways out of the box like Command and Query buses.&#x20;
 2. We are sending command **RegisterProductCommand** to the **CommandHandler** we registered before.&#x20;
 3. Same as above, but in that case we are sending query **GetProductPriceQuery** to the **QueryHandler**
 
