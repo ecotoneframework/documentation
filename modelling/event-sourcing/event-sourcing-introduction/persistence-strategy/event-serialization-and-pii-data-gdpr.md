@@ -3,7 +3,7 @@
 ## Event Serialization
 
 Ecotone use [Converters](../../../../messaging/conversion/conversion/) in order to convert Events into serializable form. \
-This means we can customize process of serializing and deserializing specific Events and add needed encrypting capabilities.&#x20;
+This means we can customize process of serializing and deserializing specific Events, to adjust it to our Application.
 
 So let's assume **UserCreated** Event:
 
@@ -56,10 +56,13 @@ Then the Event Stream would look like above
 
 This basically means we can serialize the Event in the any format we want.&#x20;
 
+{% hint style="success" %}
+Having customized Converters for specific Events, is also useful when we need to adjust some legacy Events to new format. We can hook into the deserialization process, and modify the payload to match new structure.
+{% endhint %}
+
 ## Advanced Serialization Support with JMS
 
-When using [JMS Converter](../../../../modules/jms-converter.md) support, we can even customize how we want to serialize given type globally between Messages. This follows on Ecotone's simplicity to ensure we spend as much as possible time on infrastructure part, and move the focus the business side of things.&#x20;
-
+When using [JMS Converter](../../../../modules/jms-converter.md) support, we can even customize how we want to serialize given class, that is used within Events. \
 For example we could have User Created Event which make use of `UserName` class.
 
 ```php
@@ -102,7 +105,10 @@ Now if we would serialize it without telling JMS, how to handle this class we wo
 }
 ```
 
-Now this is not fully safe, as if we would simply change property name in `UserName.value` to `UserName.name` it would break deserialization of our previous Events. Therefore we want to keep take over the serialization of objects, to ensure stability along the time.
+Now this is fine for short-lived applications and testing, however in the long living application this may become a problem. The problem may come from changes, if we would simply change property name in `UserName.value` to `UserName.data` it would break deserialization of our previous Events. \
+As `data` does not exists under `name` key.\
+\
+Therefore we want to keep take over the serialization of objects, to ensure stability along the time.
 
 ```php
 class UserNameConverter
@@ -135,15 +141,15 @@ With this, with few lines of code we can ensure consistency across different Eve
 
 ## PII Data (GDPR)
 
-In case of storing sensitive data, we may be forced by law to ensure that data should be forgotten (e.g. [GDPR](https://gdpr-info.eu/art-17-gdpr/)). This basically that if Customer will ask to delete his data, we will be obligated by law to ensure that this will happen.&#x20;
+In case of storing sensitive data, we may be forced by law to ensure that data should be forgotten (e.g. [GDPR](https://gdpr-info.eu/art-17-gdpr/)). This basically means, if Customer will ask to us to remove his data, we will be obligated by law to ensure that this will happen.&#x20;
 
-However in case of Event Sourced System we rather do not want to delete events, as this is critical operation which is considered dangerous. Deleting Events could affect running Projections, delete too much may raise inconsistencies in the System, and in some cases we may actually want to drop only part of the data - not everything.\
+However in case of Event Sourced System we rather do not want to delete events, as this is critical operation which is considered dangerous. Deleting Events could affect running Projections, deleting too much may raise inconsistencies in the System, and in some cases we may actually want to drop only part of the data - not everything.\
 Therefore dropping Events from Event Stream is not suitable solution and we need something different.&#x20;
 
-Solution that we can use is to change the way we serialize the Event. Like we saw in the previous sections, we can hook into serialization process and set up a way to do so. \
-Therefore as Converter as in reality an Service registered in Dependency Container, we may inject anything to them in order to modify the serialization process.
+Solution that we can use, is to change the way we serialize the Event. We can hook into serialization process just as we did for normal serialization, and then customize the process.\
+Converter in reality is an Service registered in Dependency Container, so we may inject anything we want there in order to modify the serialization process.
 
-So let's assume that we want to encrypt UserCreated Event:
+So let's assume that we want to encrypt `UserCreated` Event:
 
 ```php
 final readonly class UserCreatedConverter
@@ -188,10 +194,9 @@ final readonly class UserCreatedConverter
 
 So what we do here, is we hook into `serialization/deserialization` process and pass the data to `EncryptionService`. As you can see here, we don't store the payload here, we simply store an reference in form o a key.\
 \
-EncryptionService can as simple as storing this data in the table using key as Primary Key, so we can fetch it easily. It can be stored with plain text or it may be stored with encryption. \
-It all depends on our Domain. \
+EncryptionService can as simple as storing this data in database table using key as Primary Key, so we can fetch it easily. It can also be stored with encryption in some cryptographic service, yet it may also be stored as plain text. It all depends on our Domain. \
 \
-However what is important is that we've provided the resource id to the EncryptionService
+However what is important is that we've provided the resource id to the `EncryptionService`
 
 ```php
 $this->encryptingService->encrypt(
@@ -206,15 +211,18 @@ $this->encryptingService->encrypt(
 )
 ```
 
-Now this could be used to delete related Event's data.
+Now this could be used to delete related Event's data. \
+When Customer comes to us and say, he wants his data deleted, we simply delete by resource:
 
 ```php
 $this->encryptingService->delete(resource: $userId);
 ```
 
-That that way this Data won't be available in the System anymore.\
+That way this Data won't be available in the System anymore.\
 Now we could just allow Converters fails, if those Events are meant to be deserialized, or we could check if given key exists and then return dummy data instead.&#x20;
 
-{% hint style="info" %}
-If we allow Converters to fail when Serialization happens, we should ensure that related Projections are using simple arrays instead of classes, and handle those cases during Projecting.
+{% hint style="success" %}
+If we allow Converters to fail when Serialization happens, we should ensure that related Projections are using simple arrays instead of classes, and handle those cases during Projecting.\
+\
+If we decide to return dummy data, we can keep deserializing those Events for Projections, as they will be able to use them.&#x20;
 {% endhint %}

@@ -58,7 +58,7 @@
       * [Snapshoting](modelling/event-sourcing/event-sourcing-introduction/event-sourcing-aggregates/snapshoting.md)
     * [Working with Metadata](modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md)
     * [Event versioning](modelling/event-sourcing/event-sourcing-introduction/event-versioning.md)
-    * [Event Stream Persistence](modelling/event-sourcing/event-sourcing-introduction/persistence-strategy/README.md)
+    * [Event Stream Persistence](modelling/event-sourcing/event-sourcing-introduction/persistence-strategy.md)
       * [Persistence Strategies](modelling/event-sourcing/event-sourcing-introduction/persistence-strategy/persistence-strategies.md)
       * [Event Serialization and PII Data (GDPR)](modelling/event-sourcing/event-sourcing-introduction/persistence-strategy/event-serialization-and-pii-data-gdpr.md)
   * [Projections Introduction](modelling/event-sourcing/setting-up-projections/README.md)
