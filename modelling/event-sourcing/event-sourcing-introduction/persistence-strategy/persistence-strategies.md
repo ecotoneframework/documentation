@@ -1,8 +1,4 @@
----
-description: PHP Event Sourcing Persistence Strategy
----
-
-# Event Stream Persistence Strategy
+# Persistence Strategies
 
 ## Persistence Strategy
 
@@ -163,5 +159,5 @@ public function eventSourcingConfiguration(): EventSourcingConfiguration
 The above will make the Simple Stream Strategy as default however, for `some_stream` Event Store will use the Aggregate Stream Strategy.
 
 {% hint style="warning" %}
-Please, be aware that we won't be able to set Custom Strategy that way.
+Be aware that we won't be able to set Custom Strategy that way.
 {% endhint %}
