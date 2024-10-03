@@ -15,7 +15,7 @@ Working with Event Stream directly may be useful when migrating from existing sy
 After installing Ecotone's Event Sourcing we automatically get access to Event Store abstraction. \
 This abstraction provides an easy to work with Event Streams.&#x20;
 
-Let's suppose that we do have Ticketing System like Jira, two basic Events we can think of are _"Ticket Was Registered"_ and _"Ticket Was Closed"_.\
+Let's suppose that we do have Ticketing System like Jira with two basic Events _"Ticket Was Registered"_ and _"Ticket Was Closed"_.\
 Of course we need to identify to which Ticket given event is related, therefore will have some Id.
 
 <figure><img src="../../../.gitbook/assets/events.png" alt=""><figcaption><p>Ticket Events</p></figcaption></figure>
@@ -39,7 +39,7 @@ final readonly class TicketWasClosed
 }
 ```
 
-To store those in the Event Stream, let's first declare it using Event Store abstraction.
+To store those in the Event Stream, let's first declare it using - Event Store abstraction.
 
 {% hint style="info" %}
 Event Store is automatically available in your Dependency Container after installing Symfony or Laravel integration. In case of Ecotone Lite, it can be retrievied directly.&#x20;
@@ -89,7 +89,7 @@ But it's good to understand what actually happens under the hood.
 
 ### What is the Event Stream actually
 
-In short Event Stream is just audit of series of Events. From the technical point it's a table in the Database. Therefore when we create an Event Stream we are actually creating new table in the Database.
+In short Event Stream is just audit of series of Events. From the technical point it's a table in the Database. Therefore when we create an Event Stream we are actually creating new table.
 
 <figure><img src="../../../.gitbook/assets/event-strea.png" alt=""><figcaption><p>Event Stream table</p></figcaption></figure>
 
@@ -118,7 +118,7 @@ This will store given Event in Ticket's Event Stream
 
 <figure><img src="../../../.gitbook/assets/ticket-event-stream.png" alt=""><figcaption><p>Two Events stored in the Event Stream</p></figcaption></figure>
 
-Above we've stored Events for Ticket with id "123". However we can store Events from different Tickets in the same Event Stream
+Above we've stored Events for Ticket with id "123". However we can store Events from different Tickets in the same Event Stream.
 
 ```php
 $eventStore->appendTo(
@@ -131,7 +131,7 @@ $eventStore->appendTo(
 
 <figure><img src="../../../.gitbook/assets/ticket_event_stream_2.png" alt=""><figcaption></figcaption></figure>
 
-We can now load those Events from the Event Stream
+We now can load those Events from the Event Stream
 
 ```php
 $events = $eventStore->load("ticket");
@@ -189,11 +189,12 @@ $eventStore->appendTo(
 );
 ```
 
-That's not really ideal, as we will end up with Event Stream with incorrect history:
+Without any protection we will end up with Closing Events in the Event Stream.\
+That's not really ideal, as we will end up with Event Stream having incorrect history:
 
 <figure><img src="../../../.gitbook/assets/concurrent_streams.png" alt=""><figcaption><p>Ticket was closed is duplicated in the Event Stream</p></figcaption></figure>
 
-This is the place where we need to get back to how we created this Stream
+This is the place where we need to get back to persistence strategy:
 
 ```php
 $eventStore->create("ticket", streamMetadata: [
@@ -201,10 +202,16 @@ $eventStore->create("ticket", streamMetadata: [
 ]);
 ```
 
-We've created this Stream with "simple" persistence strategy. This means we can just apply new Events and there are no guards at all. This is fine in scenarios where we are dealing with scenarios with no business logic involved like for example collecting metrics, where all we to do is to push push Events into the Event Stream. \
+We've created this Stream with "simple" persistence strategy. This means we can apply any new Events without guards. This is fine in scenarios where we are dealing with no business logic involved like collecting metrics, statistics. where all we to do is to push push Events into the Event Stream, and duplicates are not really a problem.\
 \
-However in more sophisticated scenarios where we want to ensure corrects of the Event Stream, we may want to ensure that the history line make sense (e.g. ensure that no ticket is closed twice). \
-For this scenarios there is another persistence strategy called "partition".
+However simple strategy (which is often the only strategy in different Event Sourcing Frameworks), comes with cost:
+
+* We lose linear history of our Event Stream, as we allow for storing duplicates. This may lead to situations which may lead to incorrect state of the System, like Repayments being recorded twice.
+* As a result of duplicated Events (Which hold different Message Id) we will trigger side effects twice. Therefore our Event Handlers will need to handle this situation to avoid for example trigger requests to external system twice, or building wrong Read Model using [Projections](../setting-up-projections/).&#x20;
+* As we do allow for concurrent access, we can actually make wrong business decisions. For example we could give to the Customer promotion code twice.
+
+The "**simple strategy"** is often the only strategy that different Event Sourcing Frameworks provide. However after the solution is released to the production, we often start to recognize above problems, yet now as we don't have other way of dealing with those, we are on mercy of fixing the causes, not the root of the problem.\
+Therefore we need more sophisticated solution to this problem, to solve the cause of it not the side effects. And to solve the cause we will be using different persistence strategy called **"partition strategy"**.
 
 ## Partitioning Events
 
@@ -212,7 +219,8 @@ Event Stream can be split in partitions. Partition is just an sub-stream of Even
 
 <figure><img src="../../../.gitbook/assets/partition_key.png" alt=""><figcaption><p>Ticket Event Stream partioned for each Ticket</p></figcaption></figure>
 
-As we can see in this scenario in order to partition the Stream, we need to know partition key (in our case Ticket Id) and version of preceding Event. By knowing those, we can apply an Event at the correct position in the partition.\
+Partition is linear history for given identifier, where each Event is within partition is assigned with version. This way we now, which event is at which position.\
+Therefore in order to partition the Stream, we need to know the partition key (in our case Ticket Id). By knowing the partition key and last version of given partition, we can apply an Event at the correct position.\
 \
 To create partitioned stream, we would create Event Stream with different strategy:
 

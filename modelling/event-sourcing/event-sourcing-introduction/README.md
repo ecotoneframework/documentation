@@ -8,7 +8,8 @@ Before diving into this section be sure to understand how Aggregates works in Ec
 
 ## Difference between Aggregate Types
 
-Ecotone provides higher level abstraction to work with Event Sourcing, which is based on Event Sourced Aggregates. Event Sourced Aggregate just like normal Aggregates protect our business rules, the difference is in how they are stored.&#x20;
+Ecotone provides higher level abstraction to work with Event Sourcing, which is based on Event Sourced Aggregates. \
+Event Sourced Aggregate just like normal Aggregates protect our business rules, the difference is in how they are stored.&#x20;
 
 ### State-Stored Aggregates
 
@@ -42,8 +43,8 @@ This way all changes are preserved and we are able to know what was the historic
 ## Event Stream
 
 The audit trail of all the Events that happened for given Aggregate is called **Event Stream**.\
-Event Stream contains of all historic Events for all instance of specific Aggregate type, for example al Events for Product Aggregate
+Event Stream contains of all historic Events for all instance of specific Aggregate type, for example all Events for Product Aggregate
 
 <figure><img src="../../../.gitbook/assets/event_strea.png" alt=""><figcaption><p>Product Event Stream</p></figcaption></figure>
 
-Let's now see how we can make use of it in the code.
+Let's now dive a bit more into Event Streams, and what they actually are.
