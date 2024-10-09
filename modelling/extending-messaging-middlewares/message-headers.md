@@ -105,12 +105,12 @@ In Ecotone all Messages contains of **Message Id**, **Correlation Id** and **Par
 
 {% hint style="success" %}
 Using Message Id, Correlation Id are especially useful find out what have happened during the flow and if any part of the flow has failed. \
-Using already propagated Headers, we may build our own tracing solution on top of what Ecotone provides or use inbuilt support for [OpenTelemetry](../../modules/opentelemetry-tracing-and-metrics.md).
+Using already propagated Headers, we may build our own tracing solution on top of what Ecotone provides or use inbuilt support for [OpenTelemetry](../../modules/opentelemetry-tracing-and-metrics/).
 {% endhint %}
 
 ### Id
 
-Each Message receives it's own unique Id, which is Uuid generated value. This is used by Ecotone to provide capabilities like [Message Deduplication](../recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md), [Tracing](../../modules/opentelemetry-tracing-and-metrics.md) and Message identification for [Retries and Dead Letter](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md).
+Each Message receives it's own unique Id, which is Uuid generated value. This is used by Ecotone to provide capabilities like [Message Deduplication](../recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md), [Tracing](../../modules/opentelemetry-tracing-and-metrics/) and Message identification for [Retries and Dead Letter](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md).
 
 ### Parent Id
 

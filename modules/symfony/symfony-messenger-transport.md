@@ -12,7 +12,7 @@ This way we can work with familiar environment and reuse already set up `Symfony
 
 ### Asynchronous Message Handler
 
-Suppose we have `messenger_async` transport.
+Suppose we have **"async"** transport:
 
 ```yaml
 framework:
@@ -21,7 +21,7 @@ framework:
       async: 'doctrine://default?queue_name=async'
 ```
 
-Then we can register it using Service Context in Ecotone:
+Then we can register it using [Service Context](../../messaging/service-application-configuration.md) in Ecotone:
 
 ```php
 final class MessagingConfiguration
@@ -75,20 +75,15 @@ final class OrderController
 
 ### Running Message Consumer (Worker)
 
-Instead of using Messenger `messenger:consume`, we will be running Message Consumer using Ecotone's command:
+We will be running Message Consumer using "**ecotone:run"** command:
 
 ```bash
-bin/console ecotone:run messenger_async -vvv
+bin/console ecotone:run async -vvv
 ```
-
-{% hint style="success" %}
-Symfony Messenger when Message can't be sent to failed transport [will lose the Message.](https://github.com/symfony/symfony/issues/36870)\
-This is not the case when using Ecotone with Messenger Transport. Ecotone will requeue the message in that case.
-{% endhint %}
 
 ## Sending messages via routing
 
-When sending command and events [via routing](broken-reference), it's possible to use non-class types, however Symfony Messenger Transports require to use class. To solve that Ecotone wraps simple types in a class and unwrap it on deserialization. Thanks to that we can Symfony Transport like any other Ecotone's Message Channel.
+When sending command and events via routing, it's possible to use non-class types. In case of Symfony however, Messenger Transports require to Classes. To solve that Ecotone wraps simple types in a class and unwrap it on deserialization. Thanks to that we can Symfony Transport like any other Ecotone's Message Channel.
 
 * Command Handler with command having `array payload`
 
@@ -126,16 +121,15 @@ class Order
 
 ## Asynchronous Event Handlers
 
-In case of sending events, we will be using `Event Bus`.\
-Ecotone deliver copy of the `Event` to each of the `Event Handlers`, this allows for handling in isolation and safe retries.
+In case of sending events, we will be using **Event Bus**.
 
-* Inject Event Bus into your service, it will be available out of the box.
+* EventBus is available out of the box in Dependency Container. Therefore all we need to do, is to inject it and publish an Event
 
 ```php
 $this->eventBus->publish(new OrderWasPlaced($orderId));
 ```
 
-* Subscribe to event
+* Subscribe to Event
 
 ```php
 #[Asynchronous('async')]

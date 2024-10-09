@@ -5,7 +5,7 @@ Ecotone provides solutions to handle failures within the system that helps in:
 
 * Self-healing the application ([Instant and Delayed Message Handling Retries](resiliency/retries.md), [Locking](resiliency/concurrency-handling.md), [Isolation of failures](message-handling-isolation.md))
 * Ensuring Data Consistency ([Resilient Message Sending](resiliency/resilient-sending.md), [Outbox pattern](resiliency/outbox-pattern.md), [Message Deduplication](resiliency/idempotent-consumer-deduplication.md))
-* Recovering ([Dead Letter](resiliency/error-channel-and-dead-letter.md), [Tracing](../../modules/opentelemetry-tracing-and-metrics.md), [Monitoring](ecotone-pulse-service-dashboard.md))
+* Recovering ([Dead Letter](resiliency/error-channel-and-dead-letter.md), [Tracing](../../modules/opentelemetry-tracing-and-metrics/), [Monitoring](ecotone-pulse-service-dashboard.md))
 
 {% hint style="success" %}
 To find out more about different use-cases, read related section about [Handling Failures in Workflows](../../messaging/workflows/handling-failures.md).

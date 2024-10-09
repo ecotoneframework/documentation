@@ -1,11 +1,4 @@
-# OpenTelemetry (Tracing and Metrics)
-
-<figure><img src="../../.gitbook/assets/Screenshot from 2023-11-04 17-59-51.png" alt=""><figcaption><p>Trace your flows using OpenTelemetry</p></figcaption></figure>
-
-[**OpenTelemetry**](https://opentelemetry.io/docs/instrumentation/php/) is tracing abstraction to collect and aggregate data such as metrics and traces.\
-As OpenTelemetry is tracing abstraction is not force to use specific Tracing 3rd party. Depending on the need and preferences, we may choose provides like [DataDog](https://www.datadoghq.com/), [Jaeger](https://www.jaegertracing.io/), [Zipkin](https://zipkin.io/) etc.
-
-**Ecotone** brings full tracing using OpenTelemetry to your PHP applications, which will provide with details about your Message flows in the system, no matter if they run synchronously or asynchronously.
+# Configuration
 
 ## Installation
 
@@ -23,7 +16,8 @@ docker run -p 16686:16686 -p 4317:4317 -e COLLECTOR_OTLP_ENABLED=true jaegertrac
 
 ### Install GRPC and Protobuf
 
-This is needed to make Tracing insignificant to your Application performance.
+There are two ways of sending traces, over HTTP or GRPC with Protobuf. \
+It's recommended to use the second approach, as it avoids putting pressure on your Application performance.&#x20;
 
 ```bash
 # Install PHP Extensions
@@ -35,7 +29,7 @@ composer require open-telemetry/exporter-otlp
 
 ### Add Tracer Provider to Dependency Container
 
-In order to use `OpenTelemetry Support` we need to add `TracerProviderInterface` to our Dependency Container.&#x20;
+In order to use **OpenTelemetry Support** we need to add **TracerProviderInterface** to our Dependency Container.&#x20;
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -146,7 +140,7 @@ $application = EcotoneLiteApplication::boostrap(
 
 By default Ecotone will `flush traces` after Command/Query buses are executed or after handling Message asynchronously. This way traces will be propagated without any extra configuration. \
 \
-However you may want to include bootstrap time for your HTTP Requests, and as Command Bus is executed after your Application is already bootstrapped, this won't be included. \
+However we may want to start tracing before Application is bootstrapped. This way we will be able to see time how much time Application have spent on bootstrapping vs actual processing. \
 So if you want to take over the process or use of auto-configuration for this, then you can disable force flushing in Ecotone:
 
 ```php
@@ -162,13 +156,3 @@ public function traceConfiguration()
 {% hint style="success" %}
 If you've enabled auto-instrumentation for Laravel or Symfony, you may disable flush on Bus `withForceFlushOnBusExecution(false)`, as traces will be pushed at the end of the Request.
 {% endhint %}
-
-## Materials
-
-### Demo implementation
-
-* [Demo implementation with Symfony and Laravel](https://github.com/ecotoneframework/php-ddd-cqrs-event-sourcing-symfony-laravel-ecotone)
-
-### Links
-
-* [How OpenTelemetry can be used with Ecotone](https://blog.ecotone.tech/tracing-using-opentelemetry/)
