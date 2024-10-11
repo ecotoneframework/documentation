@@ -12,14 +12,18 @@ Not having code for _Lesson 4?_ \
 
 ### Metadata
 
-Message can contain headers. Headers may contain anything e.g. `currentUser`, `timestamp`, `contentType`, `messageId.` Headers are helpful, to give extra insights about the message and how it should be handled. \
-In `Ecotone` headers and metadata means the same. Those terms will be used interchangeably.
+Message can contain of Metadata. Metadata is just additional information stored along side to the Message's payload. It may contain things like **currentUser**, **timestamp**, **contentType**, **messageId**.&#x20;
 
-We just got new requirement for our Products in Shopping System.:
+{% hint style="info" %}
+In **Ecotone** headers and metadata means the same. Those terms will be used interchangeably.
+{% endhint %}
 
-`User who registered the product, should be able to change it price.`&#x20;
+\
+To test out Metadata, let's assume we just got new requirement for our Products in Shopping System.:
 
-Let's start by adding `ChangePriceCommand.`
+> User who registered the product, should be able to change it's price.&#x20;
+
+Let's start by adding **ChangePriceCommand**
 
 ```php
 namespace App\Domain\Product;
@@ -42,8 +46,8 @@ class ChangePriceCommand
 }
 ```
 
-We will handle this `Command` in a minute. Let's first add user information for registering the product.\
-We will do it, using `Meta Data`. Let's get back to our Testing Class `EcotoneQuickstart` and add 4th argument to our `CommandBus` call.
+We will handle this Command in a minute. Let's first add user information for registering the product.\
+We will do it, using **Metadata**. Let's get back to our Testing Class **EcotoneQuickstart** and add 4th argument to our **CommandBus** call.
 
 ```php
 public function run() : void
@@ -52,7 +56,7 @@ public function run() : void
         "product.register",
         \json_encode(["productId" => 1, "cost" => 100]),
         "application/json",
-        [
+        metadata: [
             "userId" => 1
         ]
     );
@@ -61,9 +65,9 @@ public function run() : void
 }
 ```
 
-We call `sendWithRouting`, it accepts 4th argument, which is `associative array.` Whatever we will place in here, will be available during message handling for us.\
-So it's good place, to enrich the message with extra information, which we will want to use or store, but are is not part of the `command/query/event`. \
-Now we can change our `Product` aggregate:&#x20;
+**sendWithRouting** accepts 4th argument, which is **associative array.** Whatever we will place in here, will be available during message handling for us - This actually our Metadata. It's super simple to pass new Headers, it's matter of adding another key to the array.\
+\
+Now we can change our **Product** aggregate:&#x20;
 
 ```php
 #[Aggregate]
@@ -71,7 +75,7 @@ class Product
 {
     use WithAggregateEvents;
 
-    #[AggregateIdentifier]
+    #[Identifier]
     private int $productId;
 
     private Cost $cost;
@@ -90,13 +94,19 @@ class Product
     #[CommandHandler("product.register")]
     public static function register(RegisterProductCommand $command, array $metadata) : self
     {
-        return new self($command->getProductId(), $command->getCost(), $metadata["userId"]);
+        return new self(
+            $command->getProductId(), 
+            $command->getCost(), 
+            // all metadata is available for us. 
+            // Ecotone automatically inject it, if second param is array
+            $metadata["userId"]
+        );
     }
 ```
 
-We have added second parameter `$metadata` to our `@CommandHandler`. `Ecotone` read parameters and evaluated what should be injected. We will see soon, how can we take control of this process. \
+We have added second parameter **$metadata** to our **CommandHandler**. **Ecotone** read parameters and evaluate what should be injected. We will see soon, how can we take control of this process. \
 \
-We can add `changePrice` method now.
+We can add **changePrice** method now to our Aggregate:
 
 ```php
 #[CommandHandler("product.changePrice")]
@@ -110,7 +120,7 @@ public function changePrice(ChangePriceCommand $command, array $metadata) : void
 }
 ```
 
-And let's call it with incorrect `userId` and see, if we get the exception.
+And let's call it with incorrect **userId** and see, if we get the exception.
 
 ```php
 public function run() : void
@@ -150,11 +160,11 @@ InvalidArgumentException
 
 ### Method Invocation
 
-We have been just informed, that customers are registering new products in our system. \
-\
-`Only administrator should be allowed to register new product`
+We have been just informed, that customers are registering new products in our system, which should not be a case. Therefore our next requirement is:
 
-Let's create simple `UserService` which will tell us, if specific user is administrator. \
+> Only administrator should be allowed to register new Product
+
+Let's create simple **UserService** which will tell us, if specific user is administrator. \
 In our testing scenario we will suppose, that only user with `id` of 1 is administrator.&#x20;
 
 ```php
@@ -169,13 +179,18 @@ class UserService
 }
 ```
 
-Now we need to think where we should call our `UserService.` \
-The good place for it, would not allow for any invocation of `product.register command` without being administrator, otherwise our constraint may be bypassed.\
-`Ecotone` does allow for auto-wire like injection for endpoints. All services registered in Depedency Container are available.
+Now we need to think where we should call our **UserService**. \
+The good place for it, would not allow for any invocation of **product.register** command without being administrator, otherwise our constraint may be bypassed.\
+**Ecotone** does allow for auto-wire like injection for endpoints. All services registered in Depedency Container are available.
 
 ```php
 #[CommandHandler("product.register")]
-public static function register(RegisterProductCommand $command, array $metadata, UserService $userService) : self
+public static function register(
+    RegisterProductCommand $command, 
+    array $metadata, 
+    // Any non first class argument, will be considered an DI Service to inject
+    UserService $userService
+) : self
 {
     $userId = $metadata["userId"];
     if (!$userService->isAdmin($userId)) {
@@ -186,7 +201,7 @@ public static function register(RegisterProductCommand $command, array $metadata
 }
 ```
 
-Great, there is no way to bypass the constraint now. The `isAdmin constraint` must be satisfied in order to register new product. \
+Great, there is no way to bypass the constraint now. The **isAdmin constraint** must be satisfied in order to register new product. \
 \
 Let's correct our testing class. &#x20;
 
@@ -229,11 +244,11 @@ Good job, scenario ran with success!
 
 ### Injecting arguments
 
-`Ecotone` inject arguments based on `Parameter Converters`.\
-Parameter converters , tells `Ecotone` how to resolve specific parameter and what kind of argument it is expecting.  The one used for injecting services like `UserService` is `Reference` parameter converter.\
-Let's see how could we use it in our `product.register` command handler.&#x20;
+**Ecotone** inject arguments based on **Parameter Converters**.\
+Parameter converters , tells **Ecotone** how to resolve specific parameter and what kind of argument it is expecting.  The one used for injecting services like **UserService** is **Reference** parameter converter.\
+Let's see how could we use it in our **product.register** command handler.&#x20;
 
-Let's suppose UserService is registered under `user-service` in Dependency Container. Then we would need to set up the `CommandHandler`like below.
+Let's suppose UserService is registered under **user-service** in Dependency Container. Then we would need to set up the `CommandHandler`like below.
 
 ```php
 #[CommandHandler("product.register")]
@@ -244,7 +259,7 @@ public static function register(
 ) : self
 ```
 
-`Reference`- Does inject service from Dependency Container. If `referenceName,` which is name of the service in the container is not given, then it will take the class name as default.
+`Reference`- Does inject service from Dependency Container. If **referenceName**`,` which is name of the service in the container is not given, then it will take the class name as default.
 
 `Payload` - Does inject payload of the [message](../messaging/messaging-concepts/message.md). In our case it will be the command itself
 
@@ -258,10 +273,11 @@ You may read more detailed description in [Method Invocation section.](../messag
 
 ### Default Converters
 
-`Ecotone`, if parameter converters are not passed provides default converters. \
-First parameter is always `@Payload.` \
-The second parameter, if is `array` then `@Headers` converter is taken, otherwise if class type hint is provided for parameter, then `@Reference` converter is picked. \
-If we would want to manually configure parameters for `product.register` Command Handler, then it would look like this:
+**Ecotone**, if parameter converters are not passed provides default converters. \
+First parameter is always **Payload**`.` \
+The second parameter, if is **array** then **Headers** converter is taken, otherwise if class type hint is provided for parameter, then **Reference** converter is picked. \
+\
+If we would want to manually configure parameters for **product.register** Command Handler, then it would look like this:
 
 ```php
 #[CommandHandler("product.register")]
@@ -271,19 +287,29 @@ public static function register(
     #[Reference] UserService $userService
 ) : self
 {
-    $userId = $metadata["userId"];
-    if (!$userService->isAdmin($userId)) {
-        throw new \InvalidArgumentException("You need to be administrator in order to register new product");
-    }
+    // ...
+}
+```
 
-    return new self($command->getProductId(), $command->getCost(), $metadata["userId"]);
+We could also inject specific header and let Ecotone convert it directly to specific object (if we have Converter registered):
+
+```php
+#[CommandHandler("product.register")]
+public static function register(
+    #[Payload] RegisterProductCommand $command, 
+    // injecting specific header and doing the conversion string to UserId
+    #[Header("userId")] UserId $metadata, 
+    #[Reference] UserService $userService
+) : self
+{
+    // ...
 }
 ```
 
 {% hint style="success" %}
 Great, we have just finished Lesson 4!
 
-In this Lesson we learned about using Meta Data to provide extra information to our Message.\
+In this Lesson we learned about using Metadata to provide extra information to our Message.\
 Besides we took a look on how arguments are injected into endpoint and how we can make use of it.\
 \
 Now we will learn about powerful Interceptors, which can be describes as Middlewares on steroids.
