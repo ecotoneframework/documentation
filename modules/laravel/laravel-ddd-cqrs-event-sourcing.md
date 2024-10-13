@@ -20,6 +20,7 @@ defaultChannelPollRetry:
 serviceName: string (default: null)
 skippedModulePackageNames: string[] (default: [])
 test: bool (default: false)
+licenceKey: string|null (default: null)
 ```
 
 ### loadAppNamespaces
@@ -67,3 +68,7 @@ Skip list of given module package names (Check`ModulePackageList` for available 
 ### test
 
 Should test mode be enabled, so `MessagingTestSupport` can be used.
+
+### licenceKey
+
+Provides access to Enterprise Feature of Ecotone.

@@ -30,6 +30,7 @@ $messagingSystem = EcotoneLite::bootstrap(
         ->withServiceName("banking")
         ->withSkippedModulePackageNames(ModulePackageList::allPackages())
         ->withExtensionObjects([InMemoryRepositoryBuilder::createForAllStateStoredAggregates()]),
+        ->withLicenceKey('ecotoneEnterpriseKey')
     $configurationVariables,
     $useCachedVersion
 );
@@ -93,3 +94,7 @@ Skip list of given module package names (Check`ModulePackageList` for available 
 ### withExtensionObjects()
 
 Provides list of extension object for your Ecotone's modules, that adjust the behaviour to your needs.
+
+### withLicenceKey()
+
+Provides access to Enterprise Feature of Ecotone.
