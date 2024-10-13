@@ -2,7 +2,7 @@
 
 * [Business First](README.md)
 * [Installation](install-php-service-bus.md)
-* [Examples - Demo](quick-start-php-ddd-cqrs-event-sourcing/README.md)
+* [How to use](quick-start-php-ddd-cqrs-event-sourcing/README.md)
   * [CQRS PHP](quick-start-php-ddd-cqrs-event-sourcing/php-cqrs.md)
   * [Event Handling PHP](quick-start-php-ddd-cqrs-event-sourcing/php-event-handling.md)
   * [Aggregates & Sagas](quick-start-php-ddd-cqrs-event-sourcing/aggregates-and-sagas.md)
