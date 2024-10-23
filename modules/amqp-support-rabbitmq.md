@@ -82,9 +82,26 @@ Now `orders` channel will be available in our Messaging System.&#x20;
 ### Message Channel Configuration
 
 ```php
-DbalBackedMessageChannelBuilder::create("orders")
+AmqpBackedMessageChannelBuilder::create("orders")
     ->withAutoDeclare(false) // do not auto declare queue
     ->withDefaultTimeToLive(1000) // limit TTL of messages
+    ->withDefaultDeliveryDelay(1000) // delay messages by default
+```
+
+### Customize Queue Name
+
+By default the queue name will follow channel name, which in above example will be "orders".\
+However we can use "orders" as reference name in our Application, yet name queue differently:
+
+```php
+#[ServiceContext] 
+public function orderChannel()
+{
+    return AmqpBackedMessageChannelBuilder::create(
+        channelName: "orders",
+        queueName: "crm_orders"
+    );
+}
 ```
 
 ## Distributed Publisher and Consumer
