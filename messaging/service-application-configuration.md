@@ -100,3 +100,9 @@ class MyConfiguration
     }
 }
 ```
+
+{% hint style="warning" %}
+Service Context is evaluated before container is dumped and cached. Therefore if you will change environment variables after your cache is dumped this won't be changed.\
+\
+This happens because Ecotone tries to maximalize configuration caching, in order to speed up run time execution and do no configuration at that time.
+{% endhint %}
