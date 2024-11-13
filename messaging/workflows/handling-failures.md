@@ -142,7 +142,7 @@ In case of coding errors (bugs) we may also end up in situation where not matter
 
 For this situation, Ecotone provides [Dead Letter Storage](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md), which allows us to store the the Message and replay after the problem is fixed.&#x20;
 
-<figure><img src="../../.gitbook/assets/dead-letter.png" alt=""><figcaption><p>Store in Dead Letter when urecoverable and replay when needed</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/dead-letter (1).png" alt=""><figcaption><p>Store in Dead Letter when urecoverable and replay when needed</p></figcaption></figure>
 
 {% hint style="success" %}
 Instant, Delayed Retries and Dead Letter creates a solution where Messages goes in circle till the moment they are handled or deleted. This ensure no data is lost along the way, and we more often than not do not need to deal with failures as our Application can self-heal from those problems.\
