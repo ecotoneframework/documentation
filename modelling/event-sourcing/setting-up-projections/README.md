@@ -203,3 +203,12 @@ This way if even so Ticket Was Registered failed, when Ticket was Closed would c
 {% hint style="success" %}
 Each Projection keep track of it's position. Therefore whenever new Event comes in, it knows from which point in Event Stream it should fetch the Events from.
 {% endhint %}
+
+There is one more important reason for building Projections from Event Stream, **Projection Rebuilding**.
+
+### Setting up new Projections and Rebuilding
+
+Thanks to Projections ability to build the projection from the Event Stream, we are not bound by time. When we deploy new Projection, it will go over previous Events as part of the projecting process.\
+This way we can ability to be able to ship new Projections at any point of time, yet with ability to use all the previous Events from the past.&#x20;
+
+Besides that we can rebuild existing Projection, as rebuilding is all about reseting the Projection's position, and start to fetch from scretch. You may read about available actions in [Executing and Managing section](executing-and-managing/).
