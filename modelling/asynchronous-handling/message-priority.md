@@ -71,7 +71,7 @@ For example we may send a lot of different notifications, however when Customer 
 [Asynchronous Message Channel ](./)need to support this option to be used
 {% endhint %}
 
-## Static Priority
+## Message Handler Priority
 
 You may prioritize handling given asynchronous message by adding `#[Priority]` attribute.
 
@@ -93,7 +93,7 @@ public function sendAuthenticationToken(RequestToken $command): void
 }
 ```
 
-## Dynamic Priority
+## Message Priority
 
 We may send an Message and tell Ecotone to prioritize it using **priority** Message Header:
 

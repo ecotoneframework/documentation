@@ -171,14 +171,12 @@ $ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
 );
 
 $ecotoneTestSupport
-    ->sendCommandWithRoutingKey('order.register', new PlaceOrder('123'))
-    ->run('notifications', ExecutionPollingMetadata::createWithTestingSetup());
+    ->sendCommandWithRoutingKey('order.register', new PlaceOrder('123'));
 
 // 2. Releasing messages awaiting for 60 seconds
-$ecotoneTestSupport->releaseAwaitingMessagesAndRunConsumer(
+$ecotoneTestSupport->run(
     'orders', 
-    1000 * 60, 
-    ExecutionPollingMetadata::createWithTestingSetup()
+    releaseAwaitingFor: TimeSpan::withSeconds(60)
 );
 
 $this->assertEquals(

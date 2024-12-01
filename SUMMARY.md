@@ -166,6 +166,7 @@
 * [OpenTelemetry (Tracing and Metrics)](modules/opentelemetry-tracing-and-metrics/README.md)
   * [Configuration](modules/opentelemetry-tracing-and-metrics/configuration.md)
 * [RabbitMQ Support](modules/amqp-support-rabbitmq.md)
+* [Kafka Support](modules/kafka-support.md)
 * [DBAL Support](modules/dbal-support.md)
 * [Amazon SQS Support](modules/amazon-sqs-support.md)
 * [Redis Support](modules/redis-support.md)

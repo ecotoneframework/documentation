@@ -165,7 +165,7 @@ public function test_success_verification_after_registration()
         $testSupport
             ->sendCommand(new RegisterUser($userId, "John Snow", Email::create('test@wp.pl'), PhoneNumber::create('148518518518')))
             ->discardRecordedMessages()
-            ->releaseAwaitingMessagesAndRunConsumer("asynchronous_messages", 1000 * 60 * 60)
+            ->run("asynchronous_messages", releaseAwaitingFor: TimeSpan::withHours(24))
             ->getRecordedCommandsWithRouting()
     );
 }

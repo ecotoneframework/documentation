@@ -79,6 +79,12 @@ class MessagingConfiguration
 
 Now `orders` channel will be available in our Messaging System.&#x20;
 
+{% hint style="success" %}
+Message Channels simplify to the maximum integration with Message Broker. \
+From application perspective all we need to do, is to provide channel implementation.\
+Ecotone will take care of whole publishing and consuming part.&#x20;
+{% endhint %}
+
 ### Message Channel Configuration
 
 ```php
@@ -104,9 +110,15 @@ public function orderChannel()
 }
 ```
 
-## Distributed Publisher and Consumer
+## Custom Publisher and Consumer
 
-To create [distributed publisher or consumer](../modelling/microservices-php/) provide [Service Context](../messaging/service-application-configuration.md).
+To create [custom publisher or consumer](../modelling/microservices-php/) provide [Service Context](../messaging/service-application-configuration.md).
+
+{% hint style="success" %}
+Message Channels simplify to the maximum integration with Message Broker. \
+From application perspective all we need to do, is to provide channel implementation.\
+Ecotone will take care of whole publishing and consuming part.&#x20;
+{% endhint %}
 
 ### Distributed Publisher
 
