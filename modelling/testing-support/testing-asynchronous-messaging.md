@@ -188,6 +188,30 @@ $this->assertEquals(
 1. The default behaviour for In Memory Channels is to ignore delays. By setting `second parameter` to `true` we are registering In Memory Channel that will be aware of delays.
 2. We are releasing messages that awaits for 60 seconds or less.
 
+### Delaying to given date
+
+If we delay to given point in time, then we can use date time for releasing this message.
+
+```php
+$ecotoneTestSupport
+    ->sendCommand(
+        new SendNotification('123'),
+        metadata: [
+            "deliveryDelay" => new \DateTimeImmutable('+1 day')
+        ]
+    );
+
+$ecotoneTestSupport->run(
+    'notifications', 
+    releaseAwaitingFor: new \DateTimeImmutable('+1 day')
+);
+
+$this->assertEquals(
+    1,
+    count($this->notifier->getNotifications())
+);
+```
+
 ## Dropping all messages coming to given channel
 
 In some scenarios, you may just want to turn off given channel, because you're not interested in messages that goes through it.
