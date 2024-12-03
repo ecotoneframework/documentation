@@ -85,6 +85,20 @@ You may run consumer from separate process like this: (example for symfony):\
 However running consumer as separate process is not advised, as it `requires booting separate process`which slows test suite, and due to lack of`shared memory` does not allow for using `In Memory implementations.`
 {% endhint %}
 
+## Default Message Channels
+
+For testing with In Memory Channels, we can omit providing specific implementation. \
+Ecotone will deliver an default In Memory Message Channels for us:
+
+```php
+$ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
+    [OrderService::class, NotificationService::class],
+    [new OrderService(), new NotificationService()],
+    // We simply state, that we want to enable async processing
+    enableAsynchronousProcessing: true
+);
+```
+
 ## Polling Metadata
 
 By default Ecotone will optimize for your test scenario:
