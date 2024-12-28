@@ -1,11 +1,15 @@
-# Repository
+# Business Repository
 
 ## Business Repository Interface
 
-Special type of `Business Interface` is `Repository`. \
-If you want to fetch or store Aggregate register under [Ecotone's Repository](../repository.md) you may use                 `#[Repository]` attribute. &#x20;
+Special type of **Business Interface** is **Repository**. \
+This Interface allows us to simply load and store our Aggregates directly. In situations when we call Command directly in our Aggregates we won't be in need to use it. However for some specific cases, where we need to load Aggregate and store it outside of Aggregate's Command Handler, this business interface becomes useful.&#x20;
 
-### For State-Stored Aggregate
+{% hint style="info" %}
+To make use of this Business Interface, we need our [Aggregate Repository](../repository.md) being registered.
+{% endhint %}
+
+## Business Repository
 
 ```php
 interface OrderRepository
@@ -21,13 +25,16 @@ interface OrderRepository
 }
 ```
 
-Ecotone will read type hint to understand, which Aggregate you would like to fetch or save.
+Ecotone will read type hint to understand which Aggregate you would like to fetch or save.
 
 {% hint style="info" %}
-Implementation will be delivered by Framework. All you need to do is to define the interface and it will available in your Dependency Container
+Implementation will be delivered by Ecotone. All you need to do is to define the interface and it will available in your Dependency Container
 {% endhint %}
 
-### For Event Sourced Aggregate
+## Pure Event Sourced Repository <a href="#for-event-sourced-aggregate" id="for-event-sourced-aggregate"></a>
+
+When using Pure Event Sourced Aggregate, instance of Aggregate does not hold recorded Events. Therefore passing aggregate instance would not contain any information about recorded events. \
+For Pure Event Sourced Aggregates, we can use direct event passing to the repository:
 
 ```php
 interface OrderRepository
@@ -43,5 +50,3 @@ interface OrderRepository
     public function save(string $aggregateId, int $currentVersion, array $events): void;
 }
 ```
-
-The difference is in `save` method, you need to provide `aggregate id, current aggregate's version and array of events` you would like to store.
