@@ -181,7 +181,7 @@ We need to touch on one more important topic. Where do we actually get the data 
 ## The source of data for Projection
 
 Events that trigger Projections are not actually a source of the data for them.\
-This is because if we would lose Event Message along the way due some failure (For example we don't use [Outbox](../../recovering-tracing-and-monitoring/resiliency/outbox-pattern.md)) or it would and in [Dead Letter](../../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md) then we would basically skip over an Event.
+This is because if we would lose Event Message along the way due some failure (For example we don't use [Outbox](../../recovering-tracing-and-monitoring/resiliency/outbox-pattern.md)) or it would and in [Dead Letter](../../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/) then we would basically skip over an Event.
 
 Let's take as an example Asynchronous Projection, where we want to store Ticket with new "**alert-warning**" type. However let's suppose we've created column with limited size for type - which is up to  10 characters. Therefore our Projection will fail on storing that, because the type is 13 characters long:
 

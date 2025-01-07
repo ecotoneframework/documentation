@@ -1,6 +1,6 @@
 # Multi-Tenant aware Dead Letter
 
-When executing [Dead Letter Console Command](../../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md#dead-letter-console-commands) we will lack of Context of the Tenant we are using.\
+When executing [Dead Letter Console Command](../../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#dead-letter-console-commands) we will lack of Context of the Tenant we are using.\
 To handle that we may use Ecotone's [support for passing Message Headers](../../console-commands.md#passing-message-headers) together with Console Command.
 
 ### Example

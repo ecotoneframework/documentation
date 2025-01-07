@@ -122,7 +122,7 @@ public function asyncChannelConfiguration()
 }
 ```
 
-If you will push Error Messages to [Dbal Dead Letter](error-channel-and-dead-letter.md#dbal-dead-letter), then they will be stored in your database for later review. You may then delete or replay them after fixing the problem. This way we ensure consistency even if unrecoverable failure happened our system continues to have self-healed.
+If you will push Error Messages to [Dbal Dead Letter](error-channel-and-dead-letter/#dbal-dead-letter), then they will be stored in your database for later review. You may then delete or replay them after fixing the problem. This way we ensure consistency even if unrecoverable failure happened our system continues to have self-healed.
 
 ## Customized configuration per Message Consumer
 

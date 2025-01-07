@@ -47,7 +47,7 @@ This feature is available as part of **Ecotone Enterprise.**
 
 Depending on the version we may actually want to restore our Aggregate a bit differently. \
 This is especially useful when we've changed the way Events are structured and introduced new version of the Event. \
-For this we can use **revision header** to access the version on which given Event was stored**.**
+For this we can use **revision header** to access the version on which given Event was store&#x64;**.**
 
 ```php
 #[EventSourcingAggregate]
@@ -79,5 +79,5 @@ class Product
 
 {% hint style="success" %}
 We may inject any type of Header that was stored together with the Event. \
-This means inbuilt headers like **timestamp**, **id**, **correlationId are avaiable** out of the box**.**
+This means inbuilt headers like **timestamp**, **id**, **correlationId are avaiable** out of the bo&#x78;**.**
 {% endhint %}

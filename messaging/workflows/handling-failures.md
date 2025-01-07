@@ -115,7 +115,7 @@ This kind of explicit way of solving problems allows us to switch the code from 
 
 ## Recoverable Synchronous Errors
 
-One of the problems that we need to accept is that [Network is not reliable](https://en.wikipedia.org/wiki/Fallacies\_of\_distributed\_computing). This means that that when we will want to store something in our Database, send an Message to the Message Broker or call External Service, network may simply fail and there are various reasons why it may happen.
+One of the problems that we need to accept is that [Network is not reliable](https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing). This means that that when we will want to store something in our Database, send an Message to the Message Broker or call External Service, network may simply fail and there are various reasons why it may happen.
 
 In our case, if we would want to store our Order synchronously, or send an Message to the Broker, it may happen that we will face an error. This of course means that Customer will not completely his Order, which is far from ideal.&#x20;
 
@@ -140,7 +140,7 @@ In those situations we still want to Application to seal-heal, so we don't need 
 In case External Service is down for longer period of time, we may actually not be able to self-heal. \
 In case of coding errors (bugs) we may also end up in situation where not matter how many retries we would do, we still won't recover.
 
-For this situation, Ecotone provides [Dead Letter Storage](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md), which allows us to store the the Message and replay after the problem is fixed.&#x20;
+For this situation, Ecotone provides [Dead Letter Storage](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/), which allows us to store the the Message and replay after the problem is fixed.&#x20;
 
 <figure><img src="../../.gitbook/assets/dead-letter (1).png" alt=""><figcaption><p>Store in Dead Letter when urecoverable and replay when needed</p></figcaption></figure>
 
@@ -153,7 +153,7 @@ And if unrecoverable error happens, we get ability to easily replay the Message 
 
 If we already have some solution to handle Asynchronous Errors in our Application, we can take over the process using Error Channel. Error Chanel is a Message Channel where all unhandled Asynchronous Errors go. \
 \
-You can read more about in [related documentation](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter.md#error-channel).
+You can read more about in [related documentation](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#error-channel).
 
 ## Customizing Error Handling on Message Handler Level
 

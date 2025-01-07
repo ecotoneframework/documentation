@@ -15,7 +15,7 @@ Not having code for _Lesson 3?_\
 Command, queries and events are not always objects. When they travel via different asynchronous channels, they are converted to simplified format, like **JSON** or **XML**.\
 At the level of application however we want to deal with **PHP** format as objects or arrays.
 
-Moving from one format to another requires conversion. **Ecotone** does provide extension points in which we can integrate different [Media Type](https://pl.wikipedia.org/wiki/Typ\_MIME) Converters to do this type of conversion.
+Moving from one format to another requires conversion. **Ecotone** does provide extension points in which we can integrate different [Media Type](https://pl.wikipedia.org/wiki/Typ_MIME) Converters to do this type of conversion.
 
 ## First Media Type Converter
 
@@ -321,7 +321,7 @@ class RegisterProductCommand
 }
 ```
 
-The **$cost** class property will be automatically converted from **integer** to **Cost** by JMS Module**.**
+The **$cost** class property will be automatically converted from **integer** to **Cost** by JMS Modul&#x65;**.**
 
 ```php
 class Product

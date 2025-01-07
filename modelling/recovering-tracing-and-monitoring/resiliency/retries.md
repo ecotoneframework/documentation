@@ -53,7 +53,7 @@ In those situations we may try to self-heal the application, by delaying failed 
 
 ### Installation
 
-First [Error Channel](error-channel-and-dead-letter.md#error-channel) need to be set up for your Application, then you may configure retries.
+First [Error Channel](error-channel-and-dead-letter/#error-channel) need to be set up for your Application, then you may configure retries.
 
 ### Using Default Delayed Retry Strategy
 

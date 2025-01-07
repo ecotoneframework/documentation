@@ -12,7 +12,7 @@ Ecotone Pulse provide way to control error messages for all your services from o
 
 ## Installation
 
-Enable [Dead Letter](resiliency/error-channel-and-dead-letter.md) in your service and [Distributed Consumer](../../modules/amqp-support-rabbitmq.md#distributed-consumer) with [AMQP Module](../../modules/amqp-support-rabbitmq.md#installation).
+Enable [Dead Letter](resiliency/error-channel-and-dead-letter/) in your service and [Distributed Consumer](../../modules/amqp-support-rabbitmq.md#distributed-consumer) with [AMQP Module](../../modules/amqp-support-rabbitmq.md#installation).
 
 After this you may run docker image with Ecotone Pulse passing the configuration to your services and RabbitMQ connection.
 

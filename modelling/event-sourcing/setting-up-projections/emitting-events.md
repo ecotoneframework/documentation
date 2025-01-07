@@ -39,7 +39,7 @@ In order to emit the events, we are using `EventStreamEmitter`.\
 Whenever we `emit` given events, they are stored in Projection's stream.
 
 {% hint style="info" %}
-Events are stored in stream called project_{projectionName}._ In above case it will be _project\_wallet\_balance._
+Events are stored in stream called projec&#x74;_{projectionName}._ In above case it will be _project\_wallet\_balance._
 {% endhint %}
 
 After that you may subscribe to given events, just like to any other events.

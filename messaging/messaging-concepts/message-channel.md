@@ -6,7 +6,7 @@ description: Message Channel PHP
 
 ![](../../.gitbook/assets/message-channel-connection.svg)
 
-_`Message channel`_abstracts communication between components. It does allow for sending and receiving messages.\
+_`Message channel`_&#x61;bstracts communication between components. It does allow for sending and receiving messages.\
 A message channel may follow either point-to-point or publish-subscribe semantics. \
 With a point-to-point channel, only one consumer can receive each message sent to the channel. \
 Publish-subscribe channels, broadcast each message to all subscribers on the channel.&#x20;

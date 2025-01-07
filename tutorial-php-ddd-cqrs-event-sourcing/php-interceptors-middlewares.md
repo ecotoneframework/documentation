@@ -10,12 +10,12 @@ Not having code for _Lesson 5?_&#x20;
 `git checkout lesson-5`
 {% endhint %}
 
-`Ecotone` provide us with possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting\_concern) via `Interceptors`. \
+`Ecotone` provide us with possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) via `Interceptors`. \
 `Interceptor` as name suggest, intercepts the process of handling the message. \
 You may enrich the [message](../messaging/messaging-concepts/message.md), stop or modify usual processing cycle, call some shared functionality, add additional behavior to existing code without modifying the code itself.&#x20;
 
 {% hint style="info" %}
-If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented\_programming) or Middleware pattern you may find some similarities.
+If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming) or Middleware pattern you may find some similarities.
 {% endhint %}
 
 ### Before & After Interceptor
@@ -143,7 +143,7 @@ If `changeHeaders=true` then`headers` are picked and associative array must be r
 If `changeHeaders=false` then `payload` is picked and current payload is replaced by returned value, the headers stays the same.\
 You may of course inject current payload and headers into the method if needed, as with usual endpoint. \
 \
-**`precedence`** - Tells `Ecotone` in what order interceptors should be called. The lower the value is the quicker interceptor will be called. The order exists within interceptor type: `before/around/after.`\
+&#xNAN;**`precedence`** - Tells `Ecotone` in what order interceptors should be called. The lower the value is the quicker interceptor will be called. The order exists within interceptor type: `before/around/after.`\
 \
 We want to call `AddUserId Interceptor` before `RequireAdministrator Interceptor` as it require `userId` to exists, in order to verify. \
 `AddUserIdService` has precedence of `0` as default, so `UserService` must have at least `1`.
@@ -326,7 +326,7 @@ SQL
 You do not need to focus too much on the Repository implementation, this is just example. \
 In your application, you may implement it using your ORM or whatever fits you best. \
 \
-_This implementation will override aggregate for `registerProduct`, if one already exists. It will  will insert or update if aggregate exists._
+&#xNAN;_&#x54;his implementation will override aggregate for `registerProduct`, if one already exists. It will  will insert or update if aggregate exists._
 {% endhint %}
 
 We want to intercept `Command Bus Gateway` with transaction. So whenever we call it, it will invoke our Command Handler within transaction.
@@ -377,7 +377,7 @@ This pointcut will intercept `CommandBus.`
 
 
 
-![](../.gitbook/assets/gateway\_interceptor.svg)
+![](../.gitbook/assets/gateway_interceptor.svg)
 
 {% hint style="success" %}
 Let's run our testing command:

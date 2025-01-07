@@ -1,62 +1,87 @@
-# Error Channel and Dead Letter
-
-## Error Channel
-
-`Ecotone` comes with solution that allow to push Error Messages to `error channel`.\
-Depending on what subscribing to error channel you may provide different behaviour. \
-From logging, storing or even discarding the message.
-
-### Error Channel
-
-The error channel is channel defined for handling failed messages. As a default it's turned off. \
-We may set up error channel for specific consumer
-
-* [Set up default error channel for all consumers](../../../messaging/service-application-configuration.md#ecotone-core-configuration)
-
-&#x20;         \- [Symfony](../../../modules/symfony/symfony-ddd-cqrs-event-sourcing.md#defaulterrorchannel)
-
-&#x20;         \- [Laravel](../../../modules/laravel/laravel-ddd-cqrs-event-sourcing.md#defaulterrorchannel)
-
-&#x20;         \- [Lite](../../../modules/ecotone-lite/#withdefaulterrorchannel)
-
-* [Set up for specific consumer](../../asynchronous-handling/#static-configuration)
-
-{% hint style="info" %}
-Setting up Error Channel means that [Message Consumer](../../../messaging/contributing-to-ecotone/demo-integration-with-sqs/message-consumer-and-publisher.md#message-consumer) will send Error Message to error channel and then continue handling next messages.\
-\
-After sending Error Message to error channel, message is considered handled.
-{% endhint %}
-
-## Manually Handling Error Messages from Error Channel
-
-After setting it up default error channel to "errorChannel" we may subscribe to the errors by setting up [ServiceActivator](../../../messaging/messaging-concepts/):
-
-```php
-#[ServiceActivator("errorChannel")]
-public function handle(ErrorMessage $errorMessage): void
-{
-    // do something with ErrorMessage
-}
-```
-
-{% hint style="info" %}
-Service Activator are endpoints like Command Handlers, however they are not exposed using Command/Event/Query Buses. \
-You may use them for internal handling.
-{% endhint %}
+# Dbal Dead Letter
 
 ## Dbal Dead Letter
 
-Ecotone comes with full support for managing full life cycle of a error message by using [Dbal Module](../../../modules/dbal-support.md#dead-letter).
+Ecotone comes with full support for managing full life cycle of a error message by using [Dbal Module](../../../../modules/dbal-support.md#dead-letter).
 
 * Store failed Message with all details about the exception
 * Allow for reviewing error Messages
-* Allow for deleting and replaying error Message back to the [Asynchronous Message Channels](../../asynchronous-handling/)
+* Allow for deleting and replaying error Message back to the [Asynchronous Message Channels](../../../asynchronous-handling/)
 
 ## Installation
 
-* Install [Ecotone's Dbal Module](../../../modules/dbal-support.md).&#x20;
-* Set up Error Channel like discussed at the [beginning of the section](error-channel-and-dead-letter.md#error-channel)
-* Set up "_errorChannel"_ in _ErrorHandlerConfiguration to "dbal\_dead\_letter"_
+* Install [Ecotone's Dbal Module](../../../../modules/dbal-support.md).&#x20;
+* Set up Error Channel like discussed at the [beginning of the section](dbal-dead-letter.md#error-channel)
+
+### Send Error Messages directly to Dead Letter:
+
+If we configure default error channel to point to **"dbal\_dead\_letter"** then all Error Messages will land there directly:
+
+{% tabs %}
+{% tab title="Symfony" %}
+**config/packages/ecotone.yaml**
+
+```yaml
+ecotone:
+  defaultErrorChannel: "dbal_dead_letter"
+```
+{% endtab %}
+
+{% tab title="Laravel" %}
+**config/ecotone.php**
+
+```php
+return [
+    'defaultErrorChannel' => 'dbal_dead_letter',
+];
+```
+{% endtab %}
+
+{% tab title="Lite" %}
+```php
+$ecotone = EcotoneLite::bootstrap(
+    configuration: ServiceConfiguration::createWithDefaults()
+        ->withDefaultErrorChannel('dbal_dead_letter')
+);
+```
+{% endtab %}
+{% endtabs %}
+
+### Try to recover with Retries first
+
+We may also want to try to recover before we consider Message to be stored in Dead Letter:
+
+{% tabs %}
+{% tab title="Symfony" %}
+**config/packages/ecotone.yaml**
+
+```yaml
+ecotone:
+  defaultErrorChannel: "errorChannel"
+```
+{% endtab %}
+
+{% tab title="Laravel" %}
+**config/ecotone.php**
+
+```php
+return [
+    'defaultErrorChannel' => 'errorChannel',
+];
+```
+{% endtab %}
+
+{% tab title="Lite" %}
+```php
+$ecotone = EcotoneLite::bootstrap(
+    configuration: ServiceConfiguration::createWithDefaults()
+        ->withDefaultErrorChannel('errorChannel')
+);
+```
+{% endtab %}
+{% endtabs %}
+
+and then we use inbuilt Retry Strategy:
 
 <pre class="language-php"><code class="lang-php">#[ServiceContext]
 public function errorConfiguration()
@@ -71,10 +96,6 @@ public function errorConfiguration()
     );
 }
 </code></pre>
-
-{% hint style="info" %}
-If you would set up "nullChannel" in place of "dbal\_dead\_letter", then all Message that can't be retried with success would be discared.
-{% endhint %}
 
 ## Dead Letter Console Commands
 
@@ -229,7 +250,7 @@ public function dbalConfiguration()
 
 ## Managing Multiple Ecotone Applications
 
-The above solution requires running Console Line Commands. If we want however, we can manage all our Error Messages from one place using [Ecotone Pulse](../ecotone-pulse-service-dashboard.md).
+The above solution requires running Console Line Commands. If we want however, we can manage all our Error Messages from one place using [Ecotone Pulse](../../ecotone-pulse-service-dashboard.md).
 
 This is especially useful when we've multiple Applications, so we can go to single place and see if any Application have failed to process Message.
 

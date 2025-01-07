@@ -55,7 +55,7 @@ If you are familiar with Symfony Messager/Simplebus, for now you can think of En
 
 ### Messaging Gateway
 
-![](../.gitbook/assets/gateway\_execution.svg)
+![](../.gitbook/assets/gateway_execution.svg)
 
 The Messaging Gateway encapsulates messaging-specific code (The code required to send or receive a [Message](php-messaging-architecture.md#message)) and separates it from the rest of the application code.\
 It take your domain specific objects an convert them into a [Message](php-messaging-architecture.md#message) that is send via [Message channel](php-messaging-architecture.md#message-channel). \
@@ -119,8 +119,8 @@ Go to "src/EcotoneQuickstart.php"
 {% endtab %}
 {% endtabs %}
 
-this method will be run, whenever we execute_`ecotone:quickstart`_. \
-This class is auto-registered using auto-wire system, both [Symfony](https://symfony.com/doc/current/service\_container/autowiring.html) and [Laravel](https://laravel.com/docs/7.x/container) provides this great feature. For `Lite` clean and easy to use [`PHP-DI`](https://github.com/PHP-DI/PHP-DI) is taken.\
+this method will be run, whenever we execut&#x65;_`ecotone:quickstart`_. \
+This class is auto-registered using auto-wire system, both [Symfony](https://symfony.com/doc/current/service_container/autowiring.html) and [Laravel](https://laravel.com/docs/7.x/container) provides this great feature. For `Lite` clean and easy to use [`PHP-DI`](https://github.com/PHP-DI/PHP-DI) is taken.\
 
 
 Thanks to that, we will avoid writing configuration files for service registrations during this tutorial. \
@@ -205,16 +205,16 @@ class ProductService
 ```
 
 First thing worth noticing is **#\[CommandHandler]**. \
-This [attribute](https://wiki.php.net/rfc/attributes\_v2) marks our `register` method in **ProductService** as an [Endpoint](php-messaging-architecture.md#message-endpoint), from that moment it can be found by **Ecotone**`.`
+This [attribute](https://wiki.php.net/rfc/attributes_v2) marks our `register` method in **ProductService** as an [Endpoint](php-messaging-architecture.md#message-endpoint), from that moment it can be found by **Ecotone**`.`
 
 Ecotone will read method declaration and base on the first parameter type hint will know that this **CommandHandler** is responsible for handling **RegisterProductCommand**.&#x20;
 
 {% hint style="success" %}
-Ecotone make use [Attributes](https://wiki.php.net/rfc/attributes\_v2) to provide declarative configuration. In most of the scenarios we will be stating "what" we want to achieve with Attributes, and Ecotone will take care of "how". **This way our application logic will stay decoupled from the technical concerns.**&#x20;
+Ecotone make use [Attributes](https://wiki.php.net/rfc/attributes_v2) to provide declarative configuration. In most of the scenarios we will be stating "what" we want to achieve with Attributes, and Ecotone will take care of "how". **This way our application logic will stay decoupled from the technical concerns.**&#x20;
 {% endhint %}
 
 {% hint style="info" %}
-`#[ClassReference]` is a special [Attribute](https://wiki.php.net/rfc/attributes\_v2)  it informs `Ecotone`how this service is registered in `Depedency Container`. As a default it takes the class name, which is compatible with auto-wiring system. \
+`#[ClassReference]` is a special [Attribute](https://wiki.php.net/rfc/attributes_v2)  it informs `Ecotone`how this service is registered in `Depedency Container`. As a default it takes the class name, which is compatible with auto-wiring system. \
 If **ProductService** would be registered in **Dependency Container** as "**productService"**, we would use the Attribute this way:
 
 ```php
