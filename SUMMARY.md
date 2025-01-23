@@ -22,6 +22,7 @@
   * [Lesson 4: Metadata and Method Invocation](tutorial-php-ddd-cqrs-event-sourcing/php-metadata-method-invocation.md)
   * [Lesson 5: Interceptors](tutorial-php-ddd-cqrs-event-sourcing/php-interceptors-middlewares.md)
   * [Lesson 6: Asynchronous Handling](tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md)
+* [Enterprise](enterprise.md)
 
 ## Modelling
 
@@ -91,10 +92,22 @@
   * [Message Priority](modelling/asynchronous-handling/message-priority.md)
   * [Scheduling](modelling/asynchronous-handling/scheduling.md)
   * [Dynamic Message Channels](modelling/asynchronous-handling/dynamic-message-channels.md)
-* [Distributed Bus and MicroServices](modelling/microservices-php/README.md)
-  * [Distributed Bus](modelling/microservices-php/distributed-bus.md)
+* [Distributed Bus and Microservices](modelling/microservices-php/README.md)
+  * [Distributed Bus](modelling/microservices-php/distributed-bus/README.md)
+    * [Distributed Bus with Service Map](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/README.md)
+      * [Configuration](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/configuration.md)
+      * [Custom Features](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/custom-features.md)
+      * [Non-Ecotone Application integration](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/non-ecotone-application-integration.md)
+      * [Testing](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/testing.md)
+    * [AMQP Distributed Bus (RabbitMQ)](modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/README.md)
+      * [Configuration](modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/configuration.md)
+    * [Distributed Bus Interface](modelling/microservices-php/distributed-bus/distributed-bus-interface.md)
   * [Message Consumer](modelling/microservices-php/message-consumer.md)
   * [Message Publisher](modelling/microservices-php/message-publisher.md)
+* [Business Workflows](modelling/business-workflows/README.md)
+  * [The Basics - Stateless Workflows](modelling/business-workflows/the-basics-stateless-workflows.md)
+  * [Stateful Workflows - Saga](modelling/business-workflows/stateful-workflows-saga.md)
+  * [Handling Failures](modelling/business-workflows/handling-failures.md)
 * [Testing Support](modelling/testing-support/README.md)
   * [Testing Messaging](modelling/testing-support/testing-messaging.md)
   * [Testing Aggregates and Sagas with Message Flows](modelling/testing-support/testing-aggregates-and-sagas-with-message-flows.md)
@@ -104,10 +117,6 @@
 ## Messaging and Ecotone In Depth <a href="#messaging" id="messaging"></a>
 
 * [Overview](messaging/overview.md)
-* [Workflows](messaging/workflows/README.md)
-  * [The Basics - Stateless Workflows](messaging/workflows/the-basics-stateless-workflows.md)
-  * [Stateful Workflows - Saga](messaging/workflows/stateful-workflows-saga.md)
-  * [Handling Failures](messaging/workflows/handling-failures.md)
 * [Multi-Tenancy Support](messaging/multi-tenancy-support/README.md)
   * [Getting Started](messaging/multi-tenancy-support/getting-started/README.md)
     * [Any Framework Configuration](messaging/multi-tenancy-support/getting-started/any-framework-configuration.md)

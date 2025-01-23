@@ -110,41 +110,9 @@ public function orderChannel()
 }
 ```
 
-## Custom Publisher and Consumer
+## AMQP Distributed Bus
 
-To create [custom publisher or consumer](../modelling/microservices-php/) provide [Service Context](../messaging/service-application-configuration.md).
-
-{% hint style="success" %}
-Message Channels simplify to the maximum integration with Message Broker. \
-From application perspective all we need to do, is to provide channel implementation.\
-Ecotone will take care of whole publishing and consuming part.&#x20;
-{% endhint %}
-
-### Distributed Publisher
-
-```php
-class MessagingConfiguration
-{
-    #[ServiceContext] 
-    public function distributedPublisher()
-    {
-        return AmqpDistributedBusConfiguration::createPublisher();
-    }
-}
-```
-
-### Distributed Consumer
-
-```php
-class MessagingConfiguration
-{
-    #[ServiceContext] 
-    public function distributedConsumer()
-    {
-        return AmqpDistributedBusConfiguration::createConsumer();
-    }
-}
-```
+AMQP Distributed Bus is described in more details under [Distributed Bus section](../modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/).
 
 ## Message Publisher
 

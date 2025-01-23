@@ -157,6 +157,29 @@ By default In Memory Queue Channel will do the serialization to PHP native seria
 If you don't want to use serialization however, you may set type to `conversionMediaType: MediaType::createApplicationXPHP()`
 {% endhint %}
 
+If our serialization mechanism is JMS Module, we will need to enable it for testing:
+
+```php
+$ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
+    [OrderService::class, NotificationService::class],
+    [new OrderService(), new NotificationService()],
+    configuration: ServiceConfiguration::createWithDefaults()
+                ->withSkippedModulePackageNames(ModulePackageList::allPackagesExcept([
+                        ModulePackageList::ASYNCHRONOUS_PACKAGE,
+                        ModulePackageList::JMS_CONVERTER_PACKAGE
+                ]))
+    enableAsynchronousProcessing: [
+        // 1. Enable conversion on given channel
+        SimpleMessageChannelBuilder::createQueueChannel(
+            'notifications',
+            conversionMediaType: 'application/json'
+        )    
+    ]
+);
+```
+
+Otherwise we will need to include Classes that customize our serialization.
+
 ## Testing Delayed Messages
 
 Our Handlers may be delayed in time and we may want to run peform few actions and then release the message, to verify production like flow.

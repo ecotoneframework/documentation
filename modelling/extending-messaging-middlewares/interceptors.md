@@ -4,7 +4,7 @@ description: PHP Interceptors Middlewares
 
 # Interceptors (Middlewares)
 
-`Ecotone` provide possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting\_concern) via `Interceptors`. \
+`Ecotone` provide possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) via `Interceptors`. \
 `Interceptor` intercepts the process of handling the message, this means we can do actions like:&#x20;
 
 * Enriching the [message](../../messaging/messaging-concepts/message.md)
@@ -15,7 +15,7 @@ description: PHP Interceptors Middlewares
 This all can be done without modifying the code itself, as we hook into the existing flows.
 
 {% hint style="info" %}
-If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented\_programming) you will find a lot of similarities.
+If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming) you will find a lot of similarities.
 {% endhint %}
 
 ## Interceptor
@@ -415,3 +415,7 @@ class IsEventAlreadyHandled
     }
 }
 ```
+
+{% hint style="success" %}
+Presend can't intercept Gateways like (Command/Event/Query) buses, however in context of Gateways using Before Interceptor lead to same behaviour, therefore can be used instead.
+{% endhint %}

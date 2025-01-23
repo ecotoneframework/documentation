@@ -1,6 +1,6 @@
 # Message Consumer
 
-Message Consumers allows you to connect your Service (application) with other Services, that can be written in different language or not using Ecotone's [Distributed Bus](distributed-bus.md).
+Message Consumers allows you to connect your Service (application) with other Services, that can be written in different language or not using Ecotone's [Distributed Bus](distributed-bus/).
 
 ### Modules Providing Support
 

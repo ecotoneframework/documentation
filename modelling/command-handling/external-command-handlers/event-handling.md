@@ -183,7 +183,7 @@ class TicketService
 ```
 
 {% hint style="success" %}
-Ecotone is using message routing for [cross application communication](../../microservices-php/distributed-bus.md). This way applications can stay decoupled from each other, as there is no need to share the classes between them.
+Ecotone is using message routing for [cross application communication](../../microservices-php/distributed-bus/). This way applications can stay decoupled from each other, as there is no need to share the classes between them.
 {% endhint %}
 
 ## Sending Events with Metadata

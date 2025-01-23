@@ -8,7 +8,7 @@ Ecotone provides solutions to handle failures within the system that helps in:
 * Recovering ([Dead Letter](resiliency/error-channel-and-dead-letter/), [Tracing](../../modules/opentelemetry-tracing-and-metrics/), [Monitoring](ecotone-pulse-service-dashboard.md))
 
 {% hint style="success" %}
-To find out more about different use-cases, read related section about [Handling Failures in Workflows](../../messaging/workflows/handling-failures.md).
+To find out more about different use-cases, read related section about [Handling Failures in Workflows](../business-workflows/handling-failures.md).
 {% endhint %}
 
 ## Materials

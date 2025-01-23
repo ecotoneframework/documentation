@@ -21,7 +21,7 @@ Let's consider placing an Order Command Handler:
 public function place(PlaceOrder $command): void
 ```
 
-What actually happens under the hood is that, we've created an place.order [Message Channel](../messaging-concepts/message-channel.md).
+What actually happens under the hood is that, we've created an place.order [Message Channel](../../messaging/messaging-concepts/message-channel.md).
 
 <figure><img src="../../.gitbook/assets/place_order_channel.png" alt=""><figcaption><p>Channel connected to our Message Handler</p></figcaption></figure>
 
@@ -97,14 +97,14 @@ By using InternalHandler we state explicitly that this actually part of somethin
 
 {% hint style="success" %}
 Our Workflows, contains of two steps however we could easily add more to it. To do it we would simply add **outputMessageChannel** to our PlaceOrder Handler.\
-To distribute the flow to multiple Handlers we could make use of [Router pattern](../messaging-concepts/message-endpoint/message-routing.md).
+To distribute the flow to multiple Handlers we could make use of [Router pattern](../../messaging/messaging-concepts/message-endpoint/message-routing.md).
 {% endhint %}
 
 ## Asynchronous Workflows
 
 We often state that given Message is Asynchronous. In reality Message is just an piece of data, it's neither asynchronous or synchronous, however execution of given logic may be synchronous or asynchronous. In case of Ecotone we mark given Message Handler as asynchronous, to state the execution should be done asynchronously.
 
-Continuing on our above example, we could keep our Order verification logic as synchronous and when we know that the Order is correct we could Place the Order asynchronously. This way we would ensure that Order [won't be lost](../../modelling/recovering-tracing-and-monitoring/resiliency/), even if there will problems with processing it.
+Continuing on our above example, we could keep our Order verification logic as synchronous and when we know that the Order is correct we could Place the Order asynchronously. This way we would ensure that Order [won't be lost](../recovering-tracing-and-monitoring/resiliency/), even if there will problems with processing it.
 
 ```php
 class ProcessOrder
@@ -128,7 +128,7 @@ class ProcessOrder
 }
 ```
 
-All we need to do is to add Asynchronous attribute for Message Handler which should be handled asynchronously and define what kind of [Message Channel we want to use](../../modelling/asynchronous-handling/).\
+All we need to do is to add Asynchronous attribute for Message Handler which should be handled asynchronously and define what kind of [Message Channel we want to use](../asynchronous-handling/).\
 What will happen right now is that, before our **Place Order Command Handler** will be executed, Message will first go through async Message Channel.
 
 <figure><img src="../../.gitbook/assets/async.png" alt=""><figcaption><p>Before Place Order Command is executed, Command first lands in Message Queue</p></figcaption></figure>
@@ -285,7 +285,7 @@ class ProcessOrder
 }
 ```
 
-After we enriched Message Headers, we can access them in next Workflow steps, as Message Headers are [automatically propagated](../../modelling/extending-messaging-middlewares/message-headers.md#automatic-header-propagation).
+After we enriched Message Headers, we can access them in next Workflow steps, as Message Headers are [automatically propagated](../extending-messaging-middlewares/message-headers.md#automatic-header-propagation).
 
 ## Workflows Types
 

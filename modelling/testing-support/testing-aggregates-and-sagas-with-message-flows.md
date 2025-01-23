@@ -181,7 +181,7 @@ This ensures tests will be as close to production as it's possible.
 
 ## Testing Output Channels
 
-When we want to test given Aggregate or Sagas, yet we want to do it in isolation and we do use of Ecotone's [Input/Output Pipes support](../../messaging/workflows/). Then we may want to verify if given Message was send to given channel. Consider below example:
+When we want to test given Aggregate or Sagas, yet we want to do it in isolation and we do use of Ecotone's [Input/Output Pipes support](../business-workflows/). Then we may want to verify if given Message was send to given channel. Consider below example:
 
 ```php
 #[Saga]
