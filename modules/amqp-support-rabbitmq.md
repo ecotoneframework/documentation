@@ -214,6 +214,27 @@ $amqpQueue = AmqpQueue::createDirectExchange
                 ->withDeadLetterExchangeTarget($amqpExchange);
 ```
 
+## Publisher Acknowledgments
+
+By default Ecotone will aim for resiliency to avoid Message being lost. This protects from lost heartbeats issue (AMQP bug which make message vanish without exceptions) and ensures that Message are considered delivered only when Broker has acknowledged storing them on the Broker side (Using [Publisher confirms](https://www.rabbitmq.com/docs/confirms#publisher-confirms)).\
+\
+However Publisher confirms comes with time cost, as it makes publishing process awaits for acknowledge from RabbitMQ. Therefore if delivery guarantee is not an issue, and we can accept risk of losing messages we can consider disable it to speed up publishing time:
+
+```php
+#[ServiceContext]
+public function amqpChannel() : array
+{
+    return [
+        AmqpBackedMessageChannelBuilder::create("orders")
+            ->withPublisherAcknowledgments(false)
+    ];
+}
+```
+
+{% hint style="success" %}
+Publisher acknowledgments can be combined with [Outbox](../modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md) to ensure high message guarantee.&#x20;
+{% endhint %}
+
 ## Publisher Transactions
 
 `Ecotone AMQP` comes with support for RabbitMQ Transaction for published messages. \
