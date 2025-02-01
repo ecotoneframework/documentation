@@ -113,7 +113,7 @@ public function orderChannel()
 }
 ```
 
-## Custom Publisher and Consumer
+## Custom Publisher
 
 To create [custom publisher or consumer](../modelling/microservices-php/) provide [Service Context](../messaging/service-application-configuration.md).
 
@@ -136,33 +136,90 @@ class MessagingConfiguration
 }
 ```
 
-Then Publisher will be available for us in Dependency Container under **MessagePublisher** reference.
+Then Publisher will be available for us in Dependency Container under **MessagePublisher** reference.\
+This will make it available in your dependency container under **MessagePublisher** name.
 
-### Custom Consumer
+### Providing custom rdkafka configuration
+
+You can modify your Message Publisher with specific [rdkafka configuration](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md):
+
+```php
+#[ServiceContext] 
+public function distributedPublisher()
+{
+    return KafkaPublisherConfiguration::createWithDefaults(
+        topicName: 'orders'
+    )
+        ->setConfiguration('request.required.acks', '1');
+}
+```
+
+## Custom Consumer
 
 To set up Consumer, consuming from given topics, all we need to do, is to mark given method with KafkaConsumer attribute:
 
 ```php
-#[KafkaConsumer('ordersConsumers', 'orders')]
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders']
+)]
 public function handle(string $payload, array $metadata): void
 {
     // do something
 }
 ```
 
-Then we run it as any other [asynchronous consumer](../modelling/asynchronous-handling/), using **ordersConsumer** name.
+Then we run it as any other [asynchronous consumer](../modelling/asynchronous-handling/), using **orderConsumer** name.
 
-### Custom Topic Configuration
+### Providing group id
 
-We can also customize topic configuration. For example to create reference name for Consumers and publishers, which internally in Kafka will map to different name
+By default Consumer Group id will be same as endpoint id, however we can provide customized name if needed:
 
 ```php
-class MessagingConfiguration
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders'],
+    groupId: 'order_subscriber'
+)]
+public function handle(string $payload, array $metadata): void
 {
-    #[ServiceContext] 
-    public function distributedPublisher()
-    {
-        return TopicConfiguration::createWithReferenceName("orders", 'crm_orders');
-    }
+    // do something
+}
+```
+
+### Providing custom rdkafka configuration
+
+You can modify your Message Consumer with specific [rdkafka configuration](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md):
+
+```php
+#[ServiceContext] 
+public function distributedPublisher()
+{
+    return KafkaConsumerConfiguration::createWithDefaults(
+        endpointId: 'orderConsumers'
+    )
+        ->setConfiguration('auto.offset.reset', 'earliest');
+}
+```
+
+## Kafka Headers
+
+We can accesss specific Kafka Headers using standard [Ecotone's metadata](../modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md) mechanism
+
+* **kafka\_topic** - Topic name for incoming message
+* **kafka\_partition** - Partition of incoming message
+* **kafka\_offset** - Offset of Message Consumer
+
+```php
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders']
+)]
+public function handle(
+    string $payload, 
+    #[Header("kafka_topic") string $topicName,
+): void
+{
+    // do something
 }
 ```
