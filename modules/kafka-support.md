@@ -22,7 +22,7 @@ In order to use **Kafka Support** we need to add **KafkaBrokerConfiguration** to
     Ecotone\Kafka\Configuration\KafkaBrokerConfiguration:
         class: Ecotone\Kafka\Configuration\KafkaBrokerConfiguration
         arguments:
-            bootstrapServers:
+            $bootstrapServers:
                 - localhost:9094
 ```
 {% endtab %}
