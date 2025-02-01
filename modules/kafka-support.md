@@ -18,7 +18,7 @@ In order to use **Kafka Support** we need to add **KafkaBrokerConfiguration** to
 {% tab title="Symfony" %}
 ```php
 # config/services.yaml
-# You need to have RabbitMQ instance running on your localhost, or change DSN
+# You need to have Kafka instance running on your localhost, or change DSN
     Ecotone\Kafka\Configuration\KafkaBrokerConfiguration:
         class: Ecotone\Kafka\Configuration\KafkaBrokerConfiguration
         arguments:
@@ -29,7 +29,7 @@ In order to use **Kafka Support** we need to add **KafkaBrokerConfiguration** to
 
 {% tab title="Laravel" %}
 ```php
-# Register AMQP Service in Provider
+# Register Kafka Service in Provider
 
 use Ecotone\Kafka\Configuration\KafkaBrokerConfiguration;
 
