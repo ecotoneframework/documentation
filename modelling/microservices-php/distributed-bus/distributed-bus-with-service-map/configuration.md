@@ -16,11 +16,17 @@ The minimum needed for enabling Distributed Bus with Service Map and start consu
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
-    return DistributedServiceMap::initialize()
-              ->withServiceMapping(
-                        serviceName: "ticketService", 
-                        channelName: "distributed_ticket_service"
-              )
+    return DistributedServiceMap::initialize();
+}
+```
+
+and then we would define Message Channel, which we would use for for incoming messages:
+
+```php
+#[ServiceContext]
+public function channels()
+{
+    return SqsBackedMessageChannelBuilder::create("distributed_ticket_service")
 }
 ```
 
