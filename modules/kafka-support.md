@@ -217,7 +217,7 @@ We can accesss specific Kafka Headers using standard [Ecotone's metadata](../mod
 )]
 public function handle(
     string $payload, 
-    #[Header("kafka_topic") string $topicName,
+    #[Header("kafka_topic")] string $topicName,
 ): void
 {
     // do something
