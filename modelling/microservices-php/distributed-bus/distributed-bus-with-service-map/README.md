@@ -26,7 +26,7 @@ Making Service available for integration is matter of adding it to the Service M
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
-    return DistributedServiceMap::createEmpty()
+    return DistributedServiceMap::initialize()
               ->withServiceMapping(
                         serviceName: "ticketService", 
                         channelName: "distributed_ticket_service"
@@ -98,7 +98,7 @@ In User Service let's then define Service Map using [ServiceContext](../../../..
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
-    return DistributedServiceMap::createEmpty()
+    return DistributedServiceMap::initialize()
               ->withServiceMapping(
                         serviceName: "ticketService", 
                         channelName: "distributed_ticket_service"
@@ -182,7 +182,7 @@ To configure map with subscription keys, we will be using **subscriptionRoutingK
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
-    return DistributedServiceMap::createEmpty()
+    return DistributedServiceMap::initialize()
               ->withServiceMapping(
                         serviceName: "ticketService", 
                         channelName: "distributed_ticket_service",

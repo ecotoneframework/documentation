@@ -18,7 +18,7 @@ $userService = EcotoneLite::bootstrapFlowTesting(
                 ->withServiceName('user_service')
                 ->withExtensionObjects([
                     // distributed service map on the publisher side
-                    DistributedServiceMap::createEmpty()
+                    DistributedServiceMap::initialize()
                         ->withServiceMapping(serviceName: 'ticket_service', channelName: 'distributed_ticket'),
                     // shared in memory channel
                     enableAsynchronousProcessing: [distributedTicketChannel]

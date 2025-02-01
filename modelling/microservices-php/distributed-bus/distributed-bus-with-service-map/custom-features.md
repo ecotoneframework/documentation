@@ -12,7 +12,7 @@ To configure this up, we need to have our [Database Message Channel](../../../as
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
-    return DistributedServiceMap::createEmpty()
+    return DistributedServiceMap::initialize()
               ->withServiceMapping(serviceName: "ticketService", channelName: "distributed_ticket_service")
               ->withAsynchronousChannel('database_channel')
 }
@@ -29,9 +29,9 @@ In case we would like to explicitly separate Service Maps for specific integrati
 public function serviceMap(): DistributedServiceMap
 {
     return [
-        DistributedServiceMap::createEmpty(referenceName: 'internalDistributedBus')
+        DistributedServiceMap::initialize(referenceName: 'internalDistributedBus')
            ->withServiceMapping(serviceName: "ticketService", channelName: "distributed_ticket_service"),
-        DistributedServiceMap::createEmpty(referenceName: 'externalDistributedBus')
+        DistributedServiceMap::initialize(referenceName: 'externalDistributedBus')
             ->withServiceMapping(serviceName: "orderService", channelName: "distributed_order_service")
     ];
 }
