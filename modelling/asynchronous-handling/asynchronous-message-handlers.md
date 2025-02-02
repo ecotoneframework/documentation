@@ -56,7 +56,7 @@ There are multiple different implementation which we can use:
 At this moment following modules with pollable channels are available:
 
 * [AMQP Support (RabbitMQ)](../../modules/amqp-support-rabbitmq.md#message-channel)
-* [Kafka Support](../../modules/kafka-support.md)
+* [Kafka Support](../../modules/kafka-support/)
 * [DBAL Support](../../modules/dbal-support.md#message-channel)
 * [SQS Support](../../modules/amazon-sqs-support.md)
 * [Redis Support](../../modules/redis-support.md)

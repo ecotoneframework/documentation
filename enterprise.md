@@ -17,7 +17,7 @@ Stay tuned by [subscribe to mailing list](https://blog.ecotone.tech/#/portal).
 ## Available Enterprise Features
 
 * [**Dynamic Message Channels**](modelling/asynchronous-handling/dynamic-message-channels.md) - Allows for different deployment strategies of Message Channels, provides support for build advanced per Client configurations.
-* [**Kafka Support**](modules/kafka-support.md) - Enables integration with Kafka (Event Streaming Platform) to send, receive from Messages from topics, and to use Kafka in form of Message Channel abstraction for seamless integration into the System.
+* [**Kafka Support**](modules/kafka-support/) - Enables integration with Kafka (Event Streaming Platform) to send, receive from Messages from topics, and to use Kafka in form of Message Channel abstraction for seamless integration into the System.
 * [**Event Sourcing Handlers with Metadata**](modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md#enterprise-accessing-metadata-during-event-application) -Provides ability to access Event's metadata during Event Sourced Aggregate reconstruction.
 * [**Asynchronous Message Buses**](modelling/asynchronous-handling/asynchronous-message-bus-gateways.md) **-** Adds ability to set up Message Bus as asynchronous, which make it easy to create customized solutions like "Outbox Command Bus".
 * [**Distributed Bus with Service Map**](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/) - Provides way to communicate between Services (Applications) using all available Message Channels providers (RabbitMQ, Amazon SQS, Redis, Dbal, Kafka, Symfony Message Channels, Laravel Queues).

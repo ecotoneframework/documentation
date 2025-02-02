@@ -1,67 +1,8 @@
-# Kafka Support
-
-{% hint style="success" %}
-This module is available as part of **Ecotone Enterprise.**
-{% endhint %}
-
-## Installation
-
-```php
-composer require ecotone/kafka
-```
-
-## Configuration
-
-In order to use **Kafka Support** we need to add **KafkaBrokerConfiguration** to our **Dependency Container.**&#x20;
-
-{% tabs %}
-{% tab title="Symfony" %}
-```php
-# config/services.yaml
-# You need to have Kafka instance running on your localhost, or change DSN
-    Ecotone\Kafka\Configuration\KafkaBrokerConfiguration:
-        class: Ecotone\Kafka\Configuration\KafkaBrokerConfiguration
-        arguments:
-            $bootstrapServers:
-                - localhost:9094
-```
-{% endtab %}
-
-{% tab title="Laravel" %}
-```php
-# Register Kafka Service in Provider
-
-use Ecotone\Kafka\Configuration\KafkaBrokerConfiguration;
-
-public function register()
-{
-     $this->app->singleton(KafkaBrokerConfiguration::class, function () {
-         return new KafkaBrokerConfiguration(['localhost:9094']);
-     });
-}
-```
-{% endtab %}
-
-{% tab title="Lite" %}
-```php
-use Ecotone\Kafka\Configuration\KafkaBrokerConfiguration;
-
-$application = EcotoneLiteApplication::boostrap(
-    [
-        KafkaBrokerConfiguration::class => new KafkaBrokerConfiguration(['localhost:9094'])
-    ]
-);
-```
-{% endtab %}
-{% endtabs %}
-
-{% hint style="info" %}
-We register our **KafkaBrokerConfiguration** under the class name **Ecotone\Kafka\Configuration\KafkaBrokerConfiguration**. This will help Ecotone resolve it automatically, without any additional configuration.
-{% endhint %}
+# Usage
 
 ## Message Channel
 
-To create Kafka Backed [Message Channel](../modelling/asynchronous-handling/), we need to create [Service Context](../messaging/service-application-configuration.md).&#x20;
+To create Kafka Backed [Message Channel](../../modelling/asynchronous-handling/), we need to create [Service Context](../../messaging/service-application-configuration.md).&#x20;
 
 ```php
 class MessagingConfiguration
@@ -119,7 +60,7 @@ Position of Message Consumer is tracked against given group id.. Depending on re
 
 ## Custom Publisher
 
-To create [custom publisher or consumer](../modelling/microservices-php/) provide [Service Context](../messaging/service-application-configuration.md).
+To create [custom publisher or consumer](../../modelling/microservices-php/) provide [Service Context](../../messaging/service-application-configuration.md).
 
 {% hint style="success" %}
 Custom Publishers and Consumers are great for building integrations for existing infrastructure or setting up a customized way to communicate between applications. With this you can take over the control of what is published and how it's consumed.
@@ -173,7 +114,7 @@ public function handle(string $payload, array $metadata): void
 }
 ```
 
-Then we run it as any other [asynchronous consumer](../modelling/asynchronous-handling/), using **orderConsumer** name.
+Then we run it as any other [asynchronous consumer](../../modelling/asynchronous-handling/), using **orderConsumer** name.
 
 ### Providing group id
 
@@ -208,7 +149,7 @@ public function distributedPublisher()
 
 ## Kafka Headers
 
-We can accesss specific Kafka Headers using standard [Ecotone's metadata](../modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md) mechanism
+We can accesss specific Kafka Headers using standard [Ecotone's metadata](../../modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md) mechanism
 
 * **kafka\_topic** - Topic name for incoming message
 * **kafka\_partition** - Partition of incoming message
