@@ -100,7 +100,7 @@ public function orderChannel()
 
 ### Customize Group Id
 
-We can also customize the group id, which by default with following channel name:
+We can also customize the group id, which by default following channel name:
 
 ```php
 #[ServiceContext] 
@@ -112,6 +112,10 @@ public function orderChannel()
     );
 }
 ```
+
+{% hint style="warning" %}
+Position of Message Consumer is tracked against given group id.. Depending on retention policy, changing group id for existing Message Channel may result in re-delivering messages.
+{% endhint %}
 
 ## Custom Publisher
 
