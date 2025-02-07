@@ -24,4 +24,4 @@ class Shop
 * `endpointId` - Endpoint identifier&#x20;
 * `inputChannnelName` - Required option, defines to which channel endpoint should be connected
 * `outputChannelName` - Channel where result of method invocation will be&#x20;
-* `requiredInterceptorNames` - List of [interceptor](../../../modelling/extending-messaging-middlewares/interceptors.md) names, which should intercept the endpoint
+* `requiredInterceptorNames` - List of [interceptor](../../../modelling/extending-messaging-middlewares/interceptors/) names, which should intercept the endpoint

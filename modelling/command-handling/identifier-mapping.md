@@ -76,7 +76,7 @@ public function failPayment(PaymentWasFailedEvent $event, CommandBus $commandBus
 ```
 
 {% hint style="success" %}
-We can make use of `Before` or `Presend` [Interceptors](../extending-messaging-middlewares/interceptors.md) to enrich event's metadata with required identifiers.
+We can make use of `Before` or `Presend` [Interceptors](../extending-messaging-middlewares/interceptors/) to enrich event's metadata with required identifiers.
 {% endhint %}
 
 ## Dynamic Identifier
@@ -105,7 +105,7 @@ Event so we are using "aggregate.id" in the metadata, this will work exactly the
 
 ## Advanced Identifier Mapping
 
-There may be cases where more advanced mapping may be needed. In those cases we can use identifier mapping based on [Expression Language](https://symfony.com/doc/current/components/expression\_language.html).
+There may be cases where more advanced mapping may be needed. In those cases we can use identifier mapping based on [Expression Language](https://symfony.com/doc/current/components/expression_language.html).
 
 When using **identifierMapping** configuration, we get access to the Message fully and to Dependency Container. To access specific part we will be using:
 

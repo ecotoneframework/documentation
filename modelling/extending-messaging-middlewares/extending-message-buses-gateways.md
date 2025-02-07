@@ -2,7 +2,7 @@
 
 Ecotone provides ability to extend any Messaging Gateway using Interceptors. We can hook into the flow and add additional behavior.
 
-For better understanding, please read [Interceptors section](interceptors.md) before going through this chapter.
+For better understanding, please read [Interceptors section](interceptors/) before going through this chapter.
 
 ## Intercepting Gateways
 

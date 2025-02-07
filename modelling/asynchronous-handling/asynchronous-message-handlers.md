@@ -226,7 +226,7 @@ You may put `Asynchronous` on the class, level so all the endpoints within a cla
 ## Intercepting asynchronous endpoint
 
 All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint` \
-If you want to [intercept](../extending-messaging-middlewares/interceptors.md) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors.md#pointcut) on this.
+If you want to [intercept](../extending-messaging-middlewares/interceptors/) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors/#pointcut) on this.
 
 ## Endpoint Id
 

@@ -189,7 +189,7 @@ public function changeBillingDetails(
 
 ## Intercepting Sending Messages
 
-To intercept Distributed Bus before Message is send we can use [Interceptors](../../../extending-messaging-middlewares/interceptors.md).
+To intercept Distributed Bus before Message is send we can use [Interceptors](../../../extending-messaging-middlewares/interceptors/).
 
 ```php
 #[Before(pointcut: DistributedBus::class, changeHeaders: true)]

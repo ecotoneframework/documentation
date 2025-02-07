@@ -119,7 +119,7 @@ One of the problems that we need to accept is that [Network is not reliable](htt
 
 In our case, if we would want to store our Order synchronously, or send an Message to the Broker, it may happen that we will face an error. This of course means that Customer will not completely his Order, which is far from ideal.&#x20;
 
-To solve this we can make use of [Instant Retries](../../modelling/recovering-tracing-and-monitoring/resiliency/retries.md#instant-retries) on the Command Bus.&#x20;
+To solve this we can make use of [Instant Retries](../recovering-tracing-and-monitoring/resiliency/retries.md#instant-retries) on the Command Bus.&#x20;
 
 <figure><img src="../../.gitbook/assets/instant-retries.png" alt=""><figcaption><p>When failure happens, Command Bus is triggered again</p></figcaption></figure>
 
@@ -127,11 +127,11 @@ When failure happens Command Bus will automatically be triggered once more (depe
 
 ## Recoverable Asynchronous Errors
 
-So when Failure happens during Asynchronous handling of given Message, we've still can kick off [instant retries](../../modelling/recovering-tracing-and-monitoring/resiliency/retries.md#asynchronous-instant-retries) to try to recover immediately. \
+So when Failure happens during Asynchronous handling of given Message, we've still can kick off [instant retries](../recovering-tracing-and-monitoring/resiliency/retries.md#asynchronous-instant-retries) to try to recover immediately. \
 However we get a bit more options here now as we are no more in HTTP Context, we can now delay the Retry too. \
 \
 Delaying the retries may be especially useful when dealing with External Services, as it may happen that they will be down for some period of time, which instant retries will not solve. \
-In those situations we still want to Application to seal-heal, so we don't need to bother with those situations and for this we can use [Delayed Retries](../../modelling/recovering-tracing-and-monitoring/resiliency/retries.md#delayed-retries).
+In those situations we still want to Application to seal-heal, so we don't need to bother with those situations and for this we can use [Delayed Retries](../recovering-tracing-and-monitoring/resiliency/retries.md#delayed-retries).
 
 <figure><img src="../../.gitbook/assets/synchronize (1).png" alt=""><figcaption><p>Retrying the Command Handler with delay</p></figcaption></figure>
 
@@ -140,7 +140,7 @@ In those situations we still want to Application to seal-heal, so we don't need 
 In case External Service is down for longer period of time, we may actually not be able to self-heal. \
 In case of coding errors (bugs) we may also end up in situation where not matter how many retries we would do, we still won't recover.
 
-For this situation, Ecotone provides [Dead Letter Storage](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/), which allows us to store the the Message and replay after the problem is fixed.&#x20;
+For this situation, Ecotone provides [Dead Letter Storage](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/), which allows us to store the the Message and replay after the problem is fixed.&#x20;
 
 <figure><img src="../../.gitbook/assets/dead-letter (1).png" alt=""><figcaption><p>Store in Dead Letter when urecoverable and replay when needed</p></figcaption></figure>
 
@@ -153,10 +153,10 @@ And if unrecoverable error happens, we get ability to easily replay the Message 
 
 If we already have some solution to handle Asynchronous Errors in our Application, we can take over the process using Error Channel. Error Chanel is a Message Channel where all unhandled Asynchronous Errors go. \
 \
-You can read more about in [related documentation](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#error-channel).
+You can read more about in [related documentation](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#error-channel).
 
 ## Customizing Error Handling on Message Handler Level
 
 We could also catch exception using Middleware like behaviour and provide custom logic that we would like to trigger. This can be easily built using Ecotone's Interceptors.
 
-You can read more about in [related documentation](../../modelling/extending-messaging-middlewares/interceptors.md).
+You can read more about in [related documentation](../extending-messaging-middlewares/interceptors/).
