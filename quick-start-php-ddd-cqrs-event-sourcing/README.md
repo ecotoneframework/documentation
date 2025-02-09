@@ -17,7 +17,7 @@ If you're looking on way to start and get to familiar with Ecotone. Then Ecotone
 * [Subscribe to Mailing list](https://blog.ecotone.tech/#/portal) - Join mailing list to stay up to date with Ecotone changes and latest articles and features.
 
 {% hint style="success" %}
-Ecotone does not bind given features to specific Framework. Whatever you use Laravel or Symfony or Lite (no external framework), all examples will be able to work in your Application. \
+Some demo and quick-start examples which are done using specific framework integration. However Ecotone does not bind given set of features to specific solution. Whatever you use Laravel or Symfony or Lite (no external framework), all features will in same way. \
 \
-Therefore feel encouraged to test examples, even if they are in different Framework than one you use, as you will be able to use them same way in your Application.
+Therefore feel encouraged to test out examples, even if they are not framework of your choose.
 {% endhint %}

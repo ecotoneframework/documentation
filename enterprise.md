@@ -9,9 +9,9 @@ Ecotone comes with two plans:
 * **Ecotone Enterprise** is based Enterprise licence. It does provide more advanced features that help building larger scale systems, optimize resource costs and speed up daily development even more than the basic functionality.
 
 {% hint style="success" %}
-Each Enterprise feature is marked with hint on the documentation page. Enterprise features can't be run without licence key.\
+Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\
 Enterprise Licence Keys will be sold at **https://ecotone.tech** in early **2025**.\
-Stay tuned by [subscribe to mailing list](https://blog.ecotone.tech/#/portal).
+Stay tuned by [subscribing to mailing list](https://blog.ecotone.tech/#/portal).
 {% endhint %}
 
 ## Available Enterprise Features

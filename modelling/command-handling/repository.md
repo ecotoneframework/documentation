@@ -131,25 +131,7 @@ final class EcotoneTicketRepository implements StandardRepository
 }
 ```
 
-## Repository for Event Sourced Aggregate
-
-```php
-interface EventSourcedRepository
-{
-    public function canHandle(string $aggregateClassName): bool;
-    
-    1 public function findBy(string $aggregateClassName, array $identifiers) :  EventStream;
-
-    2 public function save(array $identifiers, string $aggregateClassName, array $events, array $metadata, int $versionBeforeHandling): void;
-}
-```
-
-Event Sourced Repository  instead of working with aggregate instance, works with events.&#x20;
-
-1. `findBy method` returns previously created events for given aggregate.&#x20;
-2. `save method` gets array of events to save returned by `CommandHandler` after performing an action
-
-### Set up your own Implementation
+## Set up your own Implementation
 
 When your implementation is ready simply mark it with `#[Repository]` attribute:
 
@@ -191,3 +173,7 @@ However, if we register multiple Repositories, then we need to take over the pro
 
 * In case of [Custom Repositories](repository.md#set-up-your-own-implementation) we do it using **canHandle** method.
 * In case of inbuilt Repositories, we should follow configuration section for given type
+
+## Repository for Event Sourced Aggregate
+
+Custom repository for Event Sourced Aggregates is described in more details under [Event Sourcing Repository section](../event-sourcing/event-sourcing-introduction/persistence-strategy/event-sourcing-repository.md).

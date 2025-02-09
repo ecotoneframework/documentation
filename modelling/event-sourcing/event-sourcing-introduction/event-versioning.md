@@ -79,5 +79,5 @@ class Product
 
 {% hint style="success" %}
 We may inject any type of Header that was stored together with the Event. \
-This means inbuilt headers like **timestamp**, **id**, **correlationId are avaiable** out of the bo&#x78;**.**
+This means inbuilt not only headers like **timestamp**, **id**, **correlationId are avaiable** out of the box, but also custom headers provided by the application (e.g. userId).
 {% endhint %}

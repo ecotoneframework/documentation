@@ -61,3 +61,13 @@ class BasketWasCreated
 ```
 
 This way Ecotone will do the mapping before storing an Event and when retrieving the Event in order to deserialize it to correct class.
+
+## Testing
+
+It's worth to remember that if we want test storing Events using provided Event Named, we need to add them under recognized classes, so Ecotone knows that should scan those classes for Attributes:
+
+```php
+$ecotoneLite = EcotoneLite::bootstrapFlowTesting(
+    [Basket::class, BaskeWasCreated::class],
+);
+```

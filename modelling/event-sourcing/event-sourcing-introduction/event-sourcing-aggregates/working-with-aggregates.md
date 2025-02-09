@@ -84,7 +84,7 @@ We will explore how applying Events works more in [next section](applying-events
 ### Aggregate Type
 
 Aggregate Type will be the same as Aggregate Class. \
-We can decouple the class from the Aggregate Type, more about this can be found in "[Making Stream immune to changes](making-stream-immune-to-changes.md)" section.
+We can decouple the class from the Aggregate Type, more about this can be found in "[Making Stream immune to changes](../persistence-strategy/making-stream-immune-to-changes.md)" section.
 
 ### Recording Events in the Event Stream
 
@@ -117,4 +117,4 @@ $eventStore->appendTo(
 ```
 
 As storing in Event Store is abstracted away, the code stays clean and contains only of the business part. \
-We can [customize](making-stream-immune-to-changes.md) the Stream Name, Aggregate Type and even Event Names when needed.
+We can [customize](../persistence-strategy/making-stream-immune-to-changes.md) the Stream Name, Aggregate Type and even Event Names when needed.
