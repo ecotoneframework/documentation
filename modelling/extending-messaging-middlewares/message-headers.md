@@ -1,7 +1,7 @@
 # Message Headers
 
-Ecotone provides easy way to pass Message Headers with your Message and use it in your Message Handlers or [Interceptors](interceptors/).\
-In case of asynchronous scenarios, Message Headers will be automatically mapped and passed to your Message Broker.
+Ecotone provides easy way to pass Message Headers (Metadata) with your Message and use it in your Message Handlers or [Interceptors](interceptors/).\
+In case of asynchronous scenarios, Message Headers will be automatically mapped and passed to through your Message Broker.
 
 ## Passing headers to Bus:
 

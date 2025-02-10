@@ -26,7 +26,7 @@
 
 ## Modelling
 
-* [Introduction](modelling/modelling-1.md)
+* [Introduction](modelling/message-driven-php-introduction.md)
 * [Message Bus and CQRS](modelling/command-handling/README.md)
   * [CQRS Introduction - Commands](modelling/command-handling/external-command-handlers/README.md)
     * [Query Handling](modelling/command-handling/external-command-handlers/query-handling.md)

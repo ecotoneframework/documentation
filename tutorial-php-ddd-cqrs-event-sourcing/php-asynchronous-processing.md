@@ -501,5 +501,5 @@ The final code is available as lesson-7:\
 We made it through, Congratulations! \
 We have successfully registered asynchronous Command Handler and safely placed the order. \
 \
-We have finished last lesson. You may now apply the knowledge in real project or check more advanced usages starting here [Modelling Overview](../modelling/modelling-1.md).
+We have finished last lesson. You may now apply the knowledge in real project or check more advanced usages starting here [Modelling Overview](../modelling/message-driven-php-introduction.md).
 {% endhint %}

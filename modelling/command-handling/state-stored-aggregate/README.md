@@ -4,7 +4,7 @@ description: DDD Aggregates PHP
 
 # Aggregate Introduction
 
-This chapter will cover the basics on how to implement an [Aggregate](../../modelling-1.md#aggregates). \
+This chapter will cover the basics on how to implement an [Aggregate](../../message-driven-php-introduction.md#aggregates). \
 We will be using Command Handlers in this section, so ensure reading [External Command Handler](../external-command-handlers/) section first, to understand how Command are sent and handled.
 
 ## Aggregate Command Handlers

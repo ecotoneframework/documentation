@@ -6,7 +6,7 @@ description: PHP Message Bus, CQRS, Command Event Query Handlers
 
 In this chapter we will cover process of handling and dispatching Messages with Ecotone. \
 We will discuss topics like Commands, Events and Queries, Message Handlers, Message Buses, Aggregates and Sagas. \
-You may be interested in theory - [DDD and CQRS](../modelling-1.md) chapter first.
+You may be interested in theory - [DDD and CQRS](../message-driven-php-introduction.md) chapter first.
 
 ## Materials
 

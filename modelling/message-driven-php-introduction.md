@@ -8,22 +8,22 @@ description: Message Driven System with Domain Driven Design principles in PHP
 
 The roots of Object Oriented Programming were mainly about communication using Messages and logic encapsulation. The aim was to focus on the flows and communication, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they do, and what have they done.
 
-If you know things like Events, Commands and Aggregates, then what was written above should feel familiar to you. This is because those concepts are build around same principles of old OOP where communicate is done through Messages. \
-And this is what Ecotone is about, it's about returning to the roots of OOP, about explicit System design where Messages are playing the main role.&#x20;
+If you know things like Events, Commands and Aggregates, then what was written above should feel familiar to you. This is because those concepts are build around same principles of old OOP where communication is done through Messages and Objects are meant to encapsulate logic. \
+And Ecotone is about returning to those roots of Object Oriented Programming. It's about explicit System design where communication happen through Messages, in a way that is clear to follow and understand.
 
 ## Message based communication
 
-There is no possibility to immerse fully into Message based communication, as long as the foundation is not fully Message Driven. This means that each communication within the Application (not only between Applications) has to happen through Messages. This way it can become natural practice of how the system is designed.
+There is no possibility to immerse fully into Message based communication, as long as the foundation is not fully Message Driven. This means that each communication within the Application (not only between Applications) has to happen through Messages. This way it can become natural practice of how the system is being designed.
 
 Ecotone follows on this making the Messaging the core of the Framework. It introduce Message based communication build around [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) as the underlying foundation. This way even communication between PHP Objects can be done through Messages in seamless way.&#x20;
 
 <figure><img src="../.gitbook/assets/communication.png" alt=""><figcaption><p>Communication between Objects using Messages</p></figcaption></figure>
 
-As Ecotone follows Enterprise Integration Patterns, it makes the **communication between Objects happening through Message Channels.** We can think of Message Channel as pipe, that one side sends too, and the second side consumes from. As communication goes through Message Channels, it becomes really easy to switch the pipes. This basically means we can make choose Message Channel which is backed by different Message Brokers, we can use synchronous or asynchronous Channel, and yet our Objects will not be affected that anyhow.
+As Ecotone follows Enterprise Integration Patterns, it makes the **communication between Objects happening through Message Channels.** We can think of Message Channel as pipe, where one side send Messages into, and the other consumes from it. As communication goes through Message Channels, it becomes really easy to switch the pipes. This basically means we can easily switch Message Channel implementations to use synchronous or asynchronous Channel, different Message Brokers, and yet our Objects will not be affected by that anyhow.
 
 ## Application level code
 
-Ecotone provides different levels of abstractions, which we can choose to use from. Each abstraction is described in more details in related sections. In this Introduction we will  go over high level on how things can be used, to feel what is Message based flows about.
+Ecotone provides different levels of abstractions, which we can choose to use from. Each abstraction is described in more details in related sections. In this Introduction section we will  go over high level on how things can be used, to show what is Message based communication about.
 
 ### Command Handlers
 
@@ -65,6 +65,8 @@ After sending Command Message, our Command Handler will be executed. **Command a
 What is important here is that, Ecotone never forces to implement or extend Framework specific classes. This means that our Command or Event Messages are POPO (clean PHP object). In most of the scenarios we will simply mark given method with Attribute and Ecotone will glue the things for us.&#x20;
 {% endhint %}
 
+[Click, to find out more...](command-handling/external-command-handlers/)
+
 ### Command Handlers with Routing
 
 From here we could decide to make use Message routing functionality to decouple Controllers from constructing Command Messages.
@@ -91,6 +93,8 @@ public function registerAction(Request $request, CommandBus $commandBus): Respon
 When controllers simply pass through incoming data to Command Bus via routing, there is not much logic left in controllers. We could even have single controller, if we would be able to get routing key.  It's really up to us, what work best in context of our system.
 {% endhint %}
 
+[Click, to find out more...](command-handling/external-command-handlers/#sending-commands-via-routing)
+
 ### Interceptors
 
 What we could decide to do is to add so called Interceptors (middlewares) to our Command Bus to add additional data or access validation.&#x20;
@@ -115,6 +119,8 @@ The reference attribute stays that given parameter is Service from Dependency Co
 There are multiple different interceptors that can hook at different moments of the flow. \
 With that besides of things like validations, we can also modify Message itself, for example by enriching the Command with additional data, or add custom Metadata to the Message.
 {% endhint %}
+
+[Click, to find out more...](extending-messaging-middlewares/interceptors/)
 
 ### Message Metadata
 
@@ -153,6 +159,8 @@ Besides metadata that we do provide, Ecotone provides additional metadata that w
 Ecotone take care of automatic Metadata propagation, no matter if execution synchronous or asynchronous. Therefore we can easily access any given metadata in targeted Message Handler, and also in resulting sub flows like Event Handlers. This make it really easy to carry any additional information, which can not only be used in first executed Message Handler, but also in any flow triggered later.
 {% endhint %}
 
+[Click, to find out more...](extending-messaging-middlewares/message-headers.md)
+
 ### Event Handlers
 
 We mentioned Notification Sender to be executed when User Was Registered Event happens.\
@@ -187,6 +195,8 @@ We can easily imagine that some of them may fail and things like retries become 
 That's why Ecotone deliver a copy of the Message to each related Event Handler. \
 As a result each Asynchronous Event Handler is handling it's own Message in full isolation, and in case of failure only that Handler will be retried.
 {% endhint %}
+
+[Click, to find out more...](command-handling/external-command-handlers/event-handling.md)
 
 ### Aggregates
 
@@ -244,6 +254,8 @@ public function blockAction(Request $request, CommandBus $commandBus): Response
 
 There is one special metadata here, which is "**aggregate.id**", this tell Ecotone the instance of User which it should fetch from storage and execute this method on. There is no need to create Command Class at all, because there is no data we need to pass there. \
 This way we can build features with ease and protect internal state of our Models, so they are not modified in incorrect way.&#x20;
+
+[Click, to find out more...](command-handling/state-stored-aggregate/)
 
 ### Workflows
 
@@ -312,24 +324,24 @@ This we've made synchronous which is the default if no Asynchronous attribute is
 We have been building stateless workflows here, however Ecotone provides also stateful workflows in form of Sagas.
 {% endhint %}
 
+[Click, to find out more...](business-workflows/)
+
 This all works in seamless way, when we are dealing with Ecotone's Message Driven Architecture.\
 We simply use PHP classes that we've created ourselves and use Messaging capabilities, yet we are freed from Messaging implementation concerns. This all can be achieved thanks to Ecotone's architecture built on top of three main pillars which we will take a look on now.
 
 ## Business Oriented Architecture
 
-[Ecotone](https://blog.ecotone.tech/revolutionary-boa-framework-ecotone/) embrace the concept of Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes. \
-**Business Oriented Architecture** is built around three main pillars:
+[Ecotone](https://blog.ecotone.tech/revolutionary-boa-framework-ecotone/) embrace the concept of Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes, using Messaging as the foundation on which everything else is built.\
+\
+**Business Oriented Architecture** is built from three pillars:
 
 <figure><img src="../.gitbook/assets/image (4).png" alt="" width="563"><figcaption><p>When all thee pillars are solved by Ecotone, what is left to write is Business Oriented Code</p></figcaption></figure>
 
 1. **Resilient Messaging** **-** At the heart of Ecotone lies a resilient messaging system that enables loose coupling, fault tolerance, and self-healing capabilities.
-2. **Declarative Configuration -** Introduces declarative programming which simplifies development, reduces boilerplate code, and promotes code readability. It empowers developers to express their intent clearly, resulting in more maintainable and expressive codebases.
+2. **Declarative Configuration -** Introduces declarative programming with Attributes. It simplifies development, reduces boilerplate code, and promotes code readability. It empowers developers to express their intent clearly, resulting in more maintainable and expressive codebases.
 3. **Building Blocks -** Building blocks like Message Handlers, Aggregates, Sagas, facilitate the implementation of the business logic. By making it possible to bind Building Blocks with Resilient Messaging, Ecotone makes it easy to build and connect even the most complex business workflows.
 
-By providing all those three Pillars, Ecotone provides an foundation which then allows us to fully focus on the business side of the things. \
-
-
-Having this foundation knowledge and understanding how Ecotone works on high level, it's good moment to dive into [Tutorial section](../tutorial-php-ddd-cqrs-event-sourcing/), which will provide hands on experience to deeper your understanding.
+Having this foundation knowledge and understanding how Ecotone works on high level, it's good moment to dive into [Tutorial section](../tutorial-php-ddd-cqrs-event-sourcing/), which will provide hands on experience to deeper understanding.
 
 ## Materials
 
