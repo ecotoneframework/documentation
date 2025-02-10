@@ -6,7 +6,7 @@
 
 The roots of Object Oriented Programming (OOP) were mainly about communication using Messages and logic encapsulation. The main idea was to **focus on the flows and communication**, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they can do, and inform what they have done.&#x20;
 
-**Ecotone aim is to return to the origins of OOP**, by providing tools which allows us to fully move the focus from Objects to Flows, from Data storage to Application Design, from Technicalities to Business logic. Ecotone does that **making Message first class-citizen in our Applications**. \
+**Ecotone aims to return to the origins of OOP**, by providing tools which allows us to fully move the focus from Objects to Flows, from Data storage to Application Design, from Technicalities to Business logic. Ecotone does that by **making Messages first class-citizen in our Applications**. \
 In Ecotone any communication happens through Messages, each Object states clearly what Messages they expect to receive (input) and what Messages they will send out (output). This together with higher level abstractions like Message Handlers and Aggregates **makes the system design explicit, easy to follow and change.**
 
 Read more in [introduction section...](modelling/message-driven-php-introduction.md)
