@@ -65,9 +65,35 @@ final class PaymentHandler
 As deduplication is tracked within given endpoint id, it means we can change the deduplication key safely without being in risk of receiving duplicates. If we would like to start tracking from fresh, it would be enough to change the endpointId.
 {% endhint %}
 
-## Custom remove time
+## Deduplication clean up
 
-By default Ecotone removes message id from deduplication storage after 7 days. \
+To remove expired deduplication history which is kept in database table, Ecotone provides an console command:&#x20;
+
+{% tabs %}
+{% tab title="Symfony" %}
+```php
+bin/console ecotone:deduplication:remove-expired-messages
+```
+{% endtab %}
+
+{% tab title="Laravel" %}
+```php
+artisan ecotone:deduplication:remove-expired-messages
+```
+{% endtab %}
+
+{% tab title="Lite" %}
+```php
+$messagingSystem->runConsoleCommand("ecotone:deduplication:remove-expired-messages");
+```
+{% endtab %}
+{% endtabs %}
+
+{% hint style="info" %}
+This command can be configured to run periodically e.g. using cron jobs.
+{% endhint %}
+
+By default Ecotone removes message id from deduplication storage **after 7 days in batches of 1000**.\
 It can be customized in case of need:
 
 ```php
@@ -77,12 +103,18 @@ class DbalConfiguration
     public function registerTransactions(): DbalConfiguration
     {
         return DbalConfiguration::createWithDefaults()
-                // 10000 ms - 10 seconds
-                ->withDeduplication(true, 10000);
+                // 100000 ms - 100 seconds
+                ->withDeduplication(
+                    expirationTime: 100000,
+                    removalBatchSize: 1000
+                );
     }
-
 }
 ```
+
+{% hint style="success" %}
+It's important to keep removal batch size at small number. As deleting records may result in database index rebuild which will cause locking. Therefore small batch size will ensure our system can continue, while messages are being deleted in background.
+{% endhint %}
 
 ## Disable Deduplication
 

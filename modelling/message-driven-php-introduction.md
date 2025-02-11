@@ -72,7 +72,7 @@ What is important here is that, Ecotone never forces to implement or extend Fram
 From here we could decide to make use Message routing functionality to decouple Controllers from constructing Command Messages.
 
 ```php
-#[CommandHandler("user.register")]
+#[CommandHandler(routingKey: "user.register")]
 public function register(RegisterUser $command, EventBus $eventBus): void
 ```
 
@@ -326,12 +326,15 @@ We have been building stateless workflows here, however Ecotone provides also st
 
 [Click, to find out more...](business-workflows/)
 
-This all works in seamless way, when we are dealing with Ecotone's Message Driven Architecture.\
-We simply use PHP classes that we've created ourselves and use Messaging capabilities, yet we are freed from Messaging implementation concerns. This all can be achieved thanks to Ecotone's architecture built on top of three main pillars which we will take a look on now.
+While working with Ecotone's Message Driven Architecture, a lot of things that previously felt hard, or inaccessible will now become natural and easy. And this is not in relation to building business workflows, there is much more that Ecotone provides out of the box. This includes implementation of patterns which help with resiliency and scalability, ability to test components in isolation, event sourcing and projecting support etc. However those are out of the scope of Introduction section.
 
 ## Business Oriented Architecture
 
-[Ecotone](https://blog.ecotone.tech/revolutionary-boa-framework-ecotone/) embrace the concept of Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes, using Messaging as the foundation on which everything else is built.\
+All the above is possible thanks to Ecotone's Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes, using **Resilient Messaging** as the foundation on which everything else is built.
+
+As we already seen, we will be using **Declarative Configuration** with attributes instead of writing and maintaining configuration files, we will be stating intention of what we want to achieve instead wiring things ourselves, as a result we will regain huge amount of time, which can be invested in improving other parts of the system. \
+\
+And together with that we will be able to use higher level **Build Blocks** like Command, Event Handlers and Aggregates, which connects to the messaging seamlessly. This way we can encapsulate our business logic, and make clear \
 \
 **Business Oriented Architecture** is built from three pillars:
 
