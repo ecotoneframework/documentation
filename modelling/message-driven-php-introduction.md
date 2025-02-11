@@ -330,13 +330,13 @@ While working with Ecotone's Message Driven Architecture, a lot of things that p
 
 ## Business Oriented Architecture
 
-All the above is possible thanks to Ecotone's Business-Oriented Architecture, which follows fundamental principle of making business logic the primary citizen in our Applications. It shifts the focus from technical details to the actual business processes, using **Resilient Messaging** as the foundation on which everything else is built.
+Ecotone shifts the focus from technical details to the actual business processes, using **Resilient Messaging** as the foundation on which everything else is built. It provides seamless communication using Messages between Applications, Modules or even different Classes.
 
-As we already seen, we will be using **Declarative Configuration** with attributes instead of writing and maintaining configuration files, we will be stating intention of what we want to achieve instead wiring things ourselves, as a result we will regain huge amount of time, which can be invested in improving other parts of the system. \
+Together with that we will be using **Declarative Configuration** with attributes to avoid writing and maintaining configuration files. We will be stating intention of what we want to achieve instead wiring things ourselves, as a result we will regain huge amount of time, which can be invested in more important part of the System.\
 \
-And together with that we will be able to use higher level **Build Blocks** like Command, Event Handlers and Aggregates, which connects to the messaging seamlessly. This way we can encapsulate our business logic, and make clear \
+And together with that, we will be able to use higher level **Build Blocks** like Command, Event Handlers, Aggregates, Sagas which connects to the messaging seamlessly, and helps encapsulate our business logic.\
 \
-**Business Oriented Architecture** is built from three pillars:
+So all the above serves as pillars for creating so called **Business Oriented Architecture:**
 
 <figure><img src="../.gitbook/assets/image (4).png" alt="" width="563"><figcaption><p>When all thee pillars are solved by Ecotone, what is left to write is Business Oriented Code</p></figcaption></figure>
 
