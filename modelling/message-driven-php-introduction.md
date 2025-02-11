@@ -326,7 +326,7 @@ We have been building stateless workflows here, however Ecotone provides also st
 
 [Click, to find out more...](business-workflows/)
 
-While working with Ecotone's Message Driven Architecture, a lot of things that previously felt hard, or inaccessible will now become natural and easy. And this is not in relation to building business workflows, there is much more that Ecotone provides out of the box. This includes implementation of patterns which help with resiliency and scalability, ability to test components in isolation, event sourcing and projecting support etc. However those are out of the scope of Introduction section.
+While working with Ecotone's Message Driven Architecture, a lot of things that previously felt hard, or inaccessible will now become natural and easy. And this is not in relation to building business workflows, there is much more that Ecotone provides out of the box. This includes implementation of patterns which help with resiliency and scalability, ability to test synchronous and asynchronous components in isolation, event sourcing and projecting support and many more. However those are out of the scope of Introduction section.
 
 ## Business Oriented Architecture
 
@@ -344,7 +344,7 @@ So all the above serves as pillars for creating so called **Business Oriented Ar
 2. **Declarative Configuration -** Introduces declarative programming with Attributes. It simplifies development, reduces boilerplate code, and promotes code readability. It empowers developers to express their intent clearly, resulting in more maintainable and expressive codebases.
 3. **Building Blocks -** Building blocks like Message Handlers, Aggregates, Sagas, facilitate the implementation of the business logic. By making it possible to bind Building Blocks with Resilient Messaging, Ecotone makes it easy to build and connect even the most complex business workflows.
 
-Having this foundation knowledge and understanding how Ecotone works on high level, it's good moment to dive into [Tutorial section](../tutorial-php-ddd-cqrs-event-sourcing/), which will provide hands on experience to deeper understanding.
+Having this foundation knowledge and understanding how Ecotone works on the high level, it's good moment to dive into [Tutorial section](../tutorial-php-ddd-cqrs-event-sourcing/), which will provide hands on experience to deeper understanding.
 
 ## Materials
 
