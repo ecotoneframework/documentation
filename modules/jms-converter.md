@@ -235,18 +235,23 @@ class Configuration
         return JMSConverterConfiguration::createWithDefaults()
                 ->withDefaultNullSerialization(false) // 1
                 ->withNamingStrategy("identicalPropertyNamingStrategy"); // 2
+                ->withDefaultEnumSupport(true) // 3
     }
 }
 ```
 
 ### withDefaultNullSerialization
 
-Should nulls be serialized (`bool, default: false`)
+Should nulls be serialized (**default: false**)
 
 ### withNamingStrategy
 
-Serialization naming strategy (`string "identicalPropertyNamingStrategy" || "camelCasePropertyNamingStrategy",` \
-`default: "identicalPropertyNamingStrategy"`)&#x20;
+Serialization naming strategy ("**identicalPropertyNamingStrategy**"/"**camelCasePropertyNamingStrategy**", \
+default: "**identicalPropertyNamingStrategy**")&#x20;
+
+### withDefaultEnumSupport
+
+When enabled, default enum converter will be used, therefore Enums will serialize to simple types (**default: false**)
 
 ## Serialize Nulls for specific conversion
 
