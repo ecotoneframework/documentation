@@ -4,16 +4,9 @@ description: Implementing Microservices in PHP
 
 # Distributed Bus and Microservices
 
-Ecotone comes with Support for integrating Service together in decoupled way.\
-For this Ecotone provides `Distributed Bus` in case all services work in PHP.\
-Or in case of integrating non PHP or when `Distributed Bus` can't be used, then `Message Consumer` and `Message Publisher` can be used instead.
+Ecotone comes with Support for integrating Service (Applications) together in decoupled way, for this Ecotone provides `Distributed Bus`.
 
-{% hint style="success" %}
-You may consider integrating service using Message Channels, however Message Channels are providing both sides consuming and publishing. \
-\
-Consider `Message Channels` for communication on the level of the same Service. \
-`Message Publishers` and `Message Consumers` to integrate with other Services.&#x20;
-{% endhint %}
+Read more in bellow sections:
 
 {% content-ref url="distributed-bus/" %}
 [distributed-bus](distributed-bus/)
