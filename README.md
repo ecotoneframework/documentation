@@ -2,8 +2,6 @@
 
 <figure><img src=".gitbook/assets/ecotone_logo_no_background (2).png" alt="" width="563"><figcaption></figcaption></figure>
 
-## About
-
 The roots of Object Oriented Programming (OOP) were mainly about communication using Messages and logic encapsulation. The main idea was to **focus on the flows and communication**, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they can do, and inform what they have done.&#x20;
 
 **Ecotone aims to return to the origins of OOP**, by providing tools which allows us to fully move the focus from Objects to Flows, from Data storage to Application Design, from Technicalities to Business logic. Ecotone does that by **making Messages first class-citizen in our Applications**. \

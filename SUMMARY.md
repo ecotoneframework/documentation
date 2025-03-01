@@ -182,6 +182,7 @@
 * [RabbitMQ Support](modules/amqp-support-rabbitmq.md)
 * [Kafka Support](modules/kafka-support/README.md)
   * [Configuration](modules/kafka-support/configuration.md)
+  * [Kafka partitioning](modules/kafka-support/kafka-partitioning.md)
   * [Usage](modules/kafka-support/usage.md)
 * [DBAL Support](modules/dbal-support.md)
 * [Amazon SQS Support](modules/amazon-sqs-support.md)
