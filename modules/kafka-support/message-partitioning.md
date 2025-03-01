@@ -1,4 +1,4 @@
-# Kafka partitioning
+# Message partitioning
 
 ## Kafka architecture
 
