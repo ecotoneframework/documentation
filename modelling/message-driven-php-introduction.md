@@ -339,7 +339,7 @@ We have been building stateless workflows here, however Ecotone provides also st
 
 While working with Ecotone's Message Driven Architecture, a lot of things that previously felt hard, or inaccessible will now become natural and easy. And this is not in relation to building business workflows, there is much more that Ecotone provides out of the box. This includes implementation of patterns which help with resiliency and scalability, ability to test synchronous and asynchronous components in isolation, event sourcing and projecting support and many more. However those are out of the scope of Introduction section.
 
-### Resilient Architecture
+### Inbuilt Resiliency
 
 Ecotone handles failures at the architecture level to make Application clear of those concerns.  \
 As Messages are the main component of communication between Applications, Modules or even Classes in Ecotone, it creates space for recoverability in all parts of the Application. As Messages can be retried instantly or with delay without blocking other processes from continuing their work.&#x20;
