@@ -4,7 +4,7 @@ description: Message Driven System with Domain Driven Design principles in PHP
 
 # Introduction
 
-## The foundation idea
+The foundation idea
 
 The roots of Object Oriented Programming were mainly about communication using Messages and logic encapsulation. The aim was to focus on the flows and communication, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they do, and what have they done.
 
@@ -177,8 +177,20 @@ class NotificationSender
 }
 ```
 
-This Event Handle will be automatically triggered when related Event will be published. \
-As we mentioned at the beginning of this introduction, communication happen through Message Channels, and it's really easy to switch code from synchronous to asynchronous. For that we would simply state that this Handler should be asynchronous:
+This Event Handler will be automatically triggered when related Event will be published. \
+This way we can easily build decoupled flows, which hook in into existing business events.&#x20;
+
+{% hint style="success" %}
+Even so Commands and Events are Messages at the fundamental level, Ecotone distinguish them because they carry different semantics. Commands are meant to state intention of what we want to happen, and Events carry the information about what have had happened in our System. \
+\
+By this design Commands can only have single related Command Handler, yet Events can have multiple subscribing Event Handlers.
+{% endhint %}
+
+[Click, to find out more...](command-handling/external-command-handlers/event-handling.md)
+
+### Asynchronous Processing
+
+As we mentioned at the beginning of this introduction, communication happen through Message Channels, and it's really easy to switch code from synchronous to asynchronous. For that we would simply state that given Message Handler should be executed asynchronously:
 
 ```php
 #[Asynchronous("async")]
@@ -186,17 +198,16 @@ As we mentioned at the beginning of this introduction, communication happen thro
 public function when(UserWasRegistered $event): void
 ```
 
-Now before this Event Handler will be executed, it **will land in Asynchronous Message Channel** named "async" first.&#x20;
+Now before this Event Handler will be executed, it **will land in Asynchronous Message Channel** named **"async"** first, and from there it will be consumed asynchronously by Message Consumer (Worker process).
 
 {% hint style="success" %}
-There maybe multiple Event Handlers subscribing to same Event Message. \
-We can easily imagine that some of them may fail and things like retries become problematic (As they may trigger successful Event Handlers for the second time).\
+There maybe situations where multiple Asynchronous Event Handlers will be subscribing to same Event. \
+We can easily imagine that one of them may fail and things like retries become problematic (As they may trigger successful Event Handlers for the second time).\
 \
-That's why Ecotone deliver a copy of the Message to each related Event Handler. \
-As a result each Asynchronous Event Handler is handling it's own Message in full isolation, and in case of failure only that Handler will be retried.
+That's why Ecotone introduces [Message Handling isolation](recovering-tracing-and-monitoring/message-handling-isolation.md), which deliver a copy of the Message to each related Event Handler separately. As a result each Asynchronous Event Handler is handling it's own Message in full isolation, and in case of failure only that Handler will be retried.
 {% endhint %}
 
-[Click, to find out more...](command-handling/external-command-handlers/event-handling.md)
+[Click, to find out more...](../quick-start-php-ddd-cqrs-event-sourcing/asynchronous-php.md)
 
 ### Aggregates
 
@@ -327,6 +338,30 @@ We have been building stateless workflows here, however Ecotone provides also st
 [Click, to find out more...](business-workflows/)
 
 While working with Ecotone's Message Driven Architecture, a lot of things that previously felt hard, or inaccessible will now become natural and easy. And this is not in relation to building business workflows, there is much more that Ecotone provides out of the box. This includes implementation of patterns which help with resiliency and scalability, ability to test synchronous and asynchronous components in isolation, event sourcing and projecting support and many more. However those are out of the scope of Introduction section.
+
+### Resilient Architecture
+
+Ecotone handles failures at the architecture level to make Application clear of those concerns.  \
+As Messages are the main component of communication between Applications, Modules or even Classes in Ecotone, it creates space for recoverability in all parts of the Application. As Messages can be retried instantly or with delay without blocking other processes from continuing their work.&#x20;
+
+<figure><img src="../.gitbook/assets/event-handler.png" alt=""><figcaption><p>Message failed and will be retried with delay</p></figcaption></figure>
+
+As Message are basically data records which carry the intention, it opens possibility to store that "intention", in case unrecoverable failure happen. This means that when there is no point in delayed retries, because we encountered unrecoverable error, then we can move that Message into persistent store. This way we don't lose the information, and when the bug is fixed, we can simply retry that Message to resume the flow from the place it failed.
+
+<figure><img src="../.gitbook/assets/retry.png" alt=""><figcaption><p>Storing Message for later review, and replaying when bug is fixed</p></figcaption></figure>
+
+There are of course more resiliency patterns, that are part of Ecotone, like:&#x20;
+
+* Automatic retries to send Messages to Asynchronous Message Channels
+* Reconnection of Message Consumers (Workers) if they lose the connection to the Broker&#x20;
+* Inbuilt functionalities like Message Outbox, Error Channels with Dead Letter, Deduplication of Messages to avoid double processing,&#x20;
+* and many many more.&#x20;
+
+{% hint style="success" %}
+The flow that Ecotone based on the Messages makes the Application possibile to handle failures at the architecture level. By communicating via Messages we are opening for the way, which allows us to self-heal our application without the need for us intervene, and in case of unrecoverable failures to make system robust enough to not lose any information and quickly recover from the point o failure when the bug is fixed.
+{% endhint %}
+
+[Click, to find out more...](recovering-tracing-and-monitoring/resiliency/)
 
 ## Business Oriented Architecture
 
