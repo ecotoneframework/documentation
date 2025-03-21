@@ -5,7 +5,7 @@ This chapter provides more details about advanced Message Channel functionalitie
 
 * Simplify deployment strategy&#x20;
 * Optimize system resources&#x20;
-* Adjust the configuration per Client, which is especially useful in Multi-Tenant Environments.
+* Adjust message consumption or sending process, which is especially useful in SaaS and Multi-Tenant Environments
 
 {% hint style="success" %}
 Dynamic Message Channels are available as part of **Ecotone Enterprise.**
@@ -31,7 +31,7 @@ final readonly class EcotoneConfiguration
 }
 ```
 
-To prepare an Message Consumer that will be able to consume from those two Channels in [Round Robin](https://en.wikipedia.org/wiki/Round-robin\_scheduling) manner (meaning each consumption is called after another one) we can set up Dynamic Message Channel.&#x20;
+To prepare an Message Consumer that will be able to consume from those two Channels in [Round Robin](https://en.wikipedia.org/wiki/Round-robin_scheduling) manner (meaning each consumption is called after another one) we can set up Dynamic Message Channel.&#x20;
 
 {% hint style="success" %}
 Dynamic Message Channels can combine multiple channels, so we can treat them as a one.
@@ -79,7 +79,8 @@ We can combine as many channels as we want under single Dynamic Channel.&#x20;
 
 ## Distribute based on Context
 
-There may be situations when we would like to introduce Message Channel per Client. This is often an case in Multi-Tenant environments. In Ecotone we can keep our code agnostic of Multiple Channels and keep it focused on the business side, and under the hood implement whatever our Multi-Tenant environment needs. For this we will be using **Header Based Strategy.**
+There may be situations when we would like to introduce Message Channel per Client. This if often a case in Multi-Tenant environments when premium Customer does get higher consumption rates. \
+In Ecotone we can keep our code agnostic of Multiple Channels, and yet provide this ability to end users in a simple way. For this we will be using **Header Based Strategy.**
 
 Taking as an example Order Process:
 
@@ -93,7 +94,7 @@ public function placeOrder(PlaceOrderCommand $command) : void
 ```
 
 This code is fully agnostic to the details of Multi-Tenant environment.  It does use Message Channel "orders" to process the Command. We can however make the "orders" an Dynamic Channel, which will actually distribute to multiple Channels.\
-To do this we will introduce we will distribute the Message based on the Metadata from the Command.
+To do this we will introduce distribution based on the Metadata from the Command.
 
 ```php
 #[ServiceContext]
@@ -106,9 +107,9 @@ public function dynamicChannel()
     
         // our Dynamic Channel used in Command Handler
         DynamicMessageChannelBuilder::createWithHeaderBasedStrategy(
-            'orders',
-            'tenant',
-            [
+            thisMessageChannelName: 'orders',
+            headerName: 'tenant',
+            headerMapping: [
                 'tenant_a' => 'tenant_a_channel',
                 'tenant_b' => 'tenant_b_channel',
             ]
@@ -131,6 +132,22 @@ $this->commandBus->send(
 {% hint style="success" %}
 Above will work exactly the same for Events.
 {% endhint %}
+
+Then we would simply run those as separate Message Consumption processes (Workers):
+
+```bash
+# Symfony
+bin/console ecotone:run tenant_a_channel -vvv
+bin/console ecotone:run tenant_b_channel -vvv
+
+# Laravel
+artisan ecotone:run tenant_a_channel -vvv
+artisan ecotone:run tenant_b_channel -vvv
+
+# Ecotone Lite
+$messagingSystem->run("tenant_a_channel");
+$messagingSystem->run("tenant_b_channel");
+```
 
 ## Distribute with Default Channel
 
@@ -170,17 +187,9 @@ $this->commandBus->send(
 );
 ```
 
-Then we would run Consumers for all those three channels:
+## Running Dynamic Channels and sub-channels
 
-```bash
-bin/console ecotone:run tenant_a_channel -vvv
-bin/console ecotone:run tenant_b_channel -vvv
-bin/console ecotone:run shared_channel -vvv
-```
-
-## Speeding up consumption for given Channel
-
-We may want to upgrade above case to provide extra consumption power for given Message Channel. This if often a case in Multi-Tenant environments when premium Customer does get higher consumption rates. For this we can simple run one shared Message Consumer (using Dynamic Channel) like above, plus have extra Message Consumer for specific channels.&#x20;
+Running Dynamic Channels does not differ from normal channels.
 
 ```php
 #[ServiceContext]
@@ -199,7 +208,7 @@ public function dynamicChannel()
 }
 ```
 
-Running shared consumer reading from multiple Channels:
+If we will run "orders", which is Dynamic Channel combined of three other Channels, Ecotone will run Message Consumption process which will use round-robin strategy to consume from each of them:
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -221,7 +230,7 @@ $messagingSystem->run("shared_consumer");
 {% endtab %}
 {% endtabs %}
 
-and then running specific consumer for Premium Tenant:
+Typically we would also run consumption process for this specific channels, which require extra processing power. This Message Consumer will focus only on Messages within that Channel.
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -272,7 +281,7 @@ public function dynamicChannel()
 Internal Channels are only visible for the Dynamic Channel, therefore they can't be used for Asynchronous Message Handlers. What should be used for Async Handlers is the name of Dynamic Message Channel.
 {% endhint %}
 
-## Using Skipping Strategy
+## Throttling strategy
 
 Let's take as an example of Multi-Tenant environment where each of our Clients has set limit of 5 orders to be processed within 24 hours. This limit is known to the Client and he may buy extra processing unit to increase his daily capacity.&#x20;
 
@@ -290,10 +299,10 @@ public function dynamicChannel()
         DbalBackedMessageChannelBuilder::create('client_a'),
         DbalBackedMessageChannelBuilder::create('client_b'),
     
-        DynamicMessageChannelBuilder::createRoundRobinWithSkippingStrategy(
-            'orders',
-            'decide_for_client',
-            [
+        DynamicMessageChannelBuilder::createThrottlingStrategy(
+            thisMessageChannelName: 'orders',
+            requestChannelName: 'decide_for_client',
+            channelNames: [
                 'client_a',
                 'client_b',
             ],
@@ -310,17 +319,15 @@ public function decide(
     string $channelNameToCheck, //this will be called in round robin with client_a / client_b
 ): bool
 {
-    // We check if client is eligible to consumption    
-
     // by returning true we start the consumption process, by returning false we skip
-    return $this->checkIfRelatedClientHasLimit($channelNameToCheck);
+    return $this->checkIfReachedConsumptionLimit($channelNameToCheck);
 }
 ```
 
 This function will run in round-robin manner for each defined Message Channel (client\_a, client-b).
 
 {% hint style="success" %}
-By using Skipping Strategy we can easily rate limit our Clients. \
+By using Throttling Strategy we can easily rate limit our Clients. \
 This can work dynamically, if Customer will buy credit credits, we can start returning true from decisioning method, which will kick-off the consumption. This means that we create real-time experience for Customers.
 {% endhint %}
 

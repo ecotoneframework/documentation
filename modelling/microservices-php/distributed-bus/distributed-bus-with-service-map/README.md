@@ -9,14 +9,15 @@ This functionality is available as part of **Ecotone Enterprise.**
 
 ## Distributed Service Map
 
-It happens that communication between Services (Applications) is built using different Message Broker features to set up the topology. Which may require per feature configuration and provisioning, and in-depth knowledge about the Message Broker. This often end up as really complex solution, which becomes hard to understand and follow for Developers. When things becomes hard to understand, they become hard to change, as it raises the risk that potential modification may break something. As a result People try to avoid doing changes and development slows down. \
+It happens that communication between Services (Applications) is built using different Message Broker features to set up the topology. Which may require per feature configuration and provisioning, and in-depth knowledge about the Message Broker. This often end up as really complex solution, which becomes hard to understand and follow for Developers. When things becomes hard to understand, they become hard to change, as it raises the risk that potential modification may break something. As a result people try to avoid doing changes and development slows down. \
 \
-Therefore there is a need for different approach which keeps the things simple, easy to understand and change. Changes to the integration should not be scary, they should be straight forward and testable, so Developers can feel confidence in doing so. And for this Ecotone comes with approach for Service to Service integration based on **Service Map:**
+Therefore there is a need for different approach which keeps the things simple, easy to understand and change. Changes to the integration should not be scary, they should be straight forward and testable, so Developers can feel confidence in doing so. The best solution does not only make things simple to change, but also make things explicit, so just by looking people get more knowledge about the overal system design. And for this Ecotone comes with approach for Service to Service integration based on Service Ma&#x70;**.**
+
+**Service Map** is a map of integrated Services (Applications), and points to specific Message Channels to which Messages for given Service should be sent:
 
 <figure><img src="../../../../.gitbook/assets/service-map (1).png" alt=""><figcaption><p>Distributed Service Map</p></figcaption></figure>
 
-Service Map is a map of integrated Services, which points to specific Message Channels to which Messages for given Service should be sent. \
-In this approach **Message Channels (Pipes) are simple transport layer**, and the **routing is done on the Application (Endpoint)** level using **Service Map to make the decision**.
+&#x20;In this approach **Message Channels (Pipes) are simple transport layer**, and the **routing is done on the Application (Endpoint)** level using **Service Map to make the decision**.
 
 <figure><img src="../../../../.gitbook/assets/routing (1) (1).png" alt=""><figcaption><p>Distributed Bus making decision to which Message Channel send the Message</p></figcaption></figure>
 
@@ -58,10 +59,9 @@ As we understand the concepts behind Distributed Bus with Service Map now, let's
 
 ## How Command Distribution works
 
-Let's start by understanding how we can distributed Commands using Service Map. \
-Let's suppose we do have **User Service** (Application) which wants to create Ticket by sending Command to **Ticket Service.**&#x20;
-
-In Ticket's Service code Distributed Command Handler could look like this:
+Let’s suppose **User Service** wants to create Ticket by sending Command to **Ticket Service.**\
+\
+In Ticket Service we will explicitly state that we allow given Command Handler to be executed in Distributed way. This makes it clear for everyone that we can't simply delete this Command Handler, as other Services may rely on this integration:
 
 ```php
 #[Distributed]
@@ -128,9 +128,9 @@ As you can under the hood before DistributedCommandHandler is executed we actual
 
 ## How Event Distribution works
 
-Event distribution is a bit different than Command distribution. This is because in case of Command we do have single Service that we target, in case of Events however there may be multiple of them. \
+Event distribution is a bit different from Command distribution. In case of Command we do have single Service that will receive the Message, in case of Events however there may be multiple of them.\
 \
-So let's expand our previous example to include Order Service, and our scenario is that whenever new User is registered in User Service, we will publish this event to both Ticket and Order Services.
+Let's expand our previous example to include Order Service, and our scenario is that whenever new User is registered in User Service, we will publish this event to both Ticket and Order Services.
 
 <figure><img src="../../../../.gitbook/assets/default-publishing (1).png" alt=""><figcaption><p>Publishing Event to all known Services</p></figcaption></figure>
 
@@ -159,7 +159,7 @@ Like you can see there is no **targetServiceName** in the parameters anymore (co
 
 ### Default Publishing
 
-By default Event will be published to all Services in the Service Map, with exception if Service that publish Event is within Map too, this one will be skipped (to avoid publishing to itself). This simplifies the default solution, as no additional configuration is needed, in order to do the communication.
+By default Event will be published to all Services in the Service Map, with exception of originating Service that publish this Event, this one will be skipped (to avoid publishing to itself). Therefore the default behaviour broadcast the Event to all Services defined in Service Map.
 
 <figure><img src="../../../../.gitbook/assets/default-publishing-3.png" alt=""><figcaption><p><strong>Default Publishing</strong> - Events will be published to all Services within Service Map besides the publisher itself</p></figcaption></figure>
 
@@ -197,9 +197,11 @@ public function serviceMap(): DistributedServiceMap
 ```
 
 Subscription routing keys is array, therefore we may put multiple subscribition routing keys if needed. \
-Subscrption keys can point to exact event name: **userService.address.changed**\
-Or they may use wild card: **userService.account.\***
+Subscrption keys can point to exact event name: "**userService.address.changed"**\
+Or they may use wild card: "**userService.account.\*"**
 
-{% hint style="info" %}
 By default **subscriptionRoutingKeys** are null, which means given Service will receive all Events. If we will provide empty array, it means that subscription keys  are enabled, yet none are matching, therefore no Events will be send to given Service.
+
+{% hint style="success" %}
+When Service Map is defined as separate shared library. It becomes explicit what Events is given Service interested in. This also makes the process of subscribing to new Event visible for everyone, therefore we avoid hidden coupling that could lead to broken integration.
 {% endhint %}
