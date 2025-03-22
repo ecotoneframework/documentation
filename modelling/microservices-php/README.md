@@ -1,5 +1,5 @@
 ---
-description: Implementing Microservices in PHP
+description: Implementing Microservices and Event Driven Architecture in PHP
 ---
 
 # Distributed Bus and Microservices
