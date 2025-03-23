@@ -6,7 +6,7 @@ Ecotone comes with two plans:
 
 * **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE) for open features. It allows to build message-driven system in PHP, which solves resiliency and scalability at the architecture level. This covers all the features, which are not marked as Enterprise. \
 
-* **Ecotone Enterprise** is based Enterprise licence. It does provides more advanced set of features, which greatly enhance development process, by providing tools which help to deliver business features quicker, and also to solve product related challenges like optimization of resources, visibility of how things are integrated, and long-term maintainability by keeping things simple.&#x20;
+* **Ecotone Enterprise** is based Enterprise licence. It does provides more advanced set of features aim for Enterprise usage. It does bring to the table custom features, additional integrations, and ability to optimization resource usages.&#x20;
 
 {% hint style="success" %}
 Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\
