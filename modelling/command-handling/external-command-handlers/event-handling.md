@@ -186,6 +186,25 @@ class TicketService
 Ecotone is using message routing for [cross application communication](../../microservices-php/distributed-bus/). This way applications can stay decoupled from each other, as there is no need to share the classes between them.
 {% endhint %}
 
+## Subscribing to Events by Routing and Class Name
+
+There may be situations when we will want to subscribe given method to either routing or class name. \
+Ecotone those subscriptions separately to protect from unnecessary wiring, therefore to handle this case, we can simply add another Event Handler which is not based on routing key.
+
+```php
+class TicketService
+{
+    #[EventHandler]
+    #[EventHandler("ticket.was_created")] 
+    public function when(TicketWasCreated $event): void
+    {
+        // handle event
+    }
+}
+```
+
+This way we explicitly state that we want to subscribe by class name and by routing key.
+
 ## Sending Events with Metadata
 
 Just like with `Command Bus`, we may pass metadata to the `Event Bus`:
