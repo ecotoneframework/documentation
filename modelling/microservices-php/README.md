@@ -30,6 +30,7 @@ Read more in bellow sections:
 
 ### Links
 
+* [Ecotone Enterprise and Distributed Bus with Service Mapping](https://blog.ecotone.tech/ecotone-enterprise-kafka-distributed-bus-dynamic-channels-and-more-2/) \[Article]
 * [Integrating PHP Applications using Distributed Bus with RabbitMQ](https://blog.ecotone.tech/integrating-php-applications-with-ecotone-and-rabbitmq/) \[Article]
 * [Starting with Microservices in PHP](https://blog.ecotone.tech/how-to-integrate-microservices-in-php/) \[Article]
 * [Loosely coupled Microservices in PHP](https://blog.ecotone.tech/loosely-coupled-microservices-in-php/) \[Article]
