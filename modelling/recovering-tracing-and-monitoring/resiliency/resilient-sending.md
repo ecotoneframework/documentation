@@ -5,30 +5,6 @@ This can happen when we store data in database and then send Messages to Message
 If failure happen it can be that we will send some Message to Broker, yet fail to store related data or vice versa. \
 Ecotone provide you with tools to help solve this problem in order to make sending Messages to Message Broker resilient.
 
-## Sending Retries
-
-Whenever sending to Message Broker fails, Ecotone will retry in order to self-heal the application.
-
-{% hint style="success" %}
-By default Ecotone will do `2` reties when sending to Message Channel fails: \
-\- First after `10`ms \
-\- Second after `400`ms.
-{% endhint %}
-
-You may configure sending retries per asynchronous channel:
-
-```php
-#[ServiceContext]
-public function asyncChannelConfiguration()
-{
-    return GlobalPollableChannelConfiguration::create(
-        RetryTemplateBuilder::exponentialBackoff(initialDelay: 10, multiplier: 2)
-            ->maxRetryAttempts(3)
-            ->build()
-    );
-}
-```
-
 ## Message Collector
 
 Ecotone by default enables Message Collector. Collector collect messages that are about to be send to asynchronous channels in order to send them just before the transaction is committed. This way it help avoids bellow pitfalls:
@@ -76,12 +52,33 @@ public function asyncChannelConfiguration()
 }
 ```
 
-## Error Channel
+## Sending Retries
 
-After exhausting limit of retries in order to send the Message to the Broker, we know that we won't be able to do this. In this scenario exception will be rethrown and transaction will be rolled back.\
-Yet imagine customer making huge Order in our E-Commerce shop, in that case rollback may be the last thing that we want to do. \
-\
-To avoid failing and being able to recover consistency Ecotone provides Error Channel for Messages that failed during sending. This way we can add custom handling for those situations or store the Message in Dbal Dead Letter.
+Whenever sending to Message Broker fails, Ecotone will retry in order to self-heal the application.
+
+{% hint style="success" %}
+By default Ecotone will do `2` reties when sending to Message Channel fails: \
+\- First after `10`ms \
+\- Second after `400`ms.
+{% endhint %}
+
+You may configure sending retries per asynchronous channel:
+
+```php
+#[ServiceContext]
+public function asyncChannelConfiguration()
+{
+    return GlobalPollableChannelConfiguration::create(
+        RetryTemplateBuilder::exponentialBackoff(initialDelay: 10, multiplier: 2)
+            ->maxRetryAttempts(3)
+            ->build()
+    );
+}
+```
+
+## Unrecoverable Sending failures
+
+After exhausting limit of retries in order to send the Message to the Broker, we know that we won't be able to do this. In this scenario instead of letting our action fail completely, we may decide to push it to Error Channel instead of original targetted channel.
 
 ```php
 #[ServiceContext]
@@ -113,6 +110,8 @@ public function doSomething(ErrorMessage $errorMessage): void
 
 ### Dbal Dead Letter
 
+We may decide for example to push it to Dead Letter to store it and later retry:
+
 ```php
 #[ServiceContext]
 public function asyncChannelConfiguration()
@@ -122,9 +121,11 @@ public function asyncChannelConfiguration()
 }
 ```
 
+{% hint style="success" %}
 If you will push Error Messages to [Dbal Dead Letter](error-channel-and-dead-letter/#dbal-dead-letter), then they will be stored in your database for later review. You may then delete or replay them after fixing the problem. This way we ensure consistency even if unrecoverable failure happened our system continues to have self-healed.
+{% endhint %}
 
-## Customized configuration per Message Consumer
+## Customized configuration per Message Consumer type
 
 If you need customization per Message Consumer you may do it using `PollableChannelConfiguration` by providing Message Consumer name:
 
