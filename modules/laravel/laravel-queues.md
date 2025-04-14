@@ -153,3 +153,7 @@ public function asyncChannel()
 {% hint style="success" %}
 If you're using Ecotone JMS, it will automatically set up all your Message Channels to serialize to JSON, as long as you explicitly not state different format.
 {% endhint %}
+
+## Dead Letter (Failed Transport)
+
+Failed transport is configured on Ecotone side using Error Channel. Read more in [related section](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/).

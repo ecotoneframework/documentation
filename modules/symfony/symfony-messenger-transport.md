@@ -139,3 +139,8 @@ public function notifyAbout(OrderWasPlaced $event): void
     // send notification
 }
 ```
+
+## Dead Letter (Failed Transport)
+
+Failed transport is configured on Ecotone side using Error Channel. Read more in [related section](../../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/).
+
