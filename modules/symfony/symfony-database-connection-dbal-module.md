@@ -10,7 +10,7 @@ Suppose we already defined connection in our _"doctrine.yaml"_ file:
 doctrine:
   dbal:
     connections:
-      some_connection:
+      default:
         url: '%env(resolve:DATABASE_DSN)%'
 ```
 
@@ -22,7 +22,7 @@ final readonly class EcotoneConfiguration
     #[ServiceContext]
     public function dbalConfiguration()
     {
-        return SymfonyConnectionReference::defaultConnection('some_connection');
+        return SymfonyConnectionReference::defaultConnection('default');
     }
 }
 ```
