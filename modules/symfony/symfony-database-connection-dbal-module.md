@@ -72,6 +72,8 @@ final readonly class EcotoneConfiguration
 ```
 
 {% hint style="success" %}
+If you use Manager Registry Connection, be aware that "doctrine/orm" package need to be installed.\
+\
 It's all we need to configure. Ecotone will now know to use **some\_orm\_connection** as default.
 {% endhint %}
 
