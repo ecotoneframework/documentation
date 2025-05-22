@@ -86,7 +86,7 @@ public function sendWelcomeNotificationlWhen(UserWasRegistered $event): void
 
 #[Priority(5)]
 #[Asynchronous("notifications")]
-#[CommandHandler(endpointId: "welcomeEmail")]
+#[CommandHandler(endpointId: "authenticationToken")]
 public function sendAuthenticationToken(RequestToken $command): void
 {
    // send authentication token quicker
