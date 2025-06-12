@@ -23,8 +23,7 @@ interface DistributedBus
 ```
 
 \
-For example, when we are sending command, we are stating which Service to we aim to send the Message too. This way Ecotone is aware where given Message should land. \
-When we subscribe to Events
+For example, when we are sending command, we are stating which Service we aim to send the Message to. This way Ecotone is aware where given Message should land.&#x20;
 
 ## Command Distribution
 
