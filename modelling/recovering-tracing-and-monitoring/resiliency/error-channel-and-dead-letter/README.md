@@ -76,15 +76,16 @@ After sending Error Message to Error Channel, message is considered handled as l
 To handle incoming Error Messages, we can bind to our defined Error Channel using [ServiceActivator](../../../../messaging/messaging-concepts/):
 
 ```php
-#[ServiceActivator("errorChannel")]
+#[InternalHandler("errorChannel")]
 public function handle(ErrorMessage $errorMessage): void
 {
-    // do something with ErrorMessage
+    // handle exception
+    $exception = $errorMessage->getException();
 }
 ```
 
 {% hint style="info" %}
-Service Activator are endpoints like Command Handlers, however they are not exposed using Command/Event/Query Buses. \
+Internal Handlers are endpoints like Command Handlers, however they are not exposed using Command/Event/Query Buses. \
 You may use them for internal handling.
 {% endhint %}
 
