@@ -42,6 +42,48 @@ There are of course more benefits that this solution enables:
 * [Delaying execution of given Event Handler](../asynchronous-handling/delaying-messages.md) instead of whole Message
 * [Prioritizing execution of given Event Handler](../asynchronous-handling/message-priority.md) instead of whole Message
 
+## Safe Retries
+
+Ecotone's implementation enables safe retries, thanks to the processing isolation it provides.
+
+Let's consider asynchronous scenario, where we want send order confirmation and reserve products in Stock via HTTP call, when Order Was Placed. This could potentially look like this:
+
+```php
+#[Asynchronous("asynchronous_messages")]
+#[EventHandler(endpointId: "notifyAboutNewOrder")]
+public function notifyAboutNewOrder(OrderWasPlaced $event, NotificationService $notificationService) : void
+{
+    $notificationService->notifyAboutNewOrder($event->getOrderId());
+}
+
+#[Asynchronous("asynchronous_messages")]
+#[EventHandler(endpointId: "reserveItemsInStock")]
+public function reserveItemsInStock(OrderWasPlaced $event, StockClient $stockClient): void
+{
+    $stockClient->reserve($event->getOrderId(), $event->getProducts());
+}
+```
+
+Now imagine that sending to Stock fails and we want to retry. If we would retry whole Event, we would retry "notifyAboutNewOrder" method, this would lead to sending an notification twice. It's easy to imagine scenarios where this could lead to even worse situations, where side effect could lead to double booking, trigger an second payment etc. \
+In Ecotone this does not happen, as each of the Handlers would receive it's own copy of the Message and proceed in isolation.
+
+### Sending a copy to each of the Handlers
+
+In Ecotone each of the Handlers will receive it's own copy of the Event and will handle it in full isolation.
+
+This means that under the hood, there would be two messages sent to `asynchronous_messages` \
+each targeting specific Event Handler.\
+This bring safety to retrying events, as in case of failure, we will only retry the Handler that actually failed.
+
+{% hint style="success" %}
+In Ecotone it's the Handler that becomes Asynchronous (not Event itself) you may customize the behaviour to your needs.\
+If you want, you may:&#x20;
+
+* Run one Event Handler synchronously and the other asynchronously.&#x20;
+* You may decide to use different Message Channels for each of the Asynchronous Event Handlers.
+* You delay or add priority to  one Handler and to the other not&#x20;
+{% endhint %}
+
 ## Materials
 
 ### Links

@@ -2,11 +2,15 @@
 
 ## Instant Retries
 
-Ecotone provides instant retries, which triggers automatically, if given Message failed and tries to recover immediately.
+Instant Retries are powerful self-healing mechanism, which helps Application to automatically recover from failures.&#x20;
 
-Instant retries may be useful in case of temporary issues, like optimistic locking, momentary unavailability of the external service which we want to call or database connection failure.&#x20;
+The are especially useful to handle temporary issues, like optimistic locking, momentary unavailability of the external service which we want to call or database connection failures. This way we can recover without affecting our end users without any effort on the Developer side.
 
-### Command Bus Instant Retries
+Instant retries can be enabled for CommandBus and for Asynchronous Processing.
+
+## Global Instant Retries
+
+### Command Bus instant retries
 
 In order to set up instant retries for Command Bus, you [Service Context](../../../messaging/service-application-configuration.md) configuration.
 
@@ -16,9 +20,9 @@ public function registerRetries()
 {
     return InstantRetryConfiguration::createWithDefaults()
              ->withCommandBusRetry(
-                      true, // is enabled
-                      3, // max retries
-                      [DatabaseConnectionFailure::class, OptimisticLockingException::class] // list of exceptions to be retried, leave empty if all should be retried
+                      isEnabled: true,
+                      retryTimes: 3, // max retries
+                      retryExceptions: [DatabaseConnectionFailure::class, OptimisticLockingException::class] // list of exceptions to be retried, leave empty if all should be retried
              )
 }
 ```
@@ -33,9 +37,9 @@ public function registerRetries()
 {
     return InstantRetryConfiguration::createWithDefaults()
              ->withAsynchronousEndpointsRetry(
-                      true, // is enabled
-                      3, // max retries
-                      [DatabaseConnectionFailure::class, OptimisticLockingException::class] // list of exceptions to be retried, leave empty if all should be retried
+                      isEnabled: true,
+                      retryTimes: 3, // max retries
+                      retryExceptions: [DatabaseConnectionFailure::class, OptimisticLockingException::class] // list of exceptions to be retried, leave empty if all should be retried
              )
 }
 ```
@@ -46,10 +50,49 @@ This will retry instantly when your message is handled asynchronously. This appl
 By using instant retries for asynchronous endpoints we keep message ordering.&#x20;
 {% endhint %}
 
-## Delayed Retries
+## Customized Instant Retries
+
+The `InstantRetry` attribute allows you to specify different strategies for Retry in order to be able to customize it for specific Business use cases. For example we may create new Command Bus which will retry on **NetworkException** then use that in specific cases with custom retry.\
+We do it by extending **CommandBus** interface and adding **InstantRetry** attribute.
+
+{% hint style="success" %}
+Customized Instant Retries are available as part of **Ecotone Enterprise.**
+{% endhint %}
+
+### Instant retries times
+
+To set up Customized Instant Retries, we will extend **CommandBus** and provide the attribute
+
+```php
+#[InstantRetry(retryTimes: 2)]
+interface ReliableCommandBus extends CommandBus {}
+```
+
+**CommandBusWithRetry** will be automatically registered in our Dependency Container and available for use.&#x20;
+
+Now whenever we will send an Command using this specific Command Bus, it will do two extra retries:
+
+```php
+$this->commandBusWithRetry->send(new RegisterNewUser());
+```
+
+### Instant Retries exceptions
+
+The same way we can define specific exception list which should be retried for our customized Command Bus:
+
+```php
+#[InstantRetry(retryTimes: 2, exceptions: [NetworkException::class])]
+interface ReliableCommandBus extends CommandBus {}
+```
+
+Only the exceptions defined in exception list will be retried.
+
+## Asynchronous Delayed Retries
 
 Delayed retries are helpful in case, we can't recover instantly. This may happen for example due longer downtime of external service, which we integrate with. \
 In those situations we may try to self-heal the application, by delaying failed Message for given period of time. This way we can retry the call to given service after some time, and if everything is fine, then we will successfully handle the message.
+
+Ecotone resends the Message to original channel with delay. This way we don't block processing during awaiting time, and we can continue consuming next messages. When Message will be ready (after delay time), it will be picked up from the Queue.
 
 ### Installation
 
@@ -102,45 +145,3 @@ public function errorConfiguration()
     );
 }
 ```
-
-## Safe Retries
-
-There is crucial difference between Ecotone and other PHP Frameworks in a way it enables safe retries.
-
-Let's consider asynchronous scenario, where we want send order confirmation and reserve products in Stock via HTTP call, when Order Was Placed. This could potentially look like this:
-
-```php
-#[Asynchronous("asynchronous_messages")]
-#[EventHandler(endpointId: "notifyAboutNewOrder")]
-public function notifyAboutNewOrder(OrderWasPlaced $event, NotificationService $notificationService) : void
-{
-    $notificationService->notifyAboutNewOrder($event->getOrderId());
-}
-
-#[Asynchronous("asynchronous_messages")]
-#[EventHandler(endpointId: "reserveItemsInStock")]
-public function reserveItemsInStock(OrderWasPlaced $event, StockClient $stockClient): void
-{
-    $stockClient->reserve($event->getOrderId(), $event->getProducts());
-}
-```
-
-Now imagine that sending to Stock fails and we want to retry. If we would retry whole Event, we would retry "notifyAboutNewOrder" method, this would lead to sending an notification twice. It's easy to imagine scenarios where this could lead to even worse situations, where side effect could lead to double booking, trigger an second payment etc. \
-That's is why Ecotone implements Safe Retries.
-
-### Sending a copy to each of the Handlers
-
-In Ecotone each of the Handlers will receive it's own copy of the Event and will handle it in full isolation.
-
-This means that under the hood, there would be two messages sent to `asynchronous_messages` \
-each targeting specific Event Handler.\
-This bring safety to retrying events, as in case of failure, we will only retry the Handler that actually failed.
-
-{% hint style="info" %}
-As in Ecotone it's the Handler that becomes Asynchronous (not Event itself) you may customize the behaviour to your needs.\
-If you want, you may:&#x20;
-
-* Run one Event Handler synchronously and the other asynchronously.&#x20;
-* You may decide to use different Message Channels for each of the Asynchronous Event Handlers.
-* You delay or add priority to  one Handler and to the other not&#x20;
-{% endhint %}

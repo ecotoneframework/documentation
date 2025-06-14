@@ -10,12 +10,13 @@ Ecotone comes with full support for managing full life cycle of a error message 
 
 ## Installation
 
-* Install [Ecotone's Dbal Module](../../../../modules/dbal-support.md).&#x20;
-* Set up Error Channel like discussed at the [beginning of the section](dbal-dead-letter.md#error-channel)
+To make use of Dead Letter, we need to have [Ecotone's Dbal Module](../../../../modules/dbal-support.md) installed.
 
-### Send Error Messages directly to Dead Letter:
+## Storing Messages in Dead Letter
 
-If we configure default error channel to point to **"dbal\_dead\_letter"** then all Error Messages will land there directly:
+If we configure default error channel to point to **"dbal\_dead\_letter"** then all Error Messages will land there directly
+
+<figure><img src="../../../../.gitbook/assets/Dead Letter (1).png" alt=""><figcaption><p>Storing Error Messages once they failed directly in Database</p></figcaption></figure>
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -47,9 +48,11 @@ $ecotone = EcotoneLite::bootstrap(
 {% endtab %}
 {% endtabs %}
 
-### Try to recover with Retries first
+## Dead Letter with Delayed Retries
 
 We may also want to try to recover before we consider Message to be stored in Dead Letter:
+
+<figure><img src="../../../../.gitbook/assets/dead-letter-with-retry.png" alt=""><figcaption><p>Storing Error Messages in Dead Letter only if retries are exhausted</p></figcaption></figure>
 
 {% tabs %}
 {% tab title="Symfony" %}
