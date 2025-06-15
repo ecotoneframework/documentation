@@ -211,7 +211,7 @@ Besides we are going to use [doctrine/dbal](https://github.com/doctrine/dbal), a
 composer require doctrine/dbal
 ```
 
-And the [Repository](../modelling/command-handling/repository.md):
+And the [Repository](../modelling/command-handling/repository/):
 
 ```php
 namespace App\Infrastructure\Persistence;

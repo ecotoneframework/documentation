@@ -50,7 +50,7 @@ This will retry instantly when your message is handled asynchronously. This appl
 By using instant retries for asynchronous endpoints we keep message ordering.&#x20;
 {% endhint %}
 
-## Customized Instant Retries
+## Command Bus Instant Retries
 
 The `InstantRetry` attribute allows you to specify different strategies for Retry in order to be able to customize it for specific Business use cases. For example we may create new Command Bus which will retry on **NetworkException** then use that in specific cases with custom retry.\
 We do it by extending **CommandBus** interface and adding **InstantRetry** attribute.

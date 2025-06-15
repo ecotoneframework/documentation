@@ -13,7 +13,7 @@ Not all Workflows need to maintain state. In case of step by step Workflows we m
 For above cases when Stateful Workflow is needed, we can make use of Sagas.
 
 {% hint style="info" %}
-It's good to read [Aggregate Introduction](../../modelling/command-handling/state-stored-aggregate/) and [Stateless Workflows](the-basics-stateless-workflows.md) section first, to get wider context about Ecotone's Messaging, before diving into Sagas.
+It's good to read [Aggregate Introduction](../command-handling/state-stored-aggregate/) and [Stateless Workflows](the-basics-stateless-workflows.md) section first, to get wider context about Ecotone's Messaging, before diving into Sagas.
 {% endhint %}
 
 ## Saga - Stateful Workflow
@@ -43,7 +43,7 @@ final class OrderProcess
 
 Sagas are initialized using Factory Methods (Methods marked as static).  We can initialize Saga by subscribing to an Event, or by trigger an Command Action.
 
-To store Saga we will be using [Repositories](../../modelling/command-handling/business-interface/repository.md). We can provide custom implementation or use inbuilt repositories like Doctrine ORM, Eloquent Model or Ecotone's Document Store.
+To store Saga we will be using [Repositories](../command-handling/repository/repository.md). We can provide custom implementation or use inbuilt repositories like Doctrine ORM, Eloquent Model or Ecotone's Document Store.
 
 {% hint style="success" %}
 Aggregates and Sagas provides the same functionality, both can subscribe to Events and receive Commands, and both are persisted using Repositories. Therefore whatever we use one or another, is about making the code more explicit. As Sagas are more meant for business processes, and Aggregate for protecting business invariants.
@@ -268,11 +268,11 @@ This solution will prevent us from depending on the order of events, without int
 ## Targeting Identifier from Event/Command
 
 Whenever Event or Command comes in to Saga, we need to correlate it with given Saga's instance. \
-For this we can leverage Ecotone's support for [Identifier Mapping](../../modelling/command-handling/identifier-mapping.md). \
+For this we can leverage Ecotone's support for [Identifier Mapping](../command-handling/identifier-mapping.md). \
 This will give us ability to map Saga using different possibilites.
 
 ## Using Correlation Id as Saga's Identifier
 
 We may want to use Message Correlation Id as Saga's Identifier. This allows us to always map given Saga if Message contains of given Correlation Id.&#x20;
 
-As Ecotone [automatically propagate Correlation Id](../../modelling/extending-messaging-middlewares/message-headers.md#automatic-header-propagation) between Messages, this creates good solution for Workflows that branches and join together at later stage.
+As Ecotone [automatically propagate Correlation Id](../extending-messaging-middlewares/message-headers.md#automatic-header-propagation) between Messages, this creates good solution for Workflows that branches and join together at later stage.

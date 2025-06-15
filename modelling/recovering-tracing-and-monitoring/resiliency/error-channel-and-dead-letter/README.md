@@ -155,7 +155,7 @@ Dead Letter can be combined with Delayed Retries, to store only Error Messages t
 Read more in related section.
 {% endhint %}
 
-## Synchronous Command Bus Error Channel
+## Command Bus Error Channel
 
 Ecotone provides ability to define Error Channel on the level of Command Bus. This way we can handle synchronous Command Handler execution failures with grace. \
 For example we may receive webhooks and in case of failure instead of throwing exception, we can store related Message in Dead Letter for later review, or push it for reprocessing on asynchronous channel. \

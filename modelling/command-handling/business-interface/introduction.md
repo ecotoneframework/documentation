@@ -9,7 +9,7 @@ In Application we describe an Interface, which executes Business methods. Ecoton
 This way we can get rid of delegation level code and focus on the things we want to achieve. \
 \
 For example, if we don't want to trigger action via Command/Query Bus, we can do it directly using our business interface and skip all the Middlewares that would normally trigger during Bus execution.\
-There are different types of Business Interfaces and in this chapter we will discuss the basics of build our own Business Interface, in next sections we will dive into specific types of business interfaces: [Repositories](repository.md) and [Database Layers](working-with-database/).
+There are different types of Business Interfaces and in this chapter we will discuss the basics of build our own Business Interface, in next sections we will dive into specific types of business interfaces: [Repositories](../repository/repository.md) and [Database Layers](working-with-database/).
 
 ## Command Interface
 

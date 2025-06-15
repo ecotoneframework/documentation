@@ -4,7 +4,7 @@ description: Message Gateway PHP
 
 # Messaging Gateway
 
-![](../../.gitbook/assets/gateway\_execution.svg)
+![](../../.gitbook/assets/gateway_execution.svg)
 
 The Messaging Gateway encapsulates messaging-specific code (The code required to send or receive a [Message](message.md)) and separates it from the rest of the application code.
 
@@ -189,7 +189,7 @@ interface OrderRepository
 }
 ```
 
-Read more about Repositories in [Command Handling section](../../modelling/command-handling/repository.md).
+Read more about Repositories in [Command Handling section](../../modelling/command-handling/repository/).
 
 ### Parameters to Message Conversion
 

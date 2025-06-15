@@ -5,14 +5,14 @@ description: DDD PHP
 # Lesson 2: Tactical DDD
 
 {% hint style="info" %}
-Not having code for _Lesson 2?_&#x20;
+Not having code for _Lesson 2?_
 
 `git checkout lesson-2`
 {% endhint %}
 
 ### Aggregate
 
-An Aggregate is an entity or group of entities that is always kept in a consistent state.  \
+An Aggregate is an entity or group of entities that is always kept in a consistent state.\
 Aggregates are very explicitly present in the Command Model, as that is where change is initiated and business behaviour is placed.
 
 Let's create our first _Aggregate_ `Product.`
@@ -55,15 +55,15 @@ class Product
 
 1. **Aggregate** attribute marks class to be known as Aggregate
 2. **Identifier** marks properties as identifiers of specific Aggregate instance. Each _Aggregate_ must contains at least one identifier.
-3. **CommandHandler** enables command handling on specific method just as we did in [Lesson 1](php-messaging-architecture.md). \
-   If method is static, it's treated as a [factory method](https://en.wikipedia.org/wiki/Factory\_method\_pattern) and must return a new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](broken-reference).
+3. **CommandHandler** enables command handling on specific method just as we did in [Lesson 1](php-messaging-architecture.md).\
+   If method is static, it's treated as a [factory method](https://en.wikipedia.org/wiki/Factory_method_pattern) and must return a new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](broken-reference/).
 4. **QueryHandler** enables query handling on specific method just as we did in Lesson 1.
 
 {% hint style="info" %}
 If you want to known more details about _Aggregate_ start with chapter [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate)
 {% endhint %}
 
-Now remove `App\Domain\Product\ProductService` as it contains handlers for the same command and query classes. \
+Now remove `App\Domain\Product\ProductService` as it contains handlers for the same command and query classes.\
 Before we will run our test scenario, we need to register `Repository`.
 
 {% hint style="info" %}
@@ -72,7 +72,7 @@ Usually you will mark `services` as Query Handlers not `aggregates` .However Eco
 
 ### Repository
 
-Repositories are used for retrieving and saving the aggregate to persistent storage. \
+Repositories are used for retrieving and saving the aggregate to persistent storage.\
 We will build an in-memory implementation for now.
 
 ```php
@@ -116,11 +116,11 @@ class InMemoryProductRepository implements StandardRepository // 2
 1. **Repository** attribute marks class to be known to `Ecotone` as Repository.
 2. We need to implement some methods in order to allow `Ecotone` to retrieve and save Aggregate. Based on implemented interface, `Ecotone` knowns, if _Aggregate_ is state-stored or event sourced.
 3. **canHandle** tells which classes can be handled by this specific repository.
-4. **findBy**  return found aggregate instance or null. As there may be more, than single indentifier per aggregate, identifiers are array.
+4. **findBy** return found aggregate instance or null. As there may be more, than single indentifier per aggregate, identifiers are array.
 5. **save** saves an aggregate instance. You do not need to bother right what is `$metadata` and `$expectedVersion`.
 
 {% hint style="info" %}
-If you want to known more details about _Repository_ start with chapter [Repository](../modelling/command-handling/repository.md)
+If you want to known more details about _Repository_ start with chapter [Repository](../modelling/command-handling/repository/)
 {% endhint %}
 
 {% tabs %}

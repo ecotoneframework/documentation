@@ -34,7 +34,7 @@ class Product
 By providing `Identifier` attribute on top of property in your Aggregate, we state that this is identifier of this Aggregate (Entity in Symfony/Doctrine world, Model in Laravel world). \
 This is then used by Ecotone to fetch your aggregate automatically.
 
-However Aggregates need to be [fetched from repository](../repository.md) in order to be executed. \
+However Aggregates need to be [fetched from repository](../repository/) in order to be executed. \
 When we will send an Command, Ecotone will use property with same name from the Command instance to fetch the Aggregate.
 
 ```php
@@ -51,7 +51,7 @@ You may read more about Identifier Mapping and more advanced scenarios  in [rela
 When identifier is resolved, Ecotone use `repository` to fetch the aggregate and then call the method and then save it. So basically do all the boilerplate for you.
 
 {% hint style="success" %}
-To implement repository reference to [this section](../repository.md).\
+To implement repository reference to [this section](../repository/).\
 You may use inbuilt repositories, so you don't need to implement your own.\
 Ecotone provides [`Event Sourcing Repository`](../../event-sourcing/), [`Document Store Repository`](../../../messaging/document-store.md#storing-aggregates-in-your-document-store), integration with [Doctrine ORM](../../../modules/symfony/doctrine-orm.md) or [Eloquent](../../../modules/laravel/eloquent.md).
 {% endhint %}
