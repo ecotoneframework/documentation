@@ -5,7 +5,7 @@ This way you can send message with simple interface without exposing Message Bro
 
 ### Modules Providing Support
 
-* [RabbitMQ Module](../../modules/amqp-support-rabbitmq.md#message-publisher)
+* [RabbitMQ Module](../../modules/amqp-support-rabbitmq/#message-publisher)
 
 ## Message Publisher Interface
 
@@ -34,7 +34,7 @@ interface MessagePublisher
 
 ## How to use Message Publisher
 
-Publisher is a special type of [Gateway](../../messaging/messaging-concepts/messaging-gateway.md), which implements [Publisher interface](../../modules/amqp-support-rabbitmq.md#available-actions).\
+Publisher is a special type of [Gateway](../../messaging/messaging-concepts/messaging-gateway.md), which implements [Publisher interface](../../modules/amqp-support-rabbitmq/#available-actions).\
 It will be available in your Dependency Container under passed `Reference name.`\
 In case interface name `MessagePublisher:class` is used, it will be available using auto-wire.
 

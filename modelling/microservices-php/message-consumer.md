@@ -4,7 +4,7 @@ Message Consumers allows you to connect your Service (application) with other Se
 
 ### Modules Providing Support
 
-* [RabbitMQ Module](../../modules/amqp-support-rabbitmq.md#message-consumer)
+* [RabbitMQ Module](../../modules/amqp-support-rabbitmq/#message-consumer)
 
 ## Message Consumer Implementation
 

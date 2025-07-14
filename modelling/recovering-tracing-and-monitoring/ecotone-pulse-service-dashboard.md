@@ -12,7 +12,7 @@ Ecotone Pulse provide way to control error messages for all your services from o
 
 ## Installation
 
-Enable [Dead Letter](resiliency/error-channel-and-dead-letter/) in your service and [Distributed Consumer](../../modules/amqp-support-rabbitmq.md#distributed-consumer) with [AMQP Module](../../modules/amqp-support-rabbitmq.md#installation).
+Enable [Dead Letter](resiliency/error-channel-and-dead-letter/) in your service and [Distributed Consumer](../../modules/amqp-support-rabbitmq/#distributed-consumer) with [AMQP Module](../../modules/amqp-support-rabbitmq/#installation).
 
 After this you may run docker image with Ecotone Pulse passing the configuration to your services and RabbitMQ connection.
 
@@ -41,7 +41,7 @@ This way Ecotone Pulse knows how to route messages to your Service.
 AMQP_DSN='amqp://guest:guest@rabbitmq:5672//'
 ```
 
-DSN to your RabbitMQ instance, which services are connected with [Distributed Consumer](../../modules/amqp-support-rabbitmq.md#distributed-consumer).
+DSN to your RabbitMQ instance, which services are connected with [Distributed Consumer](../../modules/amqp-support-rabbitmq/#distributed-consumer).
 
 {% hint style="info" %}
 It's important to set up Amqp Distributed Consumer. This way Service starts to subscribe to messages coming from Ecotone Pulse.

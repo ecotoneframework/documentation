@@ -1,118 +1,8 @@
----
-description: Asynchronous PHP RabbitMQ
----
-
-# RabbitMQ Support
-
-## Installation
-
-```php
-composer require ecotone/amqp
-```
-
-### Module Powered By
-
-[Enqueue](https://github.com/php-enqueue/enqueue-dev) solid and powerful abstraction over asynchronous queues.
-
-## Configuration
-
-In order to use `AMQP Support` we need to add `ConnectionFactory` to our `Dependency Container.`&#x20;
-
-{% tabs %}
-{% tab title="Symfony" %}
-```php
-# config/services.yaml
-# You need to have RabbitMQ instance running on your localhost, or change DSN
-    Enqueue\AmqpExt\AmqpConnectionFactory:
-        class: Enqueue\AmqpExt\AmqpConnectionFactory
-        arguments:
-            - "amqp://guest:guest@localhost:5672//"
-```
-{% endtab %}
-
-{% tab title="Laravel" %}
-```php
-# Register AMQP Service in Provider
-
-use Enqueue\AmqpExt\AmqpConnectionFactory;
-
-public function register()
-{
-     $this->app->singleton(AmqpConnectionFactory::class, function () {
-         return new AmqpConnectionFactory("amqp+lib://guest:guest@localhost:5672//");
-     });
-}
-```
-{% endtab %}
-
-{% tab title="Lite" %}
-```php
-use Enqueue\AmqpExt\AmqpConnectionFactory;
-
-$application = EcotoneLiteApplication::boostrap(
-    [
-        AmqpConnectionFactory::class => new AmqpConnectionFactory("amqp+lib://guest:guest@localhost:5672//")
-    ]
-);
-```
-{% endtab %}
-{% endtabs %}
-
-{% hint style="info" %}
-We register our AmqpConnection under the class name `Enqueue\AmqpExt\AmqpConnectionFactory.` This will help Ecotone resolve it automatically, without any additional configuration.
-{% endhint %}
-
-## Message Channel
-
-To create AMQP Backed [Message Channel](../modelling/asynchronous-handling/) (RabbitMQ Channel), we need to create [Service Context](../messaging/service-application-configuration.md).&#x20;
-
-```php
-class MessagingConfiguration
-{
-    #[ServiceContext] 
-    public function orderChannel()
-    {
-        return AmqpBackedMessageChannelBuilder::create("orders");
-    }
-}
-```
-
-Now `orders` channel will be available in our Messaging System.&#x20;
-
-{% hint style="success" %}
-Message Channels simplify to the maximum integration with Message Broker. \
-From application perspective all we need to do, is to provide channel implementation.\
-Ecotone will take care of whole publishing and consuming part.&#x20;
-{% endhint %}
-
-### Message Channel Configuration
-
-```php
-AmqpBackedMessageChannelBuilder::create("orders")
-    ->withAutoDeclare(false) // do not auto declare queue
-    ->withDefaultTimeToLive(1000) // limit TTL of messages
-    ->withDefaultDeliveryDelay(1000) // delay messages by default
-```
-
-### Customize Queue Name
-
-By default the queue name will follow channel name, which in above example will be "orders".\
-However we can use "orders" as reference name in our Application, yet name queue differently:
-
-```php
-#[ServiceContext] 
-public function orderChannel()
-{
-    return AmqpBackedMessageChannelBuilder::create(
-        channelName: "orders",
-        queueName: "crm_orders"
-    );
-}
-```
+# Message Publisher
 
 ## AMQP Distributed Bus
 
-AMQP Distributed Bus is described in more details under [Distributed Bus section](../modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/).
+AMQP Distributed Bus is described in more details under [Distributed Bus section](../../modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/).
 
 ## Message Publisher
 
@@ -232,7 +122,7 @@ public function amqpChannel() : array
 ```
 
 {% hint style="success" %}
-Publisher acknowledgments can be combined with [Outbox](../modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md) to ensure high message guarantee.&#x20;
+Publisher acknowledgments can be combined with [Outbox](../../modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md) to ensure high message guarantee.&#x20;
 {% endhint %}
 
 ## Publisher Transactions
@@ -240,10 +130,10 @@ Publisher acknowledgments can be combined with [Outbox](../modelling/recovering-
 `Ecotone AMQP` comes with support for RabbitMQ Transaction for published messages. \
 This means that, if you send more than one message at time, it will be commited together.
 
-If you want to enable/disable for all [Asynchronous Endpoints](../tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md) or specific for Command Bus. You may use of `ServiceContext.`&#x20;
+If you want to enable/disable for all [Asynchronous Endpoints](../../tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md) or specific for Command Bus. You may use of `ServiceContext.`&#x20;
 
 {% hint style="info" %}
-By default RabbitMQ transactions are disabled, as you may ensure consistency using [Resilient Sending](../modelling/recovering-tracing-and-monitoring/resiliency/resilient-sending.md).
+By default RabbitMQ transactions are disabled, as you may ensure consistency using [Resilient Sending](../../modelling/recovering-tracing-and-monitoring/resiliency/resilient-sending.md).
 {% endhint %}
 
 ```php
