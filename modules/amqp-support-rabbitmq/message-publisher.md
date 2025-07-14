@@ -46,17 +46,30 @@ AmqpMessagePublisherConfiguration::create(
 3. `withRoutingKeyFromHeader` - should routing key be retrieved from header with name
 4. `withHeaderMapper` - On default headers are not send with AMQP message. You map provide mapping for headers that should be mapped to `AMQP Message`
 
-## Message Consumer
-
-We can bind given method as Message Consumer
+## Available Exchange Configuration
 
 ```php
-#[MessageConsumer('orders_consumer')] // name of endpoint id
-public function handle(string $payload): void
-{
-    // do something
-}
+$amqpExchange = AmqpExchange::createDirectExchange
+$amqpExchange = AmqpExchange::createFanoutExchange
+$amqpExchange = AmqpExchange::createTopicExchange
+$amqpExchange = AmqpExchange::createHeadersExchange
+
+$amqpExchange = $amqpExchange
+    ->withDurability(true) // exchanges survive broker restart
+    ->withAutoDeletion() // exchange is deleted when last queue is unbound from it
 ```
+
+## Available Queue configurations
+
+```php
+$amqpQueue = AmqpQueue::createDirectExchange
+                ->withDurability(true) // the queue will survive a broker restart
+                ->withExclusivity() // used by only one connection and the queue will be deleted when that connection closes
+                ->withAutoDeletion() // queue that has had at least one consumer is deleted when last consumer unsubscribes
+                ->withDeadLetterExchangeTarget($amqpExchange);
+```
+
+## Available Bindings Configuration
 
 To connect consumer directly to a AMQP Queue, we need to provide `Ecotone` with information, how the Queue is configured.&#x20;
 
@@ -80,29 +93,6 @@ class AmqpConfiguration
 2. `AmqpExchange::create*(string $name)` - Registers of given type with specific name
 3. `AmqpBinding::createFromName(string $exchangeName, string $queueName, string $routingKey)`- Registering binding between exchange and queue
 4. Provides Consumer that will be registered at given name `"orders_consumer"` and will be polling `"orders"` queue
-
-## Available Exchange configurations
-
-```php
-$amqpExchange = AmqpExchange::createDirectExchange
-$amqpExchange = AmqpExchange::createFanoutExchange
-$amqpExchange = AmqpExchange::createTopicExchange
-$amqpExchange = AmqpExchange::createHeadersExchange
-
-$amqpExchange = $amqpExchange
-    ->withDurability(true) // exchanges survive broker restart
-    ->withAutoDeletion() // exchange is deleted when last queue is unbound from it
-```
-
-## Available Queue configurations
-
-```php
-$amqpQueue = AmqpQueue::createDirectExchange
-                ->withDurability(true) // the queue will survive a broker restart
-                ->withExclusivity() // used by only one connection and the queue will be deleted when that connection closes
-                ->withAutoDeletion() // queue that has had at least one consumer is deleted when last consumer unsubscribes
-                ->withDeadLetterExchangeTarget($amqpExchange);
-```
 
 ## Publisher Acknowledgments
 
