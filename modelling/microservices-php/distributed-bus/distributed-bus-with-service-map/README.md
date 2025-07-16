@@ -110,7 +110,7 @@ Now when we will send Command to ticketService it will land in **distributed\_ti
 
 ### Two level routing
 
-It's important to understand two level routing which will happen. Let's zoom in how do we call our Distributed Bus:
+Two level routing is a way to find target Service and within in Command Handler we want to execute:
 
 ```php
 $distributedBus->convertAndSendCommand(
@@ -120,11 +120,12 @@ $distributedBus->convertAndSendCommand(
 );
 ```
 
-**targetServiceName** will be used to target specific Service therefore it will make use Message Channel defined in the Service Map. When Message will land in given Service, it will then use routingKey to target specific Command Handler within the Application.
+**"targetServiceName"** will be used to target specific Service therefore it will make use Message Channel defined in the Service Map. \
+When Message will land in given Service, it will then use "**routingKey"** to target specific Command Handler within the Application.
 
 <figure><img src="../../../../.gitbook/assets/real-topology (1).png" alt=""><figcaption><p>How Distributing Command works under the hood</p></figcaption></figure>
 
-As you can under the hood before DistributedCommandHandler is executed we actually have so called Distributed Handler. This Handler triggering Command/Event Bus with given routing key, and a result our Distributed Command Handler is executed.&#x20;
+As you can see above, under the hood in target Service DistributedCommandHandler will be executed. This Handler is entrypoint to our Service, and will be responsible for triggering Command/Event Bus with given routing key.
 
 ## How Event Distribution works
 
@@ -145,7 +146,6 @@ public function when(UserRegistered $event) : void
 }
 ```
 
-That code would exists in both Order and Ticket Service.\
 On the publishing side, we will be using publish event method with Distributed Bus:
 
 ```php
@@ -168,7 +168,7 @@ It's a good practice to share the Service Map between Services. In order to have
 {% endhint %}
 
 **In case given Service is not interested in specific Event, it will simply ignore it.** Therefore default publishing can really speed up of development process, and make things clear and simple. \
-However with larger volume of published Events, there may be a lot of them, which will be simply ignored. In that situation we may want to optimize publishing part by using filtered publishing.
+However with larger volume of published Events, there may be a lot of ignored Events flying in the system, therefore in that situation we may consider using filtered publishing.
 
 ### Filtered Publishing
 
