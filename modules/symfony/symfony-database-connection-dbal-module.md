@@ -2,7 +2,7 @@
 
 We can use Ecotone's Symfony integration to reuse Connections that are already defined in your Symfony Application.
 
-## Using existing Connections
+## Using existing Connections \[Recommended]
 
 Suppose we already defined connection in our _"doctrine.yaml"_ file:
 
@@ -28,6 +28,8 @@ final readonly class EcotoneConfiguration
 ```
 
 {% hint style="success" %}
+Reusing same connection as we use in Application, ensures database transactions will be rolled back correctly in case of any failure.\
+\
 It's all we need to configure. Ecotone will now know to use **some\_connection** as default.
 {% endhint %}
 
