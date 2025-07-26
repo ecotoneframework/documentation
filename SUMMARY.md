@@ -84,7 +84,7 @@
     * [Error Channel](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/README.md)
       * [Dbal Dead Letter](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/dbal-dead-letter.md)
     * [Final Failure Strategy](modelling/recovering-tracing-and-monitoring/resiliency/final-failure-strategy.md)
-    * [Idempotent Consumer (Deduplication)](modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md)
+    * [Idempotency (Deduplication)](modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md)
     * [Resilient Sending](modelling/recovering-tracing-and-monitoring/resiliency/resilient-sending.md)
     * [Outbox Pattern](modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md)
     * [Concurrency Handling](modelling/recovering-tracing-and-monitoring/resiliency/concurrency-handling.md)

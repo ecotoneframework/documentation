@@ -143,3 +143,21 @@ public function handle(Order $payload): void
 ```
 
 Read more about final failure strategy in [related section](../../modelling/recovering-tracing-and-monitoring/resiliency/final-failure-strategy.md).
+
+## Deduplication
+
+We can define custom deduplication key to ensure no same Message will be handled twice.
+
+```php
+#[Deduplicated('orderId')]
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders']
+)]
+public function handle(Order $payload): void
+{
+    // handle
+}
+```
+
+Read more about [deduplication in related section](../../modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md).
