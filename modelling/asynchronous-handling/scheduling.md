@@ -100,6 +100,26 @@ public function exchange(ExchangeCommand $command) : void;
 
 When the Message will arrive on the Command Handler it will be automatically converted to `ExchangeCommand.` If you want to understand how the conversion works, you may read about it in [Conversion section](../../messaging/conversion/).
 
+## Expression Language
+
+We can also set up cron and fixed rate using expression language. This gives us ability to set it up differently based on the environment we are currently in.&#x20;
+
+```php
+class CurrencyExchanger
+{
+    #[Scheduled(requestChannelName: "exchange", endpointId: "currencyExchanger")] 
+    #[Poller(fixedRateExpression="reference('timerService').getFixedRate()")]
+    public function callExchange() : array
+    {
+        return ["currency" => "EUR", "ratio" => 1.23];
+    }
+}
+```
+
+{% hint style="success" %}
+Timing will be evaluated once, and then preserved as timing configuration. The evaluation will happen when ecotone:run will be executed.
+{% endhint %}
+
 ## Materials
 
 ### Demo implementation
