@@ -12,7 +12,7 @@ Understanding this part will give us understanding of the whole.
 
 `External Command Handlers` are Services available in Dependency Container, which are defined to handle `Commands`. We call them External to differentiate from Aggregate Command Handlers, which will be described in later part of the section.\
 \
-In Ecotone we enable Command Handlers using attributes. By marking given method with               #`[CommandHandler]` we state it should be used as a `Command Handler`.
+In Ecotone we enable Command Handlers using attributes. By marking given method with `#[CommandHandler]` we state it should be used as a Command Handler.
 
 ```php
 class TicketService
@@ -29,7 +29,7 @@ class TicketService
 In case of Ecotone the class itself is not a Command Handler, it's a method that is considered to be Command Handler. This way we may join multiple Command Handlers under same class without introducing new classes if that's not needed.
 {% endhint %}
 
-`Command Handlers` are methods where we would typically places our business logic.\
+Command Handlers are methods where we would typically places our business logic.\
 In above example using `#[CommandHandler]` we stated that `createTicket` method will be handling `CreateTicketCommand`. \
 The first parameter of Command Handler method is indicator of the Command Class we want to handle, so in this case it will be `CreateTicketCommand`.\
 \

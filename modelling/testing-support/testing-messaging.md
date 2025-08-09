@@ -4,57 +4,72 @@ description: Testing Messaging architecture in PHP
 
 # Testing Messaging
 
-Testing `Message Driven Architecture` can easily become nightmare from the perspective of speed and maintenance of such tests. It's really important to write easy to understand, quick and reliable test scenarios. especially in long term projects. \
-That's why Ecotone comes with test supporting tools, which helps writing tests that are close to the way code runs in production, yet kept simple and isolated.
+Testing `Message Driven Architecture` can easily become a nightmare from the perspective of speed and maintenance of such tests. It's really important to write easy to understand, quick and reliable test scenarios, especially in long-term projects. \
+That's why Ecotone comes with test supporting tools, which help write tests that are close to the way code runs in production, yet kept simple and isolated.
 
 ## Ecotone Lite
 
-`Ecotone Lite` is a way to run Ecotone Application with full possibility to customize it.\
-You may point exactly what classes you would like to run, turn on and off modules that you want to include or exclude.
+When you need to test your message-driven code in isolation without booting your entire application, Ecotone Lite provides a lightweight solution. It allows you to run a minimal version of Ecotone with full customization capabilities.\
+You can specify exactly which classes to include, and enable or disable specific modules as needed for your test scenario.
 
-This makes Ecotone Lite great solution for running your tests in a way that they are really close to the way your code works on production with isolation to the set of classes you would like to test.
+This makes Ecotone Lite an excellent solution for writing tests that are close to production behavior while maintaining fast execution and proper isolation. Instead of loading your entire application with all its dependencies, you only load what's necessary for the specific functionality you're testing.
 
 ## Configuring Ecotone Lite for your tests
 
+Here's how to set up Ecotone Lite for testing. Each parameter serves a specific purpose in creating an isolated test environment:
+
 ```php
 $ecotoneLite = EcotoneLite::bootstrapFlowTesting(
-    // 1. Classes to resolve
+    // 1. Classes to resolve - specify which classes contain Ecotone attributes
     [User::class],
-    // 2. Available services, you may inject container instead
+    // 2. Available services - provide service instances or inject a container
     [new EmailConverter(), new PhoneNumberConverter(), new UuidConverter()],
-    // 3. Service Configuration
+    // 3. Service Configuration - customize the test environment
     ServiceConfiguration::createWithDefaults()
-        // 4. resolve all classes from given namespace
+        // 4. Load classes from specific namespaces automatically
         ->withNamespaces(["App\Testing\Infrastructure\Converter"])
-        // 5 add extension objects
+        // 5. Add extension objects for additional functionality
         ->withExtensionObjects([
-            // 6. register in memory repository for User
+            // 6. Use in-memory repositories for fast testing
             InMemoryStateStoredRepositoryBuilder::createForAllAggregates()
         ])
-        // 7. Turn off given Ecotone's modules
+        // 7. Disable modules not needed for this test
         ->withSkippedModulePackageNames([
-            // 8. Turning off asynchronous package
+            // 8. Skip async processing to run tests synchronously
             ModulePackageList::ASYNCHRONOUS_PACKAGE
         ])
 );
 ```
 
-1. **Classes to resolve** - The first parameter, sets list of `classes that you would like to include in this test`. Those are classes that containing Ecotone's attributes.
-2. **Available services** - Provides `references to the service classes` used in this test. You may inject `PSR compatible container` instead.
-3. **Service Configuration** - In here you may customize your configuration for this test case. All configs can be [find here](../../modules/ecotone-lite/#serviceconfiguration).
-4. **Service Configuration -withNamespaces** - One of the configuration worth mention is `withNamespaces` this allows to use define given or set of namespaces, from which all classes will be included in this test.
-5. **Service Configuration -withExtensionObjects** - This allows for defining extension object for customizing Ecotone's modules
-6. **Register in memory repository -** This example extension object registers In Memory Repository for all your [state stored aggregates](../command-handling/state-stored-aggregate/)
-7. **Turn off Modules -** This allows you to turn off given Ecotone's module for this test.
-8. **Turning off asynchronous package -** Turning off asynchronous package for example, will make your code execute synchronously, so you won't need to bother with running consumers in your test.
+**Understanding the Configuration Parameters:**
+
+1. **Classes to resolve** - Specify which classes contain Ecotone attributes (like `#[CommandHandler]`, `#[EventHandler]`, etc.) that you want to test. Only include the classes relevant to your test scenario.
+
+2. **Available services** - Provide instances of services your handlers need, or inject a PSR-compatible container. This replaces your normal dependency injection setup for testing.
+
+3. **Service Configuration** - Customize how Ecotone behaves in your test. All available configurations are documented [here](../../modules/ecotone-lite/#serviceconfiguration).
+
+4. **withNamespaces** - Instead of listing individual classes, you can tell Ecotone to automatically discover all classes with attributes in specific namespaces. This is useful when you have many related classes.
+
+5. **withExtensionObjects** - Add special objects that modify how Ecotone works. For example, you can replace real databases with in-memory alternatives for faster testing.
+
+6. **In-memory repositories** - This extension replaces your normal database repositories with fast in-memory versions, perfect for unit and integration tests.
+
+7. **Skipping modules** - Disable Ecotone modules you don't need for your specific test, making tests faster and more focused.
+
+8. **Synchronous execution** - By disabling the asynchronous package, messages that would normally be processed asynchronously (like queued events) run immediately in your test, making assertions easier.
 
 {% hint style="info" %}
-If you want to read more about Ecotone Lite configuration, check [Module Page](../../modules/ecotone-lite/).
+**Related Documentation:**
+- [Ecotone Lite Module](../../modules/ecotone-lite/) - Complete configuration reference
+- [Testing Aggregates and Sagas](testing-aggregates-and-sagas-with-message-flows.md) - Advanced testing patterns
+- [Testing Event Sourcing](testing-event-sourcing-applications.md) - Event sourcing specific testing
+- [Testing Asynchronous Messaging](testing-asynchronous-messaging.md) - Async testing strategies
 {% endhint %}
 
-## Calling Command Bus
+## Testing Command Handlers
 
-Suppose we have user registration `Command Handler:`
+Let's walk through a practical example. Suppose we have a user registration Command Handler that saves users to a repository:
 
 ```php
 class UserService
@@ -67,30 +82,41 @@ class UserService
 }
 ```
 
-and we want to fetch, if `User` was stored in the repository after sending an `Command`.
+We want to test that when we send a `RegisterUser` command, the user is actually stored in the repository. Here's how to test this behavior:
 
-<pre class="language-php"><code class="lang-php">$userRepository = new InMemoryUserRepository;
+```php
+// 1. Create an in-memory repository for testing
+$userRepository = new InMemoryUserRepository;
 
 $ecotoneLite = EcotoneLite::bootstrapFlowTesting(
-    // We provide list of classes which are using Ecotone's attributes
+    // 2. Tell Ecotone which classes contain handlers to test
     [UserService::class],
-    // We provide Service used by the Command Handler
+    // 3. Provide the repository instance our handler needs
     [UserRepository::class => $userRepository]
 );
-<strong>
-</strong><strong>// No users in repository before calling command
-</strong>$this->assertEmpty($userRepository->getAll());
-<strong>
-</strong><strong>$ecotoneLite->sendCommand(new RegisterUser(
-</strong>    Uuid::uuid4(),
+
+// 4. Verify repository is empty before we start
+$this->assertEmpty($userRepository->getAll());
+
+// 5. Send the command through Ecotone's command bus
+$ecotoneLite->sendCommand(new RegisterUser(
+    Uuid::uuid4(),
     "johny",
     Email::create("test@wp.pl"),
-    PhoneNumber::create("148518518518"))
+    PhoneNumber::create("148518518518")
 ));
 
-// User should be stored in repository
+// 6. Verify the command handler did its job
 $this->assertNotEmpty($userRepository->getAll());
-</code></pre>
+```
+
+**What's happening here:**
+1. We create an in-memory repository that behaves like a real one but stores data in memory for fast testing
+2. We tell Ecotone to load our `UserService` class which contains the Command Handler
+3. We provide the repository instance that our handler will receive when called
+4. We verify our starting state (empty repository)
+5. We send the command using Ecotone's testing API - this will trigger our handler
+6. We verify the expected outcome (user was saved)
 
 The same way we send Command using `sendCommand,` we may send Queries - `sendQuery` and publish Events - `publishEvent.`
 
@@ -114,9 +140,9 @@ public function whenOrderWasCancelled(OrderWasPlaced $event): void
 
 ## Verifying Published Events
 
-After sending `Command`, you may verify, if given set of `events` were published as a result.&#x20;
+When testing command handlers that publish events, you need to verify that the correct events were published as a result of your command. This is crucial for ensuring your business logic triggers the right side effects.
 
-For this Ecotone introduce `Message Collector` which intercept your message flow.
+Ecotone provides a `Message Collector` that automatically captures all messages flowing through your system during testing, allowing you to inspect what events were published:
 
 ```php
 $this->assertEquals(
@@ -131,7 +157,7 @@ Ecotone intercept all interactions with Event/Command/Query Buses. This allows y
 
 ## Verifying Message Headers
 
-If you want to validate, if Event was sent with given set of headers:
+Sometimes you need to verify not just what events were published, but also what metadata (headers) they carried. This is important when your business logic depends on contextual information like user IDs, timestamps, or correlation IDs:
 
 ```php
 $this->assertEquals(
@@ -185,11 +211,68 @@ $ecotoneLite->discardRecordedMessages();
 
 ## Caching Configuration
 
-Ecotone Lite tests are quick to run as the boot minimal version of Ecotone which is supposed to handle given set of classes. This way we avoid booting whole Application in order to run tests that cover specific scenario.
+One concern when using testing frameworks is performance - you don't want your test suite to become slow as it grows. Ecotone Lite addresses this by running only the minimal parts of Ecotone needed for your specific test, avoiding the overhead of booting your entire application.
 
-The only part which add extra milliseconds to the tests execution, is bootstrapping the configuration. However Ecotone does cache it between the test runs and mark it as stale when related test files does change. This means we may have great volume of tests using Ecotone Lite, and execution speed will be preserved.
+The main performance consideration is the initial configuration bootstrapping. To solve this, Ecotone automatically caches the configuration between test runs and intelligently invalidates the cache when your test files change. This means you can have hundreds of Ecotone Lite tests while maintaining fast execution times.
 
 {% hint style="success" %}
-By default if not changed Ecotone Lite, will store the config in temporary folder under ecotone catalog: "/tmp/ecotone".\
+By default if not changed, Ecotone Lite will store the config in temporary folder under ecotone catalog: "/tmp/ecotone".\
 Ecotone will reload cache on configuration changes, yet we may always remove the catalog manually in case.
 {% endhint %}
+
+## Common Pitfalls and Troubleshooting
+
+### Missing Dependencies in Test Setup
+
+**Problem:** Your test fails with "Service not found" or similar dependency injection errors.
+
+**Solution:** Make sure you provide all services that your handlers need in the second parameter of `bootstrapFlowTesting()`:
+
+```php
+$ecotoneLite = EcotoneLite::bootstrapFlowTesting(
+    [UserService::class],
+    [
+        UserRepository::class => new InMemoryUserRepository(),
+        EmailService::class => new MockEmailService(),
+        // Add all services your handlers depend on
+    ]
+);
+```
+
+### Asynchronous Code Not Working in Tests
+
+**Problem:** Your asynchronous event handlers or command handlers don't seem to execute in tests.
+
+**Solution:** By default, Ecotone Lite runs everything synchronously for testing. If you need to test asynchronous behavior, don't skip the asynchronous package:
+
+```php
+// Add this line if you want to test async behavior
+// ->withSkippedModulePackageNames([ModulePackageList::ASYNCHRONOUS_PACKAGE])
+```
+
+### Events Not Being Recorded
+
+**Problem:** `getRecordedEvents()` returns empty array even though you expect events.
+
+**Solution:**
+1. Make sure your command handler actually publishes events
+2. Check that you're calling `getRecordedEvents()` on the same test support instance
+3. Verify your event handlers are properly annotated with `#[EventHandler]`
+
+### Class Not Found Errors
+
+**Problem:** Ecotone can't find your classes during testing.
+
+**Solution:** Either include the class in the first parameter or use `withNamespaces()`:
+
+```php
+// Option 1: List classes explicitly
+$ecotoneLite = EcotoneLite::bootstrapFlowTesting([UserService::class, OrderService::class]);
+
+// Option 2: Use namespaces
+$ecotoneLite = EcotoneLite::bootstrapFlowTesting(
+    [],
+    [],
+    ServiceConfiguration::createWithDefaults()->withNamespaces(['App\\Service'])
+);
+```

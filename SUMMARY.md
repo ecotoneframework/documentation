@@ -2,17 +2,17 @@
 
 * [About](README.md)
 * [Installation](install-php-service-bus.md)
-* [How to use](quick-start-php-ddd-cqrs-event-sourcing/README.md)
-  * [CQRS PHP](quick-start-php-ddd-cqrs-event-sourcing/php-cqrs.md)
-  * [Event Handling PHP](quick-start-php-ddd-cqrs-event-sourcing/php-event-handling.md)
-  * [Aggregates & Sagas](quick-start-php-ddd-cqrs-event-sourcing/aggregates-and-sagas.md)
-  * [Scheduling in PHP](quick-start-php-ddd-cqrs-event-sourcing/scheduling-in-php.md)
-  * [Asynchronous PHP](quick-start-php-ddd-cqrs-event-sourcing/asynchronous-php.md)
-  * [Event Sourcing PHP](quick-start-php-ddd-cqrs-event-sourcing/event-sourcing-php.md)
-  * [Microservices PHP](quick-start-php-ddd-cqrs-event-sourcing/microservices-php.md)
-  * [Resiliency and Error Handling](quick-start-php-ddd-cqrs-event-sourcing/resiliency-and-error-handling.md)
-  * [Laravel Demos](quick-start-php-ddd-cqrs-event-sourcing/laravel-ddd-cqrs-demo-application.md)
-  * [Symfony Demos](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/README.md)
+* [How to use](quick-start-php-ddd-cqrs-event-sourcing/README.md) - Quick start guides and examples
+  * [CQRS PHP](quick-start-php-ddd-cqrs-event-sourcing/php-cqrs.md) - Command Query Responsibility Segregation
+  * [Event Handling PHP](quick-start-php-ddd-cqrs-event-sourcing/php-event-handling.md) - Event-driven architecture patterns
+  * [Aggregates & Sagas](quick-start-php-ddd-cqrs-event-sourcing/aggregates-and-sagas.md) - Domain modeling building blocks
+  * [Scheduling in PHP](quick-start-php-ddd-cqrs-event-sourcing/scheduling-in-php.md) - Time-based message processing
+  * [Asynchronous PHP](quick-start-php-ddd-cqrs-event-sourcing/asynchronous-php.md) - Background processing and queues
+  * [Event Sourcing PHP](quick-start-php-ddd-cqrs-event-sourcing/event-sourcing-php.md) - Event-based data persistence
+  * [Microservices PHP](quick-start-php-ddd-cqrs-event-sourcing/microservices-php.md) - Distributed system patterns
+  * [Resiliency and Error Handling](quick-start-php-ddd-cqrs-event-sourcing/resiliency-and-error-handling.md) - Fault tolerance strategies
+  * [Laravel Demos](quick-start-php-ddd-cqrs-event-sourcing/laravel-ddd-cqrs-demo-application.md) - Laravel integration examples
+  * [Symfony Demos](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/README.md) - Symfony integration examples
     * [Doctrine ORM](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/doctrine-orm.md)
 * [Tutorial](tutorial-php-ddd-cqrs-event-sourcing/README.md)
   * [Before we start tutorial](tutorial-php-ddd-cqrs-event-sourcing/before-we-start-tutorial.md)
@@ -114,11 +114,11 @@
   * [The Basics - Stateless Workflows](modelling/business-workflows/the-basics-stateless-workflows.md)
   * [Stateful Workflows - Saga](modelling/business-workflows/stateful-workflows-saga.md)
   * [Handling Failures](modelling/business-workflows/handling-failures.md)
-* [Testing Support](modelling/testing-support/README.md)
-  * [Testing Messaging](modelling/testing-support/testing-messaging.md)
-  * [Testing Aggregates and Sagas with Message Flows](modelling/testing-support/testing-aggregates-and-sagas-with-message-flows.md)
-  * [Testing Event Sourcing Applications](modelling/testing-support/testing-event-sourcing-applications.md)
-  * [Testing Asynchronous Messaging](modelling/testing-support/testing-asynchronous-messaging.md)
+* [Testing Support](modelling/testing-support/README.md) - Comprehensive testing tools for message-driven applications
+  * [Testing Messaging](modelling/testing-support/testing-messaging.md) - Basic setup and testing fundamentals
+  * [Testing Aggregates and Sagas with Message Flows](modelling/testing-support/testing-aggregates-and-sagas-with-message-flows.md) - Business logic flow testing
+  * [Testing Event Sourcing Applications](modelling/testing-support/testing-event-sourcing-applications.md) - Event sourcing specific patterns
+  * [Testing Asynchronous Messaging](modelling/testing-support/testing-asynchronous-messaging.md) - Async messaging strategies
 
 ## Messaging and Ecotone In Depth <a href="#messaging" id="messaging"></a>
 

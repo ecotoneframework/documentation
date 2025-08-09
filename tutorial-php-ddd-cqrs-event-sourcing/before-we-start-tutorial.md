@@ -4,9 +4,9 @@
 
 Depending on the preferences, we may choose tutorial version for&#x20;
 
-* [`Symfony`](https://symfony.com/)&#x20;
-* [`Laravel`](https://laravel.com/)
-* [`Lite (No extra framework)`](../modules/ecotone-lite/)
+* [Symfony](https://symfony.com/)&#x20;
+* [Laravel](https://laravel.com/)
+* [Lite (No extra framework)](../modules/ecotone-lite/)
 
 1. Use [git](https://git-scm.com) to download **starting point** in order to start tutorial
 

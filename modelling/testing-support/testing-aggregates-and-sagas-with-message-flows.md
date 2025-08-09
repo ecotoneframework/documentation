@@ -4,24 +4,33 @@ description: Testing Aggregate, Saga in PHP
 
 # Testing Aggregates and Sagas with Message Flows
 
-On top of [Messaging Test Support](testing-messaging.md), Ecotone provides abstraction to handle Message Flows.\
+On top of [Messaging Test Support](testing-messaging.md), Ecotone provides abstraction to handle message flows.\
 This is a clean way to define step by step what happens in your system and verify the results.&#x20;
 
 {% hint style="success" %}
-Testing with Message Flows, make your code closer to production like execution.\
-Message Flows are great candidate for writing acceptance tests or testing flow of your Aggregates and Sagas.
+Testing with message flows, make your code closer to production like execution.\
+Message flows are great candidate for writing acceptance tests or testing flow of your Aggregates and Sagas.
 {% endhint %}
 
 ## Setting up Flow Test
 
-To enable Flow Test Support, as first parameter we pass list of classes we want to resolve for our testing scenario, this can be `aggregate`, `saga` or any class containing Ecotone's `attributes`.
+To enable Flow Test Support, you specify which classes contain the business logic you want to test. This typically includes aggregates, sagas, or any classes with Ecotone attributes like `#[CommandHandler]` or `#[EventHandler]`.
 
 ```php
+// Set up flow testing for the User aggregate
+// This tells Ecotone to load the User class and any handlers it contains
 $testSupport = EcotoneLite::bootstrapFlowTesting([User::class]);
 ```
 
 {% hint style="success" %}
-For more details on how to set up EcotoneLite for the different test scenario, read introduction chapter [Testing Messaging](testing-messaging.md).
+**Prerequisites:** Make sure you understand the basics first:
+- [Testing Messaging](testing-messaging.md) - Essential setup and configuration
+- [Command Handling](../command-handling/) - Understanding commands and handlers
+- [State-Stored Aggregates](../command-handling/state-stored-aggregate/) - Aggregate fundamentals
+
+**Next Steps:** After mastering message flows:
+- [Testing Event Sourcing](testing-event-sourcing-applications.md) - Event sourcing specific patterns
+- [Testing Asynchronous Messaging](testing-asynchronous-messaging.md) - Async testing strategies
 {% endhint %}
 
 ## Testing Aggregate or Sagas
@@ -81,23 +90,28 @@ When we've our Ecotone Lite set up, we may start using flow testing:
 ```php
 public function test_registering_user()
 {
+    // Prepare test data
     $userId = Uuid::uuid4();
     $email = Email::create("test@wp.pl");
     $phoneNumber = PhoneNumber::create("148518518518");
 
-    // 1. Comparing published events after registration
+    // Define what we expect to happen: a UserWasRegistered event should be published
+    $expectedEvent = new UserWasRegistered($userId, $email, $phoneNumber);
+
+    // Execute the command and verify the expected event was published
     $this->assertEquals(
-        [new UserWasRegistered($userId, $email, $phoneNumber)],
-        // 2. Running Message Flow Test support
+        [$expectedEvent], // What we expect
         $testSupport
-            ->sendCommand(new RegisterUser($userId, "johny", $email, $phoneNumber))
-            ->getRecordedEvents()
+            ->sendCommand(new RegisterUser($userId, "johny", $email, $phoneNumber)) // What we do
+            ->getRecordedEvents() // What actually happened
     );
-}   
+}
 ```
 
-1. We set up our expected event as outcome of running `RegisterUser Command.`
-2. Then we can make use of Flow Support to send an Command and get event that was recorded as outcome.
+**What this test verifies:**
+1. When we send a `RegisterUser` command with specific user data
+2. The system should publish a `UserWasRegistered` event with the same data
+3. This ensures our business logic correctly translates commands into domain events
 
 {% hint style="success" %}
 You may send multiple command and chain them together, to build flow that you would like to test.
@@ -145,7 +159,7 @@ $this->assertTrue(
 
 ## Testing Communication between Aggregates and Sagas.
 
-With `Ecotone Lite` you may create full acceptance tests, just add classes that should be used in your test scenarios and let Ecotone glue everything together.
+With Ecotone Lite you may create full acceptance tests, just add classes that should be used in your test scenarios and let Ecotone glue everything together.
 
 ```php
 public function test_success_verification_after_registration()
