@@ -11,7 +11,7 @@ Ecotone comes with two plans:
 {% hint style="success" %}
 Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\
 \
-Subscription plan is now available. To subscribe to Enterprise visit [https://ecotone.tech/pricing](https://ecotone.tech/pricing)
+To subscribe to Enterprise plan, visit [https://ecotone.tech/pricing](https://ecotone.tech/pricing)
 {% endhint %}
 
 ## Available Enterprise Features
