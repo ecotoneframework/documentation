@@ -111,8 +111,9 @@
   * [Message Consumer](modelling/microservices-php/message-consumer.md)
   * [Message Publisher](modelling/microservices-php/message-publisher.md)
 * [Business Workflows](modelling/business-workflows/README.md)
-  * [The Basics - Stateless Workflows](modelling/business-workflows/the-basics-stateless-workflows.md)
-  * [Stateful Workflows - Saga](modelling/business-workflows/stateful-workflows-saga.md)
+  * [Connecting Handlers with Channels](modelling/business-workflows/connecting-handlers-with-channels.md)
+  * [Sagas: Workflows That Remember](modelling/business-workflows/sagas.md)
+  * [Orchestrators: Declarative Workflow Automation](modelling/business-workflows/orchestrators.md)
   * [Handling Failures](modelling/business-workflows/handling-failures.md)
 * [Testing Support](modelling/testing-support/README.md) - Comprehensive testing tools for message-driven applications
   * [Testing Messaging](modelling/testing-support/testing-messaging.md) - Basic setup and testing fundamentals
