@@ -10,7 +10,7 @@ Ecotone comes with two plans:
 {% hint style="success" %}
 Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\
 \
-To subscribe to Enterprise plan, visit [https://ecotone.tech/pricing](https://ecotone.tech/pricing)
+To evaluate Enterprise features, **email us at** "**support@simplycodedsoftware.com**" **to receive trial key**. **Production license keys** are available at [https://ecotone.tech](https://ecotone.tech/pricing).
 {% endhint %}
 
 ## Available Enterprise Features
