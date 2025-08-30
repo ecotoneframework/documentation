@@ -6,6 +6,7 @@ Defines how to handle failures when processing messages. This is final failure s
 
 Ecotone provides three final strategies:
 
+* **RELEASE** - Message is released back to the Channel for another attempt. This way order will be preserved, yet it can result in processing being blocked if the message keeps failing.
 * **RESEND** - Message is resend back to the Channel for another attempt, as a result Message Consumer will be unblock and will be able to continue on next Messages. This way next messages can be consumed without system being stuck.
 * **IGNORE** - Message is discarded, processing continues. Can be used for non critical message, to simply ignore failed messages.
 * **STOP** - Consumer stops, message is preserved. This strategy can be applied when our system depends heavily on the order of the Messages to work correctly. In that case we can stop the Consumer, resulting in Message still awaiting to be consumed.
