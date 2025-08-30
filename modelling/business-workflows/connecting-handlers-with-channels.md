@@ -27,6 +27,7 @@ public function place(PlaceOrder $command): void
 ```
 
 **What happens behind the scenes:**
+
 1. Ecotone creates a channel named `place.order`
 2. Your handler listens to this channel
 3. When you use the Command Bus, it sends messages to this channel
@@ -69,6 +70,7 @@ class ProcessOrder
 ```
 
 **How the flow works:**
+
 1. You send `PlaceOrder` to `verify.order` channel
 2. The `verify()` method processes it and returns the command
 3. Ecotone automatically sends the returned command to `place.order` channel
@@ -107,9 +109,10 @@ class ProcessOrder
 ```
 
 **What this means:**
-- ✅ `verify.order` can be called via Command Bus (entry point)
-- ❌ `place.order` can only be reached through the workflow
-- 🔒 This ensures orders are always verified before being placed
+
+* ✅ `verify.order` can be called via Command Bus (entry point)
+* ❌ `place.order` can only be reached through the workflow
+* 🔒 This ensures orders are always verified before being placed
 
 {% hint style="success" %}
 **Extending Workflows**: You can easily add more steps by adding `outputChannelName` to any handler. To send messages to multiple handlers, use the [Router pattern](../../messaging/messaging-concepts/message-endpoint/message-routing.md).
@@ -118,9 +121,10 @@ class ProcessOrder
 ## Adding Asynchronous Processing
 
 Sometimes you want parts of your workflow to run asynchronously (in the background). This is perfect for:
-- Heavy processing that shouldn't block the user
-- Ensuring messages aren't lost if something goes wrong
-- Scaling parts of your workflow independently
+
+* Heavy processing that shouldn't block the user
+* Ensuring messages aren't lost if something goes wrong
+* Scaling parts of your workflow independently
 
 **Example**: Keep verification synchronous (fast feedback) but make order placement asynchronous (reliable processing):
 
@@ -152,6 +156,7 @@ class ProcessOrder
 ```
 
 **What happens now:**
+
 1. `verify()` runs immediately and returns a response
 2. The message goes to a queue/background processor
 3. `place()` runs later in the background
@@ -166,9 +171,10 @@ class ProcessOrder
 ## Adding Delays and Timeouts
 
 Asynchronous handlers can also be delayed, which is perfect for business scenarios like:
-- Giving customers time to complete actions
-- Implementing timeout behaviors
-- Scheduling follow-up actions
+
+* Giving customers time to complete actions
+* Implementing timeout behaviors
+* Scheduling follow-up actions
 
 **Example**: Give customers 24 hours to pay, then automatically cancel unpaid orders:
 
@@ -219,8 +225,9 @@ class OrderTimeoutHandler
 ```
 
 **Timeline:**
-- ⏰ **T+0**: Order placed, event published
-- ⏰ **T+24h**: Cancellation handler runs automatically
+
+* ⏰ **T+0**: Order placed, event published
+* ⏰ **T+24h**: Cancellation handler runs automatically
 
 ## Controlling Workflow Flow
 
@@ -405,7 +412,7 @@ class ProcessOrder
         $this->placedOrders[] = $command->orderId;
     }
 
-    // Test helpers
+    // In production application you would most likely have some repository
     public function wasOrderVerified(string $orderId): bool
     {
         return in_array($orderId, $this->verifiedOrders);
@@ -454,56 +461,6 @@ class WorkflowChainTest extends TestCase
         $this->assertTrue($processor->wasOrderVerified('invalid-order'));
         $this->assertFalse($processor->wasOrderPlaced('invalid-order'));
     }
-}
-```
-
-### Testing Header Enrichment
-
-Test workflows that modify message headers:
-
-```php
-class HeaderEnrichmentProcessor
-{
-    #[InternalHandler(
-        inputChannelName: 'enrich.headers',
-        outputChannelName: 'use.headers',
-        changingHeaders: true
-    )]
-    public function enrichHeaders(CustomerData $customer): array
-    {
-        return [
-            'customerType' => $customer->isPremium() ? 'premium' : 'standard',
-            'riskScore' => $this->calculateRisk($customer)
-        ];
-    }
-
-    #[InternalHandler('use.headers')]
-    public function useHeaders(
-        CustomerData $customer,
-        #[Header('customerType')] string $customerType,
-        #[Header('riskScore')] int $riskScore
-    ): string {
-        return "Customer: {$customer->name}, Type: {$customerType}, Risk: {$riskScore}";
-    }
-
-    private function calculateRisk(CustomerData $customer): int
-    {
-        return $customer->isPremium() ? 10 : 50;
-    }
-}
-
-public function test_header_enrichment_workflow(): void
-{
-    $processor = new HeaderEnrichmentProcessor();
-    $ecotoneLite = EcotoneLite::bootstrapFlowTesting(
-        [HeaderEnrichmentProcessor::class],
-        [$processor]
-    );
-
-    $premiumCustomer = new CustomerData(name: 'John Doe', premium: true);
-    $result = $ecotoneLite->sendDirectToChannel('enrich.headers', $premiumCustomer);
-
-    $this->assertEquals('Customer: John Doe, Type: premium, Risk: 10', $result);
 }
 ```
 
@@ -563,10 +520,11 @@ public function test_async_workflow_in_sync_mode(): void
 You now understand the fundamentals of connecting handlers with channels in Ecotone:
 
 ### Key Concepts
-- **Channels**: Every handler has an input channel, and can send to output channels
-- **Connection**: Use `outputChannelName` to chain handlers together
-- **Privacy**: Use `InternalHandler` to make handlers private to workflows
-- **Async Processing**: Add `#[Asynchronous]` for background processing
-- **Delays**: Use `#[Delayed]` for time-based workflows
-- **Flow Control**: Return `null` to stop workflows
-- **Data Enrichment**: Transform payloads or add headers
+
+* **Channels**: Every handler has an input channel, and can send to output channels
+* **Connection**: Use `outputChannelName` to chain handlers together
+* **Privacy**: Use `InternalHandler` to make handlers private to workflows
+* **Async Processing**: Add `#[Asynchronous]` for background processing
+* **Delays**: Use `#[Delayed]` for time-based workflows
+* **Flow Control**: Return `null` to stop workflows
+* **Data Enrichment**: Transform payloads or add headers

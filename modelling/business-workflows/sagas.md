@@ -10,15 +10,13 @@ While [connecting handlers with channels](connecting-handlers-with-channels.md) 
 
 Use Sagas when your workflow needs to:
 
-🌳 **Branch and merge**: Split into multiple paths that later combine
-⏳ **Wait for humans**: Pause for manual approval or external actions
-📊 **Track progress**: Monitor long-running processes (hours, days, weeks)
-🔄 **Handle complexity**: Make decisions based on accumulated state
+🌳 **Branch and merge**: Split into multiple paths that later combine ⏳ **Wait for humans**: Pause for manual approval or external actions 📊 **Track progress**: Monitor long-running processes (hours, days, weeks) 🔄 **Handle complexity**: Make decisions based on accumulated state
 
 **Examples:**
-- Order processing (payment → shipping → delivery)
-- Loan approval (application → verification → decision)
-- User onboarding (signup → verification → welcome)
+
+* Order processing (payment → shipping → delivery)
+* Loan approval (application → verification → decision)
+* User onboarding (signup → verification → welcome)
 
 {% hint style="success" %}
 **Think of Sagas as**: A workflow coordinator that remembers what happened and decides what to do next based on that history.
@@ -48,9 +46,10 @@ final class OrderProcess
 ```
 
 **Key parts:**
-- `#[Saga]` - Tells Ecotone this is a stateful workflow
-- `#[Identifier]` - Unique ID to find and update this specific saga instance
-- Private properties - The state that gets remembered between events
+
+* `#[Saga]` - Tells Ecotone this is a stateful workflow
+* `#[Identifier]` - Unique ID to find and update this specific saga instance
+* Private properties - The state that gets remembered between events
 
 ### Step 2: Start the Saga
 
@@ -74,6 +73,7 @@ final class OrderProcess
 ```
 
 **What happens:**
+
 1. `OrderWasPlaced` event occurs
 2. Ecotone creates a new `OrderProcess` saga instance
 3. The saga is saved to storage (database, etc.)
@@ -115,6 +115,7 @@ final class OrderProcess
 ```
 
 **The flow:**
+
 1. `PaymentWasSuccessful` event arrives
 2. Saga updates its internal state
 3. Saga returns `ShipOrder` command
@@ -138,8 +139,9 @@ public function whenPaymentSucceeded(PaymentWasSuccessful $event, CommandBus $co
 
 {% hint style="info" %}
 **Timing difference**:
-- `outputChannelName`: Saga state saved first, then command sent
-- `CommandBus`: Command sent first, then saga state saved
+
+* `outputChannelName`: Saga state saved first, then command is sent
+* `CommandBus`: Command sent first, then saga state saved
 {% endhint %}
 
 ## Step 4: Publishing Events and Timeouts
@@ -199,8 +201,9 @@ final class OrderProcess
 ```
 
 **Timeline:**
-- ⏰ **T+0**: Order placed, saga starts, timeout scheduled
-- ⏰ **T+24h**: If still unpaid, automatically cancel
+
+* ⏰ **T+0**: Order placed, saga starts, timeout scheduled
+* ⏰ **T+24h**: If still unpaid, automatically cancel
 
 ## Advanced Patterns
 
@@ -233,9 +236,10 @@ class CustomerPromotion
 ```
 
 **How it works:**
-- ✅ If saga exists: Event is processed
-- ❌ If saga doesn't exist: Event is ignored (dropped)
-- 🎯 **Use case**: Features that depend on previous conditions
+
+* ✅ If saga exists: Event is processed
+* ❌ If saga doesn't exist: Event is ignored (dropped)
+* 🎯 **Use case**: Features that depend on previous conditions
 
 ### Querying Saga State
 
@@ -290,10 +294,11 @@ class OrderController
 ```
 
 **Perfect for:**
-- Order tracking pages
-- Progress indicators
-- Admin dashboards
-- Customer support tools
+
+* Order tracking pages
+* Progress indicators
+* Admin dashboards
+* Customer support tools
 
 ### Handling Unordered Events
 
@@ -326,14 +331,16 @@ class OrderFulfillment
 ```
 
 **How Ecotone decides:**
-- 🆕 **Saga doesn't exist** → Calls static factory method
-- ✅ **Saga exists** → Calls instance method
-- 🎯 **Same event, different behavior** based on saga state
+
+* 🎯 **Same event, different behavior** based on saga state
+* 🆕 **Saga doesn't exist** → Calls static factory method
+* ✅ **Saga exists** → Calls action method
 
 **Benefits:**
-- No complex if/else logic in your code
-- Handles event ordering issues automatically
-- Clean separation of initialization vs. processing logic
+
+* No complex if/else logic in your code
+* Handles event ordering issues automatically
+* Clean separation of initialization vs. processing logic
 
 {% hint style="success" %}
 **Pro tip**: This pattern is perfect for handling duplicate events or events that can arrive at different workflow stages.
@@ -390,85 +397,14 @@ class OrderProcess
 ```
 
 **Benefits of correlation IDs:**
-- Track workflows across multiple services
-- Handle branching and merging flows
-- Automatic propagation through message chains
+
+* Track workflows across multiple services
+* Handle branching and merging flows
+* Automatic propagation through message chains
 
 {% hint style="info" %}
 **Correlation IDs** are automatically propagated between messages, making them perfect for complex workflows that span multiple services or branches.
 {% endhint %}
-
-## Complete Example: Order Processing Saga
-
-Here's a full example putting it all together:
-
-```php
-#[Saga]
-final class OrderProcess
-{
-    use WithEvents;
-
-    private function __construct(
-        #[Identifier] private string $orderId,
-        private OrderStatus $status = OrderStatus::PLACED,
-        private bool $isPaid = false,
-        private bool $isShipped = false,
-    ) {
-        $this->recordThat(new OrderProcessStarted($this->orderId));
-    }
-
-    // Start the saga
-    #[EventHandler]
-    public static function startWhen(OrderWasPlaced $event): self
-    {
-        return new self($event->orderId);
-    }
-
-    // Handle payment
-    #[EventHandler(outputChannelName: "shipOrder")]
-    public function whenPaymentSucceeded(PaymentWasSuccessful $event): ?ShipOrder
-    {
-        $this->isPaid = true;
-        $this->status = OrderStatus::READY_TO_SHIP;
-
-        return new ShipOrder($this->orderId);
-    }
-
-    // Handle shipping
-    #[EventHandler]
-    public function whenOrderShipped(OrderWasShipped $event): void
-    {
-        $this->isShipped = true;
-        $this->status = OrderStatus::COMPLETED;
-
-        $this->recordThat(new OrderProcessCompleted($this->orderId));
-    }
-
-    // Timeout handling
-    #[Delayed(new TimeSpan(days: 1))]
-    #[Asynchronous('async')]
-    #[EventHandler]
-    public function cancelUnpaidOrder(OrderProcessStarted $event): void
-    {
-        if (!$this->isPaid) {
-            $this->status = OrderStatus::CANCELLED;
-            $this->recordThat(new OrderWasCancelled($this->orderId, 'Payment timeout'));
-        }
-    }
-
-    // Query current status
-    #[QueryHandler("order.getStatus")]
-    public function getStatus(): array
-    {
-        return [
-            'orderId' => $this->orderId,
-            'status' => $this->status->value,
-            'isPaid' => $this->isPaid,
-            'isShipped' => $this->isShipped,
-        ];
-    }
-}
-```
 
 ## Testing Sagas with Ecotone Lite
 
@@ -535,19 +471,22 @@ public function test_payment_processing_updates_saga_state(): void
     $this->assertEquals('READY_TO_SHIP', $status['status']);
 }
 ```
+
 ## Summary: When to Use Sagas
 
 ✅ **Use Sagas when you need to:**
-- Remember state between events
-- Coordinate long-running processes
-- Handle branching/merging workflows
-- Implement timeouts and cancellations
-- Track progress of complex operations
+
+* Remember state between events
+* Coordinate long-running processes
+* Handle branching/merging workflows
+* Implement timeouts and cancellations
+* Track progress of complex operations
 
 ❌ **Don't use Sagas for:**
-- Simple linear workflows (use [handler chaining](connecting-handlers-with-channels.md))
-- Stateless transformations
+
+* Simple linear workflows (use [handler chaining](connecting-handlers-with-channels.md))
+* Stateless transformations
 
 {% hint style="success" %}
-**Key insight**: Sagas are workflow coordinators that remember what happened and decide what to do next. They're perfect for orchestrating complex business processes that span time and multiple services.
+**Key insight**: Sagas are workflow coordinators that remember what happened and decide what to do next. They're perfect for orchestrating complex business processes that span across time and multiple services.
 {% endhint %}

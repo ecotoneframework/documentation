@@ -2,7 +2,7 @@
 description: Learn how to build predefined and dynamic workflows using Orchestrator
 ---
 
-# Orchestrator: Predefined Workflows Made Simple
+# Orchestrators: Declarative Workflow Automation
 
 While [connecting handlers with channels](connecting-handlers-with-channels.md) works great for linear workflows, and [Sagas](sagas.md) excel at stateful processes, **Orchestrator** is perfect when you need **predefined workflows** where the workflow definition is separate from the individual steps.
 
@@ -10,24 +10,27 @@ While [connecting handlers with channels](connecting-handlers-with-channels.md) 
 
 Use Orchestrator when you want to:
 
-🎯 **Separate workflow from steps**: Define the flow independently of step implementation  
-🔄 **Reuse steps**: Use the same steps in different workflows  
-⚡ **Build dynamic workflows**: Construct workflows programmatically based on business rules  
-🧪 **Easy testing**: Test workflows and steps independently  
-📋 **Predefined processes**: Execute well-defined business processes consistently  
+🎯 **Separate workflow from steps**: Define the flow independently of step implementation\
+🔄 **Reuse steps**: Use the same steps in different workflows\
+⚡ **Build dynamic workflows**: Construct workflows programmatically based on business rules\
+🧪 **Easy testing**: Test workflows and steps independently\
+📋 **Predefined processes**: Execute well-defined business processes consistently
 
 **Examples:**
-- Image processing pipeline (resize → watermark → optimize → upload)
-- Document approval workflow (validate → review → approve → notify)
-- Order fulfillment process (verify → payment → shipping → tracking)
-- Customer onboarding (registration → verification → welcome → setup)
 
-{% hint style="success" %}
+* Image processing pipeline (resize → watermark → optimize → upload)
+* Document approval workflow (validate → review → approve → notify)
+* Order fulfillment process (verify → payment → shipping → tracking)
+* Customer onboarding (registration → verification → welcome → setup)
+
 **Think of Orchestrator as**: A conductor that knows the entire symphony (workflow) and tells each musician (step) when to play, while the musicians focus only on their part.
-{% endhint %}
 
 {% hint style="info" %}
 **Prerequisites**: Understanding of [message handlers](../command-handling/) and [channels](connecting-handlers-with-channels.md) will help you get the most out of Orchestrator.
+{% endhint %}
+
+{% hint style="success" %}
+**Enterprise Feature**: Orchestrator is part of Ecotone's Enterprise features.
 {% endhint %}
 
 ## Creating Your First Orchestrator
@@ -53,9 +56,10 @@ class ImageProcessingOrchestrator
 ```
 
 **Key parts:**
-- `#[Orchestrator]` - Tells Ecotone this method defines a workflow
-- `inputChannelName` - Channel that triggers this workflow
-- Return array - List of steps (channel names) to execute in order
+
+* `#[Orchestrator]` - Tells Ecotone this method defines a workflow
+* `inputChannelName` - Channel that triggers this workflow
+* Return array - List of steps (channel names) to execute in order
 
 ### Step 2: Implement the Steps
 
@@ -96,6 +100,7 @@ class ImageProcessingOrchestrator
 ```
 
 **What happens when you trigger the workflow:**
+
 1. Message sent to `process.image` channel
 2. Orchestrator returns `["resize.image", "add.watermark", "optimize.image", "upload.image"]`
 3. Each step executes in sequence, passing data to the next step
@@ -173,10 +178,10 @@ class OrderProcessingOrchestrator
 ```
 
 **Benefits of header enrichment:**
-- Keep original payload unchanged
-- Add context data for downstream steps
-- Maintain clean separation of concerns
-- Easy to test individual steps
+
+* Keep original payload unchanged
+* Add context data for downstream steps
+* Maintain clean separation of concerns
 
 ## Executing Orchestrators
 
@@ -200,6 +205,7 @@ class ImageController
 ```
 
 **Flow:**
+
 1. `UploadImageCommand` sent to command handler
 2. Handler processes upload and returns `ImageData`
 3. Result automatically sent to `process.image` channel
@@ -220,11 +226,14 @@ class OrderEventHandler
 ```
 
 **Flow:**
+
 1. `OrderPlaced` event occurs
 2. Event handler processes it and sends result to `process.order`
 3. Orchestrator workflow begins automatically
 
 ### Method 3: Business Interface Triggering Business Workflow
+
+Business Interface is simple interface where Ecotone delivers implementation. This way we can easily create and entrypoint with interface that is part of our application level code and execute the workflow:
 
 ```php
 interface OrderProcessingService
@@ -235,6 +244,7 @@ interface OrderProcessingService
 ```
 
 **Usage in your application:**
+
 ```php
 class OrderController
 {
@@ -303,10 +313,11 @@ class OrderController
 ```
 
 **Gateway benefits:**
-- Dynamic workflow construction
-- Runtime step determination
-- Easy integration with web controllers
-- Flexible business rule application
+
+* Dynamic workflow construction
+* Runtime step determination
+* Easy integration with web controllers
+* Flexible business rule application
 
 ## Asynchronous Orchestration
 
@@ -388,6 +399,7 @@ class MixedProcessingOrchestrator
         $this->notificationService->send($data);
     }
 }
+```
 
 ## Advanced Features
 
@@ -429,55 +441,6 @@ class DynamicCustomerOnboardingOrchestrator
         $steps[] = "send.welcome.email";
 
         return $steps;
-    }
-
-    #[InternalHandler(inputChannelName: "validate.customer")]
-    public function validateCustomer(Customer $customer): Customer
-    {
-        // Basic validation
-        return $customer;
-    }
-
-    #[InternalHandler(inputChannelName: "enterprise.verification")]
-    public function enterpriseVerification(Customer $customer): Customer
-    {
-        // Enterprise-specific verification
-        return $customer;
-    }
-
-    #[InternalHandler(inputChannelName: "compliance.check")]
-    public function complianceCheck(Customer $customer): Customer
-    {
-        // Compliance verification
-        return $customer;
-    }
-
-    #[InternalHandler(inputChannelName: "international.verification")]
-    public function internationalVerification(Customer $customer): Customer
-    {
-        // International customer verification
-        return $customer;
-    }
-
-    #[InternalHandler(inputChannelName: "kyc.verification")]
-    public function kycVerification(Customer $customer): Customer
-    {
-        // Know Your Customer verification
-        return $customer;
-    }
-
-    #[InternalHandler(inputChannelName: "create.account")]
-    public function createAccount(Customer $customer): Customer
-    {
-        // Account creation
-        return $this->customerService->createAccount($customer);
-    }
-
-    #[InternalHandler(inputChannelName: "send.welcome.email")]
-    public function sendWelcomeEmail(Customer $customer): void
-    {
-        // Send welcome email
-        $this->emailService->sendWelcome($customer);
     }
 }
 ```
@@ -566,12 +529,11 @@ class MasterOrchestrator
         return new FinalResult($data);
     }
 }
+```
 
 ## Testing Orchestrators
 
 Testing orchestrators is straightforward with Ecotone Lite. You can test the entire workflow, individual steps, or specific scenarios.
-
-### Setting Up Orchestrator Tests
 
 ```php
 use Ecotone\Lite\EcotoneLite;
@@ -660,43 +622,6 @@ public function test_customer_data_enrichment_step(): void
 }
 ```
 
-### Testing Dynamic Workflows
-
-```php
-public function test_dynamic_customer_onboarding_enterprise(): void
-{
-    $enterpriseCustomer = new Customer('Enterprise Corp', 'enterprise', 'US');
-
-    $steps = $this->ecotoneLite->sendDirectToChannel('onboard.customer', $enterpriseCustomer);
-
-    $expectedSteps = [
-        'validate.customer',
-        'enterprise.verification',
-        'compliance.check',
-        'create.account',
-        'send.welcome.email'
-    ];
-
-    $this->assertEquals($expectedSteps, $steps);
-}
-
-public function test_dynamic_customer_onboarding_international(): void
-{
-    $internationalCustomer = new Customer('Global Ltd', 'standard', 'UK');
-
-    $steps = $this->ecotoneLite->sendDirectToChannel('onboard.customer', $internationalCustomer);
-
-    $expectedSteps = [
-        'validate.customer',
-        'international.verification',
-        'create.account',
-        'send.welcome.email'
-    ];
-
-    $this->assertEquals($expectedSteps, $steps);
-}
-```
-
 ### Testing Asynchronous Orchestrators
 
 ```php
@@ -724,6 +649,7 @@ public function test_asynchronous_orchestrator(): void
     // Verify processing completed
     $this->assertTrue(true); // Add specific assertions based on your implementation
 }
+```
 
 ### Testing Orchestrator Gateways
 
@@ -748,102 +674,58 @@ public function test_orchestrator_gateway_with_dynamic_steps(): void
 
     $this->assertInstanceOf(OrderConfirmation::class, $result);
 }
-
-public function test_gateway_with_different_step_combinations(): void
-{
-    /** @var OrderProcessingGateway $gateway */
-    $gateway = $this->ecotoneLite->getGateway(OrderProcessingGateway::class);
-
-    $order = new Order('123', 'international-customer', []);
-
-    // Test international order flow
-    $internationalSteps = [
-        'validate.order',
-        'customs.declaration',
-        'process.payment',
-        'international.shipping'
-    ];
-
-    $result = $gateway->processWithSteps($internationalSteps, $order, []);
-    $this->assertTrue($result->hasCustomsDeclaration());
-
-    // Test express order flow
-    $expressSteps = [
-        'validate.order',
-        'express.processing',
-        'priority.shipping'
-    ];
-
-    $result = $gateway->processWithSteps($expressSteps, $order, []);
-    $this->assertTrue($result->isExpress());
-}
 ```
 
 ## Key Benefits of Orchestrator
 
 ### 🎯 **Separation of Concerns**
-- **Workflow definition** is separate from **step implementation**
-- Easy to understand the entire process at a glance
-- Steps can be reused across different workflows
+
+* **Workflow definition** is separate from **step implementation**
+* Easy to understand the entire process at a glance
+* Steps can be reused across different workflows
 
 ### 🔄 **Reusability**
-- Same steps can be used in multiple workflows
-- Build libraries of reusable business operations
-- Mix and match steps for different scenarios
+
+* Same steps can be used in multiple workflows
+* Build libraries of reusable business operations
+* Mix and match steps for different scenarios
 
 ### ⚡ **Dynamic Workflows**
-- Build workflows programmatically based on business rules
-- Adapt to different customer types, regions, or conditions
-- Runtime workflow construction
+
+* Build workflows programmatically based on business rules
+* Adapt to different customer types, regions, or conditions
+* Runtime workflow construction
 
 ### 🧪 **Testability**
-- Test entire workflows end-to-end
-- Test individual steps in isolation
-- Easy mocking and stubbing of dependencies
+
+* Test entire workflows end-to-end
+* Test individual steps in isolation
+* Easy mocking and stubbing of dependencies
 
 ### 📈 **Scalability**
-- Asynchronous execution support
-- Individual steps can be scaled independently
-- Easy to add new steps without changing existing code
+
+* Asynchronous execution support
+* Individual steps can be scaled independently
+* Easy to add new steps without changing existing code
 
 ### 🔍 **Observability**
-- Clear workflow execution path
-- Easy to monitor and debug
-- Step-by-step execution tracking
 
-## Best Practices
-
-### ✅ **Do:**
-
-- **Keep steps focused**: Each step should have a single responsibility
-- **Use meaningful channel names**: `validate.order` is better than `step1`
-- **Handle errors gracefully**: Use proper exception handling in steps
-- **Use header enrichment**: For adding context without changing payload
-- **Test thoroughly**: Test both workflows and individual steps
-- **Document workflows**: Make the business process clear to stakeholders
-
-### ❌ **Don't:**
-
-- **Mix workflow logic with step logic**: Keep them separate
-- **Create overly complex steps**: Break down complex operations
-- **Skip testing**: Orchestrators are critical business logic
+* Clear workflow execution path
+* Easy to monitor and debug
+* Step-by-step execution tracking
 
 ## Summary
 
 Orchestrator is perfect for building **predefined workflows** where you want to:
 
-- 🎯 **Separate workflow definition from step implementation**
-- 🔄 **Reuse steps across different workflows**
-- ⚡ **Build dynamic workflows based on business rules**
-- 🧪 **Test workflows and steps independently**
-- 📋 **Execute consistent, repeatable business processes**
+* 🎯 **Separate workflow definition from step implementation**
+* 🔄 **Reuse steps across different workflows**
+* ⚡ **Build dynamic workflows based on business rules**
+* 🧪 **Test workflows and steps independently**
+* 📋 **Execute consistent, repeatable business processes**
 
 {% hint style="success" %}
 **Key insight**: Orchestrator shines when you know the types of workflows you need but want flexibility in how they're constructed and executed. It's the perfect balance between structure and flexibility.
-{% endhint %}
-
-{% hint style="info" %}
-**Enterprise Feature**: Orchestrator requires an Enterprise license. The power of predefined workflows with dynamic construction makes it invaluable for complex business applications.
 {% endhint %}
 
 The power of Orchestrator lies in its ability to make complex business workflows **simple to define**, **easy to test**, and **flexible to modify**. Whether you're processing orders, onboarding customers, or handling document workflows, Orchestrator provides the structure and flexibility you need to build robust, maintainable business processes.
