@@ -88,7 +88,7 @@ and then even so, we don't resend this Header when publishing Event, it will sti
 #[EventHandler]
 public function closeTicket(
     UserWasBlocked $command, 
-    #[Header('executorId')] $eventBus
+    #[Header('executorId')] $executorId
 ) {
     // handle storing audit data
 }
