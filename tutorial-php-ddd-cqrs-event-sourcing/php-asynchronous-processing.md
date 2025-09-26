@@ -28,6 +28,7 @@ namespace App\Domain\Order;
 class PlaceOrderCommand
 {
     private int $orderId;
+
     /**
      * @var int[]
      */
