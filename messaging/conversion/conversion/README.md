@@ -8,7 +8,7 @@ Command, queries and events are not always objects. \
 When they travel via different channels, coming from outside, they are mostly converted to simplified format, like `JSON` or `XML`.  \
 At the level of application however we want to deal with it in `PHP` format, as objects or arrays , so we can understand what are we dealing with.
 
-Moving from one format to another requires conversion. `Ecotone` does it automatically using [Media Type](https://pl.wikipedia.org/wiki/Typ\_MIME) Converters. \
+Moving from one format to another requires conversion. `Ecotone` does it automatically using [Media Type](https://pl.wikipedia.org/wiki/Typ_MIME) Converters. \
 `Media Type Converters` are responsible for converting data into expected format. It can be for example from `JSON to PHP`, but it also can be other way around from `PHP to JSON`.
 
 ## Available Media Type Converters
@@ -155,6 +155,30 @@ class ExampleConverterService
     public function convert(array $data) : Coordinates
     {
         return Coordinates::create($data["latitude"], $data["longitude"]);
+    }
+}
+```
+
+Converters can also be declared on static functions. This allows the conversion logic to be colocated with the object itself:
+
+```php
+readonly class Coordinates
+{
+    public function __construct(public float $latitude, public float $longitude){}
+    
+    #[Converter] 
+    public static function fromArray(array $data): self
+    {
+        return new self($data["latitude"], $data["longitude"]);
+    }
+    
+    #[Converter] 
+    public static function toArray(self $obj): array
+    {
+        return [
+            'latitude' => $obj->latitude,
+            'longitude' => $obj->longitude,
+        ];
     }
 }
 ```
