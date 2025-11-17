@@ -70,7 +70,7 @@ Due to the fact that Ecotone is based on EIP patterns, you will find a lot of si
 * _Make use of real providers in tests_ - This means, if integrating with RabbitMQ/SQS write tests that actually make use of this Message Brokers. This will ensure, that tests will stay the same, even if underlying 3rd party library/SDK will change.
 * _Focus on client level code_ - Your tests do not need to test every single class you add to the repository. It's more valuable from perspective of long term maintenance to focus on tests that will be testing on the high level (using [Ecotone Lite](../../modelling/testing-support/testing-messaging.md)). \
   Those tests will be also similar to the ones, you will be writing in your own Ecotone based projects.
-* _Ask questions in case you need some help_ - You can use [Ecotone's community channel](https://discord.gg/CctGMcrYnV) to get quick feedback and help with your implementation.
+* _Ask questions in case you need some help_ - You can use [Ecotone's community channel](https://discord.gg/Zm8V76FX) to get quick feedback and help with your implementation.
 
 ## Articles on how internal works
 

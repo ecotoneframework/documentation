@@ -13,7 +13,7 @@ If you're looking for a way to start and get familiar with Ecotone. Then Ecotone
 * [Quickstart Examples](https://github.com/ecotoneframework/quickstart-examples) - Provides great way to **check specific Ecotone features**. Whether you use Laravel or Symfony or Lite (no external framework), all examples will be able to work in your Application.
 * [Ask question to AI](https://docs.ecotone.tech/?q=) - Ecotone provides **AI support, to help you find the answers quicker**.  You may ask any Ecotone related questions, and it will provide more details on the topic and links where more information can be found.
 * [Have a Workshop or Consultancy](../other/contact-workshops-and-support.md) - To **quickly get whole Team or Organisation up and running** with Ecotone, we provide workshops. Workshops will not only teach you how to use Ecotone, but also the concepts and reasoning behind it.
-* [Join Community Channel](https://discord.gg/CctGMcrYnV) - Ecotone has a community channel, where you can **ask questions, discuss with other users and get help**.  It is also a great place to share your experiences, and to meet other developers using Ecotone.
+* [Join Community Channel](https://discord.gg/Zm8V76FX) - Ecotone has a community channel, where you can **ask questions, discuss with other users and get help**.  It is also a great place to share your experiences, and to meet other developers using Ecotone.
 * [Subscribe to Mailing list](https://blog.ecotone.tech/#/portal) - Join mailing list to stay up to date with Ecotone changes and latest articles and features.
 
 {% hint style="success" %}
