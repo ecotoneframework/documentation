@@ -1,6 +1,6 @@
 # Ecotone Pulse (Service Dashboard)
 
-<figure><img src="../../.gitbook/assets/Screenshot from 2022-09-23 21-11-16 (2).png" alt=""><figcaption><p>View your Error Messages and Replay them when fix directly from the Dashboard</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/Screenshot from 2022-09-23 21-11-16 (1).png" alt=""><figcaption><p>View your Error Messages and Replay them when fix directly from the Dashboard</p></figcaption></figure>
 
 Whenever message fails during [asynchronous processing](../asynchronous-handling/) it will kept repeated till the moment it will succeed. However retry strategy with dead letter queue may be set up in order to retry message given amount of times and then move it to the storage for later review and manual retry.
 
@@ -49,7 +49,7 @@ It's important to set up Amqp Distributed Consumer. This way Service starts to s
 
 ## Usage
 
-![](<../../.gitbook/assets/Screenshot from 2022-09-23 21-11-16.png>)
+![](<../../.gitbook/assets/Screenshot from 2022-09-23 21-11-16 (1).png>)
 
 In the dashboard you may check all the connected services. For quick overview, you will find amount of errors within given service there.
 

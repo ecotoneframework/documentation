@@ -4,7 +4,7 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 
 # Contact, Workshops and Support
 
-<figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption><p>Ecotone -Because Business matters</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="375"><figcaption><p>Ecotone -Because Business matters</p></figcaption></figure>
 
 {% hint style="success" %}
 An Ecotone is a transition area between Eco-Systems, where they meet and integrate.\
@@ -30,21 +30,21 @@ We will touch important topics like **Messaging, asynchronous processing, system
 ### The basic tutorial includes:
 
 1. **Resilient Messaging** - What is Message-Driven architecture, how to use it for decoupling the system and how to make the application self-heal application and recover from errors.
-2. **Building Blocks** - What are Aggregates, how can we use them to protect our business logic and how can they be connected to Messaging.&#x20;
+2. **Building Blocks** - What are Aggregates, how can we use them to protect our business logic and how can they be connected to Messaging.
 3. **Testing** - Testing in Message-Driven architecture, Aggregates and asynchronous scenarios.
 
-**Price: 1500 EUR** \
+**Price: 1500 EUR**\
 **Place: Online**\
 **Duration: Up to 5 hours**
 
-**To get the most out of workshop, it's suggested to bring up to 10 people.**&#x20;
+**To get the most out of workshop, it's suggested to bring up to 10 people.**
 
 ## **Consulting**
 
-In case of specific questions or problems, Ecotone's founder is **available for consulting sessions**. Consulting session allows for **pair programming**, **discussing your business or technical problems**, or even doing mini-workshop from the topics you're interested in.  \
-Consulting session happens online at previously scheduled day for up to 5 hours. \
+In case of specific questions or problems, Ecotone's founder is **available for consulting sessions**. Consulting session allows for **pair programming**, **discussing your business or technical problems**, or even doing mini-workshop from the topics you're interested in.\
+Consulting session happens online at previously scheduled day for up to 5 hours.\
 \
-**Price: 1200 EUR** \
+**Price: 1200 EUR**\
 **Place: Online**\
 **Duration: Up to 5 hours**
 
@@ -53,4 +53,3 @@ Consulting session happens online at previously scheduled day for up to 5 hours.
 * [**Twitter**](https://twitter.com/EcotonePHP)
 * **ecotone@simplycodedsoftware.com**
 * [**Community on Discord**](https://discord.com/invite/CctGMcrYnV)
-

@@ -28,6 +28,7 @@ You may find demo implementation [here](https://github.com/ecotoneframework/quic
 
 ### Links
 
+* [Asynchronous processing with zero configuration](https://blog.ecotone.tech/message-channels-zero-configuration-async-processing/) \[Article]
 * [Asynchronous PHP To Support Stability Of Your Application](https://blog.ecotone.tech/asynchronous-php/) \[Article]
 * [Asynchronous Messaging in Laravel](https://blog.ecotone.tech/ddd-and-messaging-with-laravel-and-ecotone/) \[Article]
 * [Testing Asynchronous Messaging](../testing-support/testing-asynchronous-messaging.md) \[Documentation]
