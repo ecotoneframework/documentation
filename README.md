@@ -17,6 +17,8 @@ Check how to [install](install-php-service-bus.md) **Ecotone** for **Symfony**, 
 * [Go through tutorial](tutorial-php-ddd-cqrs-event-sourcing/)
 * [Workshops, Support, Consultancy](other/contact-workshops-and-support.md)
 
+{% embed url="https://discord.gg/GwM2BSuXeg" %}
+
 {% hint style="success" %}
 To start with Ecotone there is no need for big impact refactor. You may introduce it in your existing code base and start using it from day one, even for a single feature.
 
