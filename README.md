@@ -9,6 +9,10 @@ In Ecotone any communication happens through Messages, each Object states clearl
 
 Read more in [introduction section...](modelling/message-driven-php-introduction.md)
 
+{% hint style="success" %}
+Feel invited to join [Ecotone's Community Channel](https://discord.gg/GwM2BSuXeg), and ask questions there.
+{% endhint %}
+
 ## How to get started
 
 Check how to [install](install-php-service-bus.md) **Ecotone** for **Symfony**, **Laravel** or **Lite.**
@@ -16,8 +20,6 @@ Check how to [install](install-php-service-bus.md) **Ecotone** for **Symfony**, 
 * [Learn by example](quick-start-php-ddd-cqrs-event-sourcing/)
 * [Go through tutorial](tutorial-php-ddd-cqrs-event-sourcing/)
 * [Workshops, Support, Consultancy](other/contact-workshops-and-support.md)
-
-{% embed url="https://discord.gg/GwM2BSuXeg" %}
 
 {% hint style="success" %}
 To start with Ecotone there is no need for big impact refactor. You may introduce it in your existing code base and start using it from day one, even for a single feature.
