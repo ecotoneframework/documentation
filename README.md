@@ -2,16 +2,28 @@
 
 <figure><img src=".gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="563"><figcaption></figcaption></figure>
 
-The roots of Object Oriented Programming (OOP) were mainly about communication using Messages and logic encapsulation. The main idea was to **focus on the flows and communication**, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they can do, and inform what they have done.
+Stop wrestling with complex infrastructure and endless boilerplate. **Ecotone brings simplicity back to PHP development** by letting you focus on what matters: your business logic.
 
-**Ecotone aims to return to the origins of OOP**, by providing tools which allows us to fully move the focus from Objects to Flows, from Data storage to Application Design, from Technicalities to Business logic. Ecotone does that by **making Messages first class-citizen in our Applications**.\
-In Ecotone any communication happens through Messages, each Object states clearly what Messages they expect to receive (input) and what Messages they will send out (output). This together with higher level abstractions like Message Handlers and Aggregates **makes the system design explicit, easy to follow and change.**
+* **Write code that reads like your requirements**\
+  "When a user registers, send a welcome email." That's not pseudocode—it's how you'll actually write it. Your code becomes self-documenting.
+* **Start simple, scale when ready**\
+  Begin with straightforward, synchronous code. Need async processing later? Add a single attribute. No architecture overhaul required.&#x20;
+* **Resilience built-in**\
+  Reliable Workflows, automatic retries, error handling, and self-healing capabilities come standard. Fewer production fires, more peaceful nights.
+* **Framework agnostic**\
+  You will never be forced to extend or implement any framework related classes. Ecotone seamless integrate with your application using declarative configuration using attributes. And this works beautifully with Symfony, Laravel, or any other framework using Ecotone Lite.&#x20;
+
+### Your app, your way
+
+Whether you're building a fresh startup idea or modernizing legacy code, Ecotone grows with you. From simple CRUD to event-sourced microservices, the same familiar patterns guide your way.&#x20;
 
 Read more in [introduction section...](modelling/message-driven-php-introduction.md)
 
 {% hint style="success" %}
 Feel invited to join [Ecotone's Community Channel](https://discord.gg/GwM2BSuXeg), and ask questions there.
 {% endhint %}
+
+***
 
 ## How to get started
 
@@ -22,7 +34,5 @@ Check how to [install](install-php-service-bus.md) **Ecotone** for **Symfony**, 
 * [Workshops, Support, Consultancy](other/contact-workshops-and-support.md)
 
 {% hint style="success" %}
-To start with Ecotone there is no need for big impact refactor. You may introduce it in your existing code base and start using it from day one, even for a single feature.
-
 Ecotone works out of the box with popular PHP frameworks like [Symfony](modules/symfony/symfony-ddd-cqrs-event-sourcing.md), [Laravel](modules/laravel/laravel-ddd-cqrs-event-sourcing.md) and can be run stand alone or with any other framework (e.g. Laminas, CodeIgniter, Magento) using [Ecotone Lite](modules/ecotone-lite/).
 {% endhint %}
