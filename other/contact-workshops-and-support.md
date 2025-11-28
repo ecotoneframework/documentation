@@ -52,4 +52,4 @@ Consulting session happens online at previously scheduled day for up to 5 hours.
 
 * [**Twitter**](https://twitter.com/EcotonePHP)
 * **ecotone@simplycodedsoftware.com**
-* [**Community on Discord**](https://discord.com/invite/CctGMcrYnV)
+* [**Community on Discord**](https://discord.gg/GwM2BSuXeg)
