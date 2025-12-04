@@ -308,8 +308,9 @@ Ecotone provides flexibility which allows to create Command classes when there a
 
 ## Returning Data from Command Handler
 
-It happens that after performing action, we would like to return some value.\
-This may happen for scenarios that require immediate response, for taking an payment may generate redirect URL for the end user.
+Sometimes we need to return a value immediately after handling a command. This is useful for scenarios that require instant feedback—for example, when processing a payment, we might need to return a redirect URL to guide the user to the payment gateway. \
+\
+Ecotone's allows for returning data from Command Handler, that will be available as a result from your CommandBus:
 
 ```php
 class PaymentService
@@ -331,6 +332,5 @@ $redirectUrl = $this->commandBus->send($command);
 ```
 
 {% hint style="success" %}
-Take under consideration that returning works for synchronous Command Handlers.\
-in case of asynchronous scenarios this will not be possible.
+Keep in mind that return values only work with synchronous Command Handlers. For asynchronous handlers, we can't return values directly because the command is processed in the background—instead, we'd use events or callbacks to communicate results back to the user when processing completes.
 {% endhint %}
