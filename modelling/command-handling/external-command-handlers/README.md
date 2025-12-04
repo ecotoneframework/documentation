@@ -4,15 +4,16 @@ description: Commands CQRS PHP
 
 # CQRS Introduction - Commands
 
-In this section we will discuss using Commands, Events and Queries. \
-We will start with Commands and Command Handlers. Even so we will be discussing Commands the functionality which we will tackle, applies to `Queries` and `Events` also. \
-Understanding this part will give us understanding of the whole.
+**In this section, we will look at how to use Commands, Events, and Queries.**\
+This will help you understand the basics of Ecotone’s CQRS support and how to build a message-driven application.
+
+Command Handlers are methods where we typically place our business logic, so we’ll start by exploring how to use them.
 
 ## Handling Commands
 
-`External Command Handlers` are Services available in Dependency Container, which are defined to handle `Commands`. We call them External to differentiate from Aggregate Command Handlers, which will be described in later part of the section.\
-\
-In Ecotone we enable Command Handlers using attributes. By marking given method with `#[CommandHandler]` we state it should be used as a Command Handler.
+**Any service available in your Dependency Container can become a Command Handler.**\
+Command Handlers are responsible for performing business actions in your system.\
+In Ecotone-based applications, you register a Command Handler by adding the `CommandHandler` attribute to the specific method that should handle the command:
 
 ```php
 class TicketService
@@ -25,19 +26,20 @@ class TicketService
 }
 ```
 
+In the example above, the **#\[CommandHandler]** attribute tells Ecotone that the "createTicket" method should handle the **CreateTicketCommand**.
+
+The first parameter of a Command Handler method determines which command type it handles — in this case, it is `CreateTicketCommand`.
+
 {% hint style="success" %}
-In case of Ecotone the class itself is not a Command Handler, it's a method that is considered to be Command Handler. This way we may join multiple Command Handlers under same class without introducing new classes if that's not needed.
+**In Ecotone, the class itself is not a Command Handler — only the specific method is.**\
+This means you can place multiple Command Handlers inside the same class, to make correlated actions available under same API class.
 {% endhint %}
 
-Command Handlers are methods where we would typically places our business logic.\
-In above example using `#[CommandHandler]` we stated that `createTicket` method will be handling `CreateTicketCommand`. \
-The first parameter of Command Handler method is indicator of the Command Class we want to handle, so in this case it will be `CreateTicketCommand`.\
-\
-Now whenever we will send this `CreateTicketCommand` using `Command Bus`, it will be delivered to `createTicket` method.
-
 {% hint style="info" %}
-If you are using autowire functionality, then all your classes are registered using class names. \
-In other case, if your class name is not corresponding to their name in Dependency Container, we may use `ClassReference:`
+**If you are using autowiring, all your classes are registered in the container under their class names.**\
+This means Ecotone can automatically resolve them without any extra configuration.
+
+If your service is registered under a different name in the Dependency Container, you can use `ClassReference` to point Ecotone to the correct service:
 
 ```php
 #[ClassReference("ticketService")]
@@ -47,9 +49,9 @@ class TicketService
 
 ## Sending Commands
 
-We send Command using `Command Bus.` After Ecotone is installed all Buses are available out of the box in Dependency Container, this way we may start using them directly after installation.\
+We send a Command using the Command Bus. After installing Ecotone, all Buses are automatically available in the Dependency Container, so we can start using them right away.\
 \
-In order to use the Command we first need to define it:
+Before we can send a Command, we first need to define it:
 
 ```php
 class readonly CreateTicketCommand
@@ -62,12 +64,13 @@ class readonly CreateTicketCommand
 ```
 
 {% hint style="success" %}
-All Messages (Command/Queries/Events) just like Message Handlers (Command/Query/Event Handlers) are simple Plain old PHP Objects, which means they do not extend or implement any framework specific classes. \
-This way we keep our business code clean and easy to understand.
+**All Messages (Commands, Queries, and Events), as well as Message Handlers, are just plain PHP objects.**\
+They don’t need to extend or implement any Ecotone-specific classes.\
+This keeps your business code clean, simple, and easy to understand.
 {% endhint %}
 
-To send an Command we will be using `send` method on `CommandBus`. \
-Command will be delivered to corresponding Command Handler.
+To send a command, we use the `send` method on the `CommandBus`. \
+The command gets automatically routed to its corresponding Command Handler
 
 {% tabs %}
 {% tab title="Symfony / Laravel" %}
@@ -106,24 +109,25 @@ $messagingSystem->getCommandBus()->send(
 
 ## Sending Commands with Metadata
 
-We may send Command with `Metadata` (Message Headers) via Command Bus.\
-This way we may provide additional information that should not be part of the Command or details which will be reused across `Command Handlers` without copy/pasting it to each of the related `Command` classes.
+We can send commands with **metadata (also called Message Headers)** through the Command Bus. \
+This lets us include **additional context that doesn't belong in the command itself**, or share information across multiple Command Handlers without duplicating it in each command class.
 
 {% tabs %}
 {% tab title="Symfony / Laravel" %}
-<pre class="language-php"><code class="lang-php">class TicketController
+```php
+class TicketController
 {
    public function __construct(private CommandBus $commandBus) {}
    
    public function closeTicketAction(Request $request, Security $security) : Response
    {
-      $this->commandBus-><a data-footnote-ref href="#user-content-fn-1">se</a>nd(
+      $this->commandBus->send(
          new CloseTicketCommand($request->get("ticketId")),
          ["executorId" => $security->getUser()->getId()]
       );
    }
 }
-</code></pre>
+```
 {% endtab %}
 
 {% tab title="Lite" %}
@@ -135,6 +139,8 @@ $messagingSystem->getCommandBus()->send(
 ```
 {% endtab %}
 {% endtabs %}
+
+And then to access given metadata, we will be using Header attribute:
 
 {% tabs %}
 {% tab title="Command Handler" %}
@@ -155,15 +161,15 @@ class TicketService
 {% endtab %}
 {% endtabs %}
 
-`#[Header]` provides information that we would like to fetch metadata which is under `executorId`. This way Ecotone knows what to pass to the Command Handler.
+The `#[Header]` attribute tells Ecotone to fetch a specific piece of metadata using the key `executorId`. This way, Ecotone knows exactly which metadata value to pass into our Command Handler.
 
 {% hint style="success" %}
 If we use [Asynchronous](../../asynchronous-handling/) Command Handler, Ecotone will ensure our metadata will be serialized and deserialized correctly.
 {% endhint %}
 
-## Injecting Services  into Command Handler
+## Injecting Services into Command Handler
 
-If we need additional Services (which are available in Dependency Container) to perform our business logic, we may pass them to the Command Handler using `#[Reference]` attribute:
+If we need additional services from the Dependency Container to handle our business logic, we can inject them into our Command Handler using the `#[Reference]` attribute:
 
 ```php
 class TicketService
@@ -187,7 +193,7 @@ In case Service is defined under custom id in DI, we may pass the reference name
 
 ## Sending Commands via Routing
 
-In Ecotone we may register Command Handlers under routing instead of a class name. \
+In Ecotone we may register Command Handlers under routing instead of a class name.\
 This is especially useful if we will register [Converters](../../../messaging/conversion/) to tell Ecotone how to deserialize given Command. This way we may simplify higher level code like `Controllers` or `Console Line Commands` by avoid transformation logic.
 
 {% tabs %}
@@ -302,8 +308,8 @@ Ecotone provides flexibility which allows to create Command classes when there a
 
 ## Returning Data from Command Handler
 
-It happens that after performing action, we would like to return some value. \
-This may happen for scenarios that require immediate response, for taking an payment may generate redirect URL for the end user.&#x20;
+It happens that after performing action, we would like to return some value.\
+This may happen for scenarios that require immediate response, for taking an payment may generate redirect URL for the end user.
 
 ```php
 class PaymentService
@@ -325,8 +331,6 @@ $redirectUrl = $this->commandBus->send($command);
 ```
 
 {% hint style="success" %}
-Take under consideration that returning works for synchronous Command Handlers. \
+Take under consideration that returning works for synchronous Command Handlers.\
 in case of asynchronous scenarios this will not be possible.
 {% endhint %}
-
-[^1]: 

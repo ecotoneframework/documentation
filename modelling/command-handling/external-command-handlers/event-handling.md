@@ -6,9 +6,11 @@ description: Event CQRS PHP
 
 Be sure to read [CQRS Introduction](../) before diving in this chapter.
 
+The difference between Events and Command is in intention. Commands are meant to trigger an given action and events are information that given action was performed successfully.
+
 ## Handling Events
 
-`External Event Handlers` are Services available in your dependency container, which are defined to handle `Events`.
+To register Event Handler, we will be using `EventHandler` attribute. By marking given method as Event Handler, we are stating that this method should subscribe to specific Event Class:
 
 ```php
 class TicketService
@@ -21,6 +23,8 @@ class TicketService
 }
 ```
 
+In above scenario we are subscribing to TicketWasCreated Event, therefore whenever this Event will be published, this method will be automatically invoked. \
+\
 Events are Plain Old PHP Objects:
 
 ```php
@@ -33,8 +37,15 @@ class readonly TicketWasCreated
 ```
 
 {% hint style="success" %}
-The difference between Events and Command is in intention. Commands are meant to trigger an given action and events are information that given action was performed successfully.&#x20;
+In case of Command Handlers there may be only single Handler for given Command Class. This is not a case for Event Handlers, multiple Event Handler may subscribe to same Event Class.
 {% endhint %}
+
+## Publishing Events
+
+To publish Events, we will be using EventBus.\
+`EventBus` is available in your Dependency Container by default, just like Command and Query buses. \
+\
+You may use Ecotone's invocation control, to inject Event Bus directly into your Command Handler:
 
 ```php
 class TicketService
@@ -52,10 +63,8 @@ class TicketService
 }
 ```
 
-`EventBus` is available in your Dependency Container by default, just like Command and Query buses. You may use Ecotone's feature to inject it directly into your Command Handler's method.&#x20;
-
 {% hint style="success" %}
-Just like EventBus is injected directly into your Command Handler, you may inject any other Service. This way you may make is clear what object your Command Handler needs in order to perform his action.
+You may inject any other Service available in your Dependency Container, into your Message Handler methods.
 {% endhint %}
 
 ## Multiple Subscriptions
@@ -188,7 +197,7 @@ Ecotone is using message routing for [cross application communication](../../mic
 
 ## Subscribing to Events by Routing and Class Name
 
-There may be situations when we will want to subscribe given method to either routing or class name. \
+There may be situations when we will want to subscribe given method to either routing or class name.\
 Ecotone those subscriptions separately to protect from unnecessary wiring, therefore to handle this case, we can simply add another Event Handler which is not based on routing key.
 
 ```php
@@ -251,26 +260,27 @@ If you make your Event Handler [Asynchronous](../../asynchronous-handling/), Eco
 
 ## Metadata Propagation
 
-By default Ecotone will ensure that your Metadata is propagated. \
+By default Ecotone will ensure that your Metadata is propagated.\
 This way you can simplify your code by avoiding passing around Headers and access them only in places where it matters for your business logic.
 
 To better understand that, let's consider example in which we pass the metadata to the Command.
 
 {% tabs %}
 {% tab title="Symfony / Laravel" %}
-<pre class="language-php"><code class="lang-php">class TicketController
+```php
+class TicketController
 {
    public function __construct(private CommandBus $commandBus) {}
    
    public function closeTicketAction(Request $request, Security $security) : Response
    {
-      $this->commandBus-><a data-footnote-ref href="#user-content-fn-1">se</a>nd(
+      $this->commandBus->send(
          new CloseTicketCommand($request->get("ticketId")),
          ["executorId" => $security->getUser()->getId()]
       );
    }
 }
-</code></pre>
+```
 {% endtab %}
 
 {% tab title="Lite" %}
@@ -323,5 +333,3 @@ class AuditService
     }
 }
 ```
-
-[^1]: 
