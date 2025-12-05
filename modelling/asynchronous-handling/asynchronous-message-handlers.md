@@ -8,7 +8,7 @@ In order to run Command Handler asynchronously we need to mark it as **Asynchron
 
 ```php
 #[Asynchronous("orders")]
-#[CommandHandler("order.place", "place_order_endpoint")
+#[CommandHandler(endpointId: "place_order_endpoint")
 public function placeOrder(PlaceOrderCommand $command) : void
 {
    // do something with $command
@@ -62,6 +62,7 @@ At this moment following modules with pollable channels are available:
 * [Redis Support](../../modules/redis-support.md)
 * [Symfony Messenger Transport Support](../../modules/symfony/symfony-messenger-transport.md)
 * [Laravel Queues](../../modules/laravel/laravel-queues.md)
+* [In Memory Channels](../testing-support/testing-asynchronous-messaging.md)
 
 {% hint style="success" %}
 If you're choose [Dbal Message Channel](../../modules/dbal-support.md#message-channel) `Ecotone` will use [Outbox Pattern](../../quick-start-php-ddd-cqrs-event-sourcing/resiliency-and-error-handling.md) to atomically store your changes and published messages.
@@ -202,8 +203,8 @@ Dynamic configuration overrides static
 
 ## Multiple Asynchronous Endpoints
 
-Using single asynchronous channel we may register multiple endpoints. \
-This allow for registering single asynchronous channel for whole Aggregate or group of related Command/Event Handlers.&#x20;
+Using single asynchronous channel we may register multiple endpoints.\
+This allow for registering single asynchronous channel for whole Aggregate or group of related Command/Event Handlers.
 
 ```php
 #[Asynchronous("orders")]
@@ -225,12 +226,12 @@ You may put `Asynchronous` on the class, level so all the endpoints within a cla
 
 ## Intercepting asynchronous endpoint
 
-All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint` \
+All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint`\
 If you want to [intercept](../extending-messaging-middlewares/interceptors/) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors/#pointcut) on this.
 
 ## Endpoint Id
 
-Each Asynchronous Message Handler requires us to define **"endpointId"**.  It's unique identifier of your Message Handler.
+Each Asynchronous Message Handler requires us to define **"endpointId"**. It's unique identifier of your Message Handler.
 
 ```php
 #[Asynchronous("orders")]
@@ -238,9 +239,4 @@ Each Asynchronous Message Handler requires us to define **"endpointId"**.  It's 
 public function when(OrderWasPlaced $event) : void {}
 ```
 
-Endpoint Id goes in form of Headers to your Message Queue. After Message is consumed from the Queue, Message will be directed to your Message Handler having given endpoint Id. \
-This decouples the Message completely from the Message Handler Class and Method and Command/Event Class.&#x20;
-
-{% hint style="success" %}
-EndpointId ensures we can freely refactor our code and it will be backward compatible with Messages in the Queues. This means we can move the method and class to different namespaces, change the Command class names and as long as **endpointId** is kept the same Message will be delivered correctly.&#x20;
-{% endhint %}
+The Endpoint ID travels with your message as part of the headers to your message channel. Once we consume the message from the Message Channel, Ecotone uses this ID to route it to the correct Message Handler. This completely decouples our messages from specific handler classes and methods—we can refactor, rename, or move our handlers around without breaking message routing.

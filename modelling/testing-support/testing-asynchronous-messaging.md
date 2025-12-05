@@ -4,11 +4,9 @@ description: Testing asynchronous communication in PHP
 
 # Testing Asynchronous Messaging
 
-When your code becomes asynchronous, sending Command is not enough to verify full flow. \
-Your message will land in [pollable message channel](../../messaging/messaging-concepts/message-channel.md) (`queue`) awaiting for consumption. \
-This requires executing your consumer in order to test full flow.&#x20;
+When we make our code asynchronous, simply sending a command isn't enough to test the complete flow. The message lands in a message queue, waiting to be processed. To test the full workflow, we need to run the asynchronous consumer that pulls messages from the channel and executes our handlers.
 
-`Ecotone` provides full support for testing your `asynchronous messaging architecture`.
+Ecotone provides full testing support for asynchronous messaging, letting us verify end-to-end flows with real message brokers or using in memory implementation. This way we can test async behavior the same way we test synchronous code—keeping our tests fast, reliable, and easy to maintain.
 
 ## Example Asynchronous Handler
 
@@ -26,29 +24,9 @@ class NotificationService
 }
 ```
 
-## Running code Synchronously
-
-By default all the asynchronous code will run synchronously. This simplifies the tested code and speed ups your test suite.
-
-```php
-$ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
-    // 1. We have dropped ChannelConfiguration::class, to replace it with our In Memory
-    [OrderService::class, NotificationService::class],
-    [new OrderService(), new NotificationService()]
-);
-
-// this will publish OrderWasPlaced as a result
-$ecotoneTestSupport->sendCommandWithRoutingKey('order.register', new PlaceOrder('123'));
-
-$this->assertEquals(
-    1,
-    count($this->notifier->getNotificationsOf('placedOrder'))
-);
-```
-
 ## Running Asynchronous Consumer
 
-Ecotone provides `In Memory Pollable Channels` which can replace real implementation for testing purposes.
+Ecotone provides support for testing asynchronous scenarios using Ecotone Lite:
 
 ```php
 $ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
@@ -56,6 +34,7 @@ $ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
     [new OrderService(), new NotificationService()],
     // 1. we need to provide Message Channel to use
     enableAsynchronousProcessing: [
+        // In this scenario we are using In Memory implementation
         SimpleMessageChannelBuilder::create('notifications')
     ]
 );
@@ -68,27 +47,26 @@ $ecotoneTestSupport->run('notifications');
 
 $this->assertEquals(
     1,
-    // 3. we can provide some in memory implementation for testing purposes
+    // 3. asserting the result
     count($this->notifier->getNotificationsOf('placedOrder'))
 );
 ```
 
 1. **Enable asynchronous processing -** We enable asynchronous processing and provide Message Channel to poll from. Message Channel can be Real (SQS, RabbitMQ, Dbal etc) or In Memory one
-2. **Run** - This runs the the consumer with given PollingMetadata
+2. **Run** - This runs the the consumer (test is still kept synchronous, therefore all debugging will work)
 3. **Assert** - We assert the state after consumer has exited
 
-{% hint style="info" %}
-In above example we are running consumer within same process as test. \
-You may run consumer from separate process like this: (example for symfony):\
-`php bin/console ecotone:run notifications --handledMessageLimit=1 --executionTimeLimit=100 --stopOnFailure`\
-\
-However running consumer as separate process is not advised, as it `requires booting separate process`which slows test suite, and due to lack of`shared memory` does not allow for using `In Memory implementations.`
+{% hint style="success" %}
+In the example above, we run the consumer within the same process as our test. We can also run the consumer from a separate process like this (example for Symfony):
+
+`php bin/console ecotone:run notifications --handledMessageLimit=1 --executionTimeLimit=100 --stopOnFailure`
+
+However, we don't recommend running the consumer as a separate process for testing. Here's why: it requires booting up a new PHP process for each test, which significantly slows down your test suite. More importantly, separate processes don't share memory, which means we can't use in-memory implementations, ensuring Message Consumers close correctly, and making debugging process much more difficult. By keeping everything in the same process, our tests run in milliseconds instead of seconds.
 {% endhint %}
 
 ## Default Message Channels
 
-For testing with In Memory Channels, we can omit providing specific implementation. \
-Ecotone will deliver an default In Memory Message Channels for us:
+For testing, we don't need to configure any specific message channel implementation. Ecotone automatically provides in-memory message channels for us. This means our tests run instantly without needing RabbitMQ, Redis, or any external services—perfect for fast, isolated unit tests that we can run anywhere, even on CI/CD pipelines without extra setup.
 
 ```php
 $ecotoneTestSupport = EcotoneLite::bootstrapFlowTesting(
@@ -153,7 +131,7 @@ $this->assertEquals(
 2. We pull and verify messages sent to `notifications` channel, if their were sent in `json` format
 
 {% hint style="success" %}
-By default In Memory Queue Channel will do the serialization to PHP native serialization or your default Serialization if defined. This way it works in similar way to your production Queue Channels. \
+By default In Memory Queue Channel will do the serialization to PHP native serialization or your default Serialization if defined. This way it works in similar way to your production Queue Channels.\
 If you don't want to use serialization however, you may set type to `conversionMediaType: MediaType::createApplicationXPHP()`
 {% endhint %}
 
