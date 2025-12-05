@@ -84,7 +84,13 @@ class TicketService
 class NotificationService
 {
     #[EventHandler] 
-    public function when(TicketWasCreated $event): void
+    public function sendNotificationX(TicketWasCreated $event): void
+    {
+        // handle event
+    }
+    
+    #[EventHandler] 
+    public function sendNotificationY(TicketWasCreated $event): void
     {
         // handle event
     }
