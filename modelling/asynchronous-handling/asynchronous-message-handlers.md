@@ -28,13 +28,17 @@ public function when(OrderWasPlaced $event) : void
 
 We need to add **endpointId** on our endpoint's annotation, this will be used to route the Message in isolation to our **Message Handlers**.
 
-## Message Channel Name
+## Message Channel
+
+The asynchronous attribute states what Channel reference we want to use:
 
 ```php
 #[Asynchronous("orders")]
 ```
 
-The "orders" string is actually a name of our Message Channel. This way we reference to specific implementation which we would like to use. To provide specific implementation like for example Database Channel, we would use **ServiceContext**.
+**The "orders" string is the name of our Message Channel.** We use this name to reference which implementation we want to use—whether it's an in-memory channel for testing, a database queue, or RabbitMQ. This naming approach keeps our business code clean and independent from infrastructure choices.
+
+To configure a specific implementation like a database channel, we use a [**ServiceContext**](../../messaging/service-application-configuration.md) class.&#x20;
 
 ```php
 final readonly class EcotoneConfiguration
@@ -47,30 +51,11 @@ final readonly class EcotoneConfiguration
 }
 ```
 
-This is basically all we need to configure. Now database channel called **orders** will be used, whenever we will use Attribute with this name.
+That's all the configuration we need! Now whenever we reference "orders" in our handler attributes, Ecotone automatically uses this database channel. Our handlers stay exactly the same whether we're using in-memory channels for testing or database channels for production—the only difference is this single configuration change.&#x20;
 
-There are multiple different implementation which we can use:
+## Running Message Consumer
 
-## Available Asynchronous Message Channels
-
-At this moment following modules with pollable channels are available:
-
-* [AMQP Support (RabbitMQ)](../../modules/amqp-support-rabbitmq/#message-channel)
-* [Kafka Support](../../modules/kafka-support/)
-* [DBAL Support](../../modules/dbal-support.md#message-channel)
-* [SQS Support](../../modules/amazon-sqs-support.md)
-* [Redis Support](../../modules/redis-support.md)
-* [Symfony Messenger Transport Support](../../modules/symfony/symfony-messenger-transport.md)
-* [Laravel Queues](../../modules/laravel/laravel-queues.md)
-* [In Memory Channels](../testing-support/testing-asynchronous-messaging.md)
-
-{% hint style="success" %}
-If you're choose [Dbal Message Channel](../../modules/dbal-support.md#message-channel) `Ecotone` will use [Outbox Pattern](../../quick-start-php-ddd-cqrs-event-sourcing/resiliency-and-error-handling.md) to atomically store your changes and published messages.
-{% endhint %}
-
-{% hint style="info" %}
-Currently available Message Channels are integrated via great library [enqueue](https://github.com/php-enqueue/enqueue).
-{% endhint %}
+We can first list all of the Message Consumers we have available for running:
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -102,7 +87,7 @@ $consumers = $messagingSystem->list()
 {% endtab %}
 {% endtabs %}
 
-After setting up Pollable Channel we can run the endpoint:
+Then in order to run our Message Consumer, we will use **ecotone:run** console command:
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -124,9 +109,7 @@ $messagingSystem->run("orders");
 {% endtab %}
 {% endtabs %}
 
-## Running Asychronous Endpoint (PollingMetadata)
-
-### Dynamic Configuration
+## Dynamic Configuration
 
 You may set up running configuration for given consumer while running it.
 
@@ -200,6 +183,19 @@ class Configuration
 {% hint style="info" %}
 Dynamic configuration overrides static
 {% endhint %}
+
+## Available Providers (Types)
+
+There are multiple different implementation which we can use:
+
+* [AMQP Support (RabbitMQ)](../../modules/amqp-support-rabbitmq/#message-channel)
+* [Kafka Support](../../modules/kafka-support/)
+* [DBAL Support](../../modules/dbal-support.md#message-channel)
+* [SQS Support](../../modules/amazon-sqs-support.md)
+* [Redis Support](../../modules/redis-support.md)
+* [Symfony Messenger Transport Support](../../modules/symfony/symfony-messenger-transport.md)
+* [Laravel Queues](../../modules/laravel/laravel-queues.md)
+* [In Memory Channels](../testing-support/testing-asynchronous-messaging.md)
 
 ## Multiple Asynchronous Endpoints
 
