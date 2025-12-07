@@ -102,7 +102,7 @@ private \ArrayObject $data;
 ["name":"Johny","age":13,"passport":["id":123]]
 ```
 
-## Custom Conversions To Classes
+## Custom Conversions for Classes
 
 With Native Conversion, we take full control of how specific classes are serialized and deserialized. We can call factory methods that validate data correctness, apply business rules, or set intelligent defaults based on our domain logic. \
 This is especially useful when converting between complex objects and simple types like strings or integers—for example, turning a Money value object into an integer for storage, or reconstructing it with proper validation when loading, ensuring given Object is always in valid state.&#x20;
@@ -168,44 +168,6 @@ class ExampleConverterService
         return $data->toString();
     }
 }
-```
-
-## Custom Conversions from Classes
-
-Above example was for deserialization, however if you want to make use of serialization, then Converter from `UUID` to `string` is needed.
-
-```php
-class ExampleConverterService
-{
-    #[Converter]
-    public function convert(Uuid $data) : string
-    {
-        return $data->toString();
-    }
-}
-```
-
-```php
-class PlaceOrder
-{
-    /**
-     * @var Uuid[]
-     */
-    private array $productIds;
-    
-    private ?string $promotionCode;
-    
-    private bool $quickDelivery;
-}
-
-$this->serializer->convertFromPHP(
-    new PlaceOrder(//construct), 
-    "application/json"
-)
-
-=>
-
-{"productIds": ["104c69ac-af3d-44d1-b2fa-3ecf6b7a3558"], "promotionCode": "33dab", "quickDelivery": false}
 ```
 
 ## Serialization Customization
