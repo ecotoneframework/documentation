@@ -9,6 +9,7 @@ Suppose we already defined connection in our _"doctrine.yaml"_ file:
 ```yaml
 doctrine:
   dbal:
+    # If this configuration is not present, then "default" is implicit config
     connections:
       default:
         url: '%env(resolve:DATABASE_DSN)%'
@@ -28,9 +29,8 @@ final readonly class EcotoneConfiguration
 ```
 
 {% hint style="success" %}
-Reusing same connection as we use in Application, ensures database transactions will be rolled back correctly in case of any failure.\
-\
-It's all we need to configure. Ecotone will now know to use **some\_connection** as default.
+By reusing the same database connection that our application already uses, we ensure that everything—our database changes and message handling—happens within the same transaction. \
+f anything fails, Ecotone automatically rolls back both the data changes and messaging related changes, keeping our system in a consistent state.&#x20;
 {% endhint %}
 
 ## Using Manager Registry
@@ -74,9 +74,7 @@ final readonly class EcotoneConfiguration
 ```
 
 {% hint style="success" %}
-If you use Manager Registry Connection, be aware that "doctrine/orm" package need to be installed.\
-\
-It's all we need to configure. Ecotone will now know to use **some\_orm\_connection** as default.
+If you use Manager Registry Connection, be aware that "doctrine/orm" package need to be installed.
 {% endhint %}
 
 ## **Using DSN**
