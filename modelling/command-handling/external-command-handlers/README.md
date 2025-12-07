@@ -334,3 +334,22 @@ $redirectUrl = $this->commandBus->send($command);
 {% hint style="success" %}
 Keep in mind that return values only work with synchronous Command Handlers. For asynchronous handlers, we can't return values directly because the command is processed in the background—instead, we'd use events or callbacks to communicate results back to the user when processing completes.
 {% endhint %}
+
+## Sending Commands with deserialization
+
+When any [Serialization](../../../messaging/conversion/conversion/) mechanism is configured (For example [JMS](../../../modules/jms-converter.md)), we can let Ecotone do the deserialization in-fly, so we don't need to both with doing custom transformations in the Controller:
+
+```php
+   public function createTicketAction(Request $request) : Response
+   {
+      $ticketId = $this->commandBus->send(
+            routingKey: 'createTicket',
+            command: $request->getContent(),  // Ecotone will deserialize Command in-fly
+            commandMediaType: 'application/json',
+      );
+      
+      return new Response([
+            'ticketId' => $ticketId
+      ]);
+   }
+```
