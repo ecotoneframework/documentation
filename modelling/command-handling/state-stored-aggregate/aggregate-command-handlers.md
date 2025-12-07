@@ -186,16 +186,10 @@ class Ticket
     
     #[CommandHandler]
     public static function createTicket(
-        CreateTicket $command,
-        #[Header("executorId")] string $executorId,
-        #[Reference] Clock $clock,
+        CreateTicket $command
     ): static
     {
-        $self = new self(
-            $command->id,
-            $executorId,
-            $clock->currentTime(),
-        );
+        $self = new self($command->id);
         
         $self->recordThat(new TicketWasCreated($command->id));
         
