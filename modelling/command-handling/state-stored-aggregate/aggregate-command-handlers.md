@@ -32,10 +32,10 @@ class Ticket
 }
 ```
 
-After calling `createTicket` aggregate will be automatically stored.&#x20;
+After calling `createTicket` aggregate will be automatically stored.
 
 {% hint style="success" %}
-Factory method is static method in the Aggregate class. \
+Factory method is static method in the Aggregate class.\
 You may have multiple factory methods if needed.
 {% endhint %}
 
@@ -96,7 +96,7 @@ $ticketId = $this->commandBus->send(
 
 ## Calling Aggregate without Command Class
 
-In fact we don't need to provide identifier in our Commands in order to execute specific Aggregate instance. We may not need a Command class in specific scenarios at all.&#x20;
+In fact we don't need to provide identifier in our Commands in order to execute specific Aggregate instance. We may not need a Command class in specific scenarios at all.
 
 ```php
 #[Aggregate]
@@ -163,9 +163,71 @@ class Ticket
 ```
 
 Both Command Handlers are registered for same command `CreateTicket`, yet one method is `factory method` and the second is `action method`.\
-When Command will be sent, Ecotone will try to load the aggregate first, \
+When Command will be sent, Ecotone will try to load the aggregate first,\
 if it will be found then `changeTicket` method will be called, otherwise `createTicket`.
 
 {% hint style="success" %}
 Redirected aggregate creation works the same for Event Sourced Aggregates.
 {% endhint %}
+
+## Publishing Events from Aggregate
+
+For standard Aggregates (non Event-Sourced) we can use **WithEvents trait** or provide method that with **AggregateEvents attribute** to provide list of Events that Aggregate has recorded.\
+After saving changes to the Aggregate, Ecotone will automatically publish related Events
+
+```php
+#[Aggregate]
+class Ticket
+{
+    use WithEvents; // Provides methods for collecting events
+
+    #[Identifier]
+    private Uuid $ticketId;
+    
+    #[CommandHandler]
+    public static function createTicket(
+        CreateTicket $command,
+        #[Header("executorId")] string $executorId,
+        #[Reference] Clock $clock,
+    ): static
+    {
+        $self = new self(
+            $command->id,
+            $executorId,
+            $clock->currentTime(),
+        );
+        
+        $self->recordThat(new TicketWasCreated($command->id));
+        
+        return $self;
+    }
+}
+```
+
+## Calling Aggregate with additional arguments
+
+Just as standard Command Handler, we can pass Metadata and DI Services to our Aggregates.&#x20;
+
+```php
+#[Aggregate]
+class Ticket
+{
+    #[Identifier]
+    private Uuid $ticketId;
+    
+    #[CommandHandler]
+    public static function createTicket(
+        CreateTicket $command,
+        #[Header("executorId")] string $executorId,
+        #[Reference] Clock $clock,
+    ): static
+    {
+        return new self(
+            $command->id,
+            $executorId,
+            $clock->currentTime(),
+        );
+    }
+}
+```
+
