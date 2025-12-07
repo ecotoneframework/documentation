@@ -14,12 +14,12 @@ Ecotone comes with integration with [JMS Serializer](https://jmsyst.com/libs/ser
 
 ### Module Powered By
 
-Great library, which allow for advanced conversion between types [JMS/Serializer](https://github.com/schmittjoh/serializer).&#x20;
+Great library, which allow for advanced conversion between types [JMS/Serializer](https://github.com/schmittjoh/serializer).
 
 ## Native Conversion
 
 Ecotone with JMS will do it's best to deserialize your classes without any additional configuration needed.\
-Suppose we have JSON like below:&#x20;
+Suppose we have JSON like below:
 
 ```javascript
 {
@@ -104,40 +104,38 @@ private \ArrayObject $data;
 
 ## Custom Conversions To Classes
 
-The difference between Native Conversion is that you take control of deserialization mechanism for specific class. You may call factory method, which will validate correctness of the data or you may provide some default based on your business logic. \
-Besides you may find it useful when there is a need to make conversion from `class` to simple type like `string` or `int`.
+With Native Conversion, we take full control of how specific classes are serialized and deserialized. We can call factory methods that validate data correctness, apply business rules, or set intelligent defaults based on our domain logic. \
+This is especially useful when converting between complex objects and simple types like strings or integers—for example, turning a Money value object into an integer for storage, or reconstructing it with proper validation when loading, ensuring given Object is always in valid state.&#x20;
 
-`JMS Converter`make use of Converters registered as Converters in order to provide all the conversion types described in [Conversion Table](jms-converter.md#conversion-table). You can read how to register new`Converter` in [Conversion section.](../messaging/conversion/conversion/#conversions-on-php-level)
+`JMS Converter` make use of Converters registered as Converters in order to provide all the conversion types described in [Conversion Table](jms-converter.md#conversion-table). You can read how to register new`Converter` in [Conversion section.](../messaging/conversion/conversion/#conversions-on-php-level)
 
 ### Example usage
 
 If we want to call bus with given `JSON` and deserialize `productIds` to `UUID`:
 
-```javascript
-{
-    "productIds": ["104c69ac-af3d-44d1-b2fa-3ecf6b7a3558"], 
-    "promotionCode": "33dab", 
-    "quickDelivery": false
-}
-```
-
 ```php
 $this->commandBus->sendWithRouting(
    "order.place",  
-   '{"productIds": ["104c69ac-af3d-44d1-b2fa-3ecf6b7a3558"], "promotionCode": "33dab", "quickDelivery": false}',
+   '{
+       "productIds": ["104c69ac-af3d-44d1-b2fa-3ecf6b7a3558"], 
+       "promotionCode": "33dab", 
+       "quickDelivery": false
+   }',
    "application/json"
 )
 ```
 
-Then, suppose we have endpoint with following Command:
+Then, suppose we have endpoint with following Command Handler:
 
 ```php
-#[CommandHandler]
+#[CommandHandler('order.place')]
 public function placeOrder(PlaceOrder $command)
 {
    // do something
 }
 ```
+
+and related Command:
 
 ```php
 class PlaceOrder
@@ -153,9 +151,7 @@ class PlaceOrder
 }
 ```
 
-We do not need to add any metadata describing how to convert `JSON to PlaceOrder PHP class.` We already have it using type hints.&#x20;
-
-The only thing, that we need is to add how to convert string to UUID. We do it using Converter:
+Then as product Ids is array of Uuid, we can use customer Converter to define how to convert from string to Uuid, and vice versa (if needed):
 
 ```php
 class ExampleConverterService
@@ -165,14 +161,18 @@ class ExampleConverterService
     {
         return Uuid::fromString($data);
     }
+    
+    #[Converter]
+    public function convert(Uuid $data) : string
+    {
+        return $data->toString();
+    }
 }
 ```
 
-And that's enough. Whenever we will use `string to UUID` conversion or `string[] to UUID[]`. This converter will be automatically used.&#x20;
-
 ## Custom Conversions from Classes
 
-Above example was for deserialization, however if you want to make use of serialization, then Converter from `UUID` to `string` is needed.&#x20;
+Above example was for deserialization, however if you want to make use of serialization, then Converter from `UUID` to `string` is needed.
 
 ```php
 class ExampleConverterService
@@ -246,8 +246,8 @@ Should nulls be serialized (**default: false**)
 
 ### withNamingStrategy
 
-Serialization naming strategy ("**identicalPropertyNamingStrategy**"/"**camelCasePropertyNamingStrategy**", \
-default: "**identicalPropertyNamingStrategy**")&#x20;
+Serialization naming strategy ("**identicalPropertyNamingStrategy**"/"**camelCasePropertyNamingStrategy**",\
+default: "**identicalPropertyNamingStrategy**")
 
 ### withDefaultEnumSupport
 
@@ -255,7 +255,7 @@ When enabled, default enum converter will be used, therefore Enums will serializ
 
 ## Serialize Nulls for specific conversion
 
-If you want to make convert nulls for [given conversion](../messaging/conversion/conversion/#serializer), then you can provide Media Type parameters&#x20;
+If you want to make convert nulls for [given conversion](../messaging/conversion/conversion/#serializer), then you can provide Media Type parameters
 
 ```php
 $this->serializer->convertFromPHP(
