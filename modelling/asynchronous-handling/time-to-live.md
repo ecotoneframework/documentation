@@ -50,12 +50,12 @@ public function sendWelcomeNotificationWhen(UserWasRegistered $event): void
 
 ## Message Time to Live
 
-We may send an Message and tell Ecotone to delay it using **deliveryDelay** Message Header:
+We may send an Message and tell Ecotone to set Time to Live using **timeToLive** Message Header:
 
 ```php
 $commandBus->sendWithRouting(
-    "sendOneTimePassword", 
-    "userId", 
+    "sendOneTimePassword",
+    "userId",
     metadata: ["timeToLive" => new TimeSpan(minutes: 5)]
 );
 ```
@@ -63,3 +63,29 @@ $commandBus->sendWithRouting(
 {% hint style="info" %}
 [Asynchronous Message Channel ](./)need to support this option to be used
 {% endhint %}
+
+## Controlling Header Override Behavior
+
+By default, the `#[TimeToLive]` attribute will **override** any existing `timeToLive` header that was set when sending the message. However, you can change this behavior using the `shouldReplaceExistingHeader` parameter.
+
+### Using Attribute as Default (Not Override)
+
+When you want the attribute to act as a **default value** that can be overridden by message metadata:
+
+```php
+#[TimeToLive(new TimeSpan(minutes: 5), shouldReplaceExistingHeader: false)]
+#[Asynchronous("notifications")]
+#[EventHandler(endpointId: "sendOTP")]
+public function sendOneTimePassword(OTPRequested $event): void
+{
+   // handle OTP sending
+}
+```
+
+With `shouldReplaceExistingHeader: false`:
+- If the message **already has** a `timeToLive` header, the attribute will **not** override it
+- If the message **does not have** a `timeToLive` header, the attribute value will be used
+
+This is useful when you want:
+- Handler-level defaults via attributes
+- Per-message overrides via metadata (e.g., different TTL based on message priority or type)

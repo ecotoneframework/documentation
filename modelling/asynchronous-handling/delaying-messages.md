@@ -74,8 +74,34 @@ We may also delay to given date time:
 
 ```php
 $commandBus->sendWithRouting(
-    "askForOrderReview", 
-    "userId", 
+    "askForOrderReview",
+    "userId",
     metadata: ["deliveryDelay" => (new \DateTimeImmutable)->modify('+1 day')]
 );
 ```
+
+## Controlling Header Override Behavior
+
+By default, the `#[Delayed]` attribute will **override** any existing `deliveryDelay` header that was set when sending the message. However, you can change this behavior using the `shouldReplaceExistingHeader` parameter.
+
+### Using Attribute as Default (Not Override)
+
+When you want the attribute to act as a **default value** that can be overridden by message metadata:
+
+```php
+#[Delayed(new TimeSpan(seconds: 50), shouldReplaceExistingHeader: false)]
+#[Asynchronous("notifications")]
+#[EventHandler(endpointId: "welcomeEmail")]
+public function sendWelcomeNotificationWhen(UserWasRegistered $event): void
+{
+   // handle welcome notification
+}
+```
+
+With `shouldReplaceExistingHeader: false`:
+- If the message **already has** a `deliveryDelay` header, the attribute will **not** override it
+- If the message **does not have** a `deliveryDelay` header, the attribute value will be used
+
+This is useful when you want:
+- Handler-level defaults via attributes
+- Per-message overrides via metadata (e.g., dynamic delays based on business logic)
