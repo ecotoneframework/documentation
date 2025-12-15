@@ -109,15 +109,40 @@ Expression does use of great feature of Symfony, called [Expression Language](ht
 Payload(expression: "payload * 2")
 ```
 
-There are three types of variables available within expression.
+There are four types of variables and functions available within expression.
 
 * `payload` - which is just payload of currently handled Message
 * `headers` - contains of all headers available within Message&#x20;
-*   `reference` - which allow for retrieving service from Dependency Container and calling a method on it. The result of the expression will be passed to parameter after optional conversion.
+* `reference` - which allow for retrieving service from Dependency Container and calling a method on it. The result of the expression will be passed to parameter after optional conversion.
 
     ```php
     Payload(expression:"reference('calculatingService').multiply(payload, 2)")
     ```
+* `parameter` - which allows for accessing configuration variables defined in your application. This is useful for accessing environment-specific values or application settings within expressions.
+
+    ```php
+    #[CommandHandler('calculate')]
+    public function handle(
+        #[Payload("parameter('multiplier') * payload['value']")] int $calculatedValue
+    ): void
+    ```
+
+    - In this example, `parameter('multiplier')` retrieves the configuration variable named `multiplier` and multiplies it with the payload value. The configuration variables are defined when bootstrapping Ecotone:
+
+    ```php
+    $messaging = EcotoneLite::bootstrap(
+        [OrderService::class],
+        [new OrderService()],
+        ServiceConfiguration::createWithDefaults(),
+        configurationVariables: [
+            'multiplier' => 10,
+        ]
+    );
+    ```
+
+    - For Laravel, configuration variables are accessed from the config system:
+
+    - For Symfony, they are accessed from container parameters.
 
 ### Headers Converter (Headers)
 
@@ -174,12 +199,13 @@ Expression used with reference can be used for dynamically calling given Service
 )] LocalConfiguration $localConfiguration
 ```
 
-There are four types of variables available within expression.
+There are five types of variables and functions available within expression.
 
 * `service` - the service
 * `payload` - which is just payload of currently handled Message
 * `headers` - contains of all headers available within Message&#x20;
 * `reference` - which allow for retrieving service from Dependency Container and calling a method on it. The result of the expression will be passed to parameter after optional conversion.
+* `parameter` - which allows for accessing configuration variables (see [Payload Expression](method-invocation.md#expression) for details)
 
 ### Configuration Variable Converter
 
