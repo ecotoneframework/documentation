@@ -13,7 +13,10 @@ To configure this up, we need to have our [Database Message Channel](../../../as
 public function serviceMap(): DistributedServiceMap
 {
     return DistributedServiceMap::initialize()
-              ->withServiceMapping(serviceName: "ticketService", channelName: "distributed_ticket_service")
+              ->withCommandMapping(
+                        targetServiceName: "ticketService",
+                        channelName: "distributed_ticket_service"
+              )
               ->withAsynchronousChannel('database_channel')
 }
 ```
@@ -30,9 +33,23 @@ public function serviceMap(): DistributedServiceMap
 {
     return [
         DistributedServiceMap::initialize(referenceName: 'internalDistributedBus')
-           ->withServiceMapping(serviceName: "ticketService", channelName: "distributed_ticket_service"),
+           ->withCommandMapping(
+                        targetServiceName: "ticketService",
+                        channelName: "distributed_ticket_service"
+           )
+           ->withEventMapping(
+                        channelName: "distributed_ticket_service",
+                        subscriptionKeys: ["internal.*"],
+           ),
         DistributedServiceMap::initialize(referenceName: 'externalDistributedBus')
-            ->withServiceMapping(serviceName: "orderService", channelName: "distributed_order_service")
+            ->withCommandMapping(
+                        targetServiceName: "orderService",
+                        channelName: "distributed_order_service"
+            )
+            ->withEventMapping(
+                        channelName: "distributed_order_service",
+                        subscriptionKeys: ["external.*"],
+            )
     ];
 }
 ```

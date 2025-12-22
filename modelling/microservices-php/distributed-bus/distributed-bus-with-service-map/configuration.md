@@ -39,9 +39,19 @@ Register Distributed Bus with given Service Map:
 public function serviceMap(): DistributedServiceMap
 {
     return DistributedServiceMap::initialize()
-              ->withServiceMapping(
-                        serviceName: "ticketService", 
+              // Map commands to target services
+              ->withCommandMapping(
+                        targetServiceName: "ticketService",
                         channelName: "distributed_ticket_service"
+              )
+              ->withCommandMapping(
+                        targetServiceName: "orderService",
+                        channelName: "distributed_order_service"
+              )
+              // Subscribe to events from other services
+              ->withEventMapping(
+                        channelName: "distributed_ticket_service",
+                        subscriptionKeys: ["user.*", "order.created"],
               )
 }
 ```
@@ -55,5 +65,9 @@ public function channels()
     return SqsBackedMessageChannelBuilder::create("distributed_ticket_service")
 }
 ```
+
+{% hint style="info" %}
+**withCommandMapping()** is used to route commands to specific services, while **withEventMapping()** is used to subscribe to events from other services with optional filtering via subscription keys.
+{% endhint %}
 
 For concrete use case, read [Main Section](./) or [Custom Features](custom-features.md) section.

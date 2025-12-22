@@ -28,9 +28,15 @@ Making Service available for integration is matter of adding it to the Service M
 public function serviceMap(): DistributedServiceMap
 {
     return DistributedServiceMap::initialize()
-              ->withServiceMapping(
-                        serviceName: "ticketService", 
+              // Map commands to specific service
+              ->withCommandMapping(
+                        targetServiceName: "ticketService",
                         channelName: "distributed_ticket_service"
+              )
+              // Subscribe to events from other services
+              ->withEventMapping(
+                        channelName: "distributed_ticket_service",
+                        subscriptionKeys: ["user.*", "order.created"],
               )
 }
 ```
@@ -39,7 +45,7 @@ and defining implementation of the Message Channel:
 
 ```php
 #[ServiceContext]
-public function serviceMap(): DistributedServiceMap
+public function channels()
 {
     return SqsBackedMessageChannelBuilder::create("distributed_ticket_service")
 }
@@ -99,8 +105,8 @@ In User Service let's then define Service Map using [ServiceContext](../../../..
 public function serviceMap(): DistributedServiceMap
 {
     return DistributedServiceMap::initialize()
-              ->withServiceMapping(
-                        serviceName: "ticketService", 
+              ->withCommandMapping(
+                        targetServiceName: "ticketService",
                         channelName: "distributed_ticket_service"
               )
 }
@@ -157,51 +163,244 @@ $distributedBus->convertAndPublishEvent(
 
 Like you can see there is no **targetServiceName** in the parameters anymore (comparing to distributing Command), this is because Event may land in more than one Service. However we keep **routingKey** as this the name to which consuming Services subscribe (look EventHandler attribute parameter).&#x20;
 
-### Default Publishing
-
-By default Event will be published to all Services in the Service Map, with exception of originating Service that publish this Event, this one will be skipped (to avoid publishing to itself). Therefore the default behaviour broadcast the Event to all Services defined in Service Map.
-
-<figure><img src="../../../../.gitbook/assets/default-publishing-3.png" alt=""><figcaption><p><strong>Default Publishing</strong> - Events will be published to all Services within Service Map besides the publisher itself</p></figcaption></figure>
-
-{% hint style="success" %}
-It's a good practice to share the Service Map between Services. In order to have one single source of truth for your Service (Context) Mapping. This can also serve as reference for Developers to understand bigger picture of the System.
-{% endhint %}
-
-**In case given Service is not interested in specific Event, it will simply ignore it.** Therefore default publishing can really speed up of development process, and make things clear and simple. \
-However with larger volume of published Events, there may be a lot of ignored Events flying in the system, therefore in that situation we may consider using filtered publishing.
-
 ### Filtered Publishing
 
 Filtered publishing allows for optimalization in publishing. This way we can publish Events only to the Services that are actually interested in those.
 
 <figure><img src="../../../../.gitbook/assets/publishers (1).png" alt=""><figcaption><p>Publishing based on Service Map subscribition keys</p></figcaption></figure>
 
-To configure map with subscription keys, we will be using **subscriptionRoutingKeys** parameter in Service Map configuration:
+To configure map with subscription keys, we will be using **withEventMapping()** method in Service Map configuration:
 
 ```php
 #[ServiceContext]
 public function serviceMap(): DistributedServiceMap
 {
     return DistributedServiceMap::initialize()
-              ->withServiceMapping(
-                        serviceName: "ticketService", 
-                        channelName: "distributed_ticket_service",
-                        subscriptionRoutingKeys: ["userService.account.*"]
+              // Command mappings
+              ->withCommandMapping(
+                        targetServiceName: "ticketService",
+                        channelName: "distributed_ticket_service"
               )
-              ->withServiceMapping(
-                        serviceName: "orderService", 
+              ->withCommandMapping(
+                        targetServiceName: "orderService",
+                        channelName: "distributed_order_service"
+              )
+              // Event subscriptions with filtering
+              ->withEventMapping(
+                        channelName: "distributed_ticket_service",
+                        subscriptionKeys: ["userService.account.*"],
+              )
+              ->withEventMapping(
                         channelName: "distributed_order_service",
-                        subscriptionRoutingKeys: ["userService.address.changed"]
+                        subscriptionKeys: ["userService.address.changed"],
               )
 }
 ```
 
-Subscription routing keys is array, therefore we may put multiple subscribition routing keys if needed. \
-Subscrption keys can point to exact event name: "**userService.address.changed"**\
+Subscription keys is array, therefore we may put multiple subscription routing keys if needed. \
+Subscription keys can point to exact event name: "**userService.address.changed"**\
 Or they may use wild card: "**userService.account.\*"**
 
-By default **subscriptionRoutingKeys** are null, which means given Service will receive all Events. If we will provide empty array, it means that subscription keys  are enabled, yet none are matching, therefore no Events will be send to given Service.
+The **excludeEventsFromServices** parameter allows you to explicitly exclude events from specific services. This is commonly used to prevent a service from receiving its own events.
 
 {% hint style="success" %}
 When Service Map is defined as separate shared library. It becomes explicit what Events is given Service interested in. This also makes the process of subscribing to new Event visible for everyone, therefore we avoid hidden coupling that could lead to broken integration.
+{% endhint %}
+
+## Sharing Events using Streaming Channels
+
+Streaming channels provide a powerful way to share events between services. Unlike traditional message queues where each message is consumed by a single consumer, streaming channels allow multiple services to independently consume the same stream of events. Each service tracks its own position in the stream, enabling features like event replay and independent consumption rates.
+
+{% hint style="success" %}
+Streaming channels are ideal for event-driven architectures where multiple services need to react to the same events independently.  
+As Event can be published once, but consumed multiple times.
+{% endhint %}
+
+### Benefits of Streaming Channels for Event Distribution
+
+* **Independent Consumption**: Each service maintains its own position in the event stream
+* **Event Replay**: Services can replay events from any point in the stream
+* **Scalability**: Multiple consumers can read from the same stream without affecting each other
+* **Durability**: Events are persisted and can be consumed multiple times
+* **Decoupling**: Publishers don't need to know about consumers
+
+### In Memory Streaming Channel
+
+For testing and development, you can use in-memory streaming channels:
+
+```php
+#[ServiceContext]
+public function distributedEventChannel()
+{
+    return SimpleMessageChannelBuilder::createStreamingChannel(
+        messageChannelName: "distributed_events",
+        messageGroupId: "my-service-consumer-group"
+    );
+}
+
+#[ServiceContext]
+public function serviceMap(): DistributedServiceMap
+{
+    return DistributedServiceMap::initialize()
+              ->withEventMapping(
+                        channelName: "distributed_events",
+                        subscriptionKeys: ["user.*", "order.*"],
+              )
+}
+```
+
+Each service consuming from the same streaming channel should use a unique `messageGroupId` to track its position independently.
+
+### RabbitMQ Streaming Channel
+
+RabbitMQ Streams provide high-throughput, persistent event streaming:
+
+```php
+#[ServiceContext]
+public function distributedEventChannel()
+{
+    return [
+        // Configure streaming channel
+        AmqpStreamChannelBuilder::create(
+            channelName: "distributed_events",
+            messageGroupId: "ticket-service-consumer" // Unique consumer group
+        )
+            ->withCommitInterval(100) // Commit position every 100 messages
+    ];
+}
+
+#[ServiceContext]
+public function serviceMap(): DistributedServiceMap
+{
+    return DistributedServiceMap::initialize()
+              ->withEventMapping(
+                        channelName: "distributed_events",
+                        subscriptionKeys: ["*"],
+              )
+}
+```
+
+**Configuration Options:**
+* **messageGroupId**: Unique identifier for this consumer group - each service should have its own
+* **commitInterval**: How often to commit the consumer position (in number of messages)
+
+### Kafka Streaming Channel
+
+Kafka provides distributed, fault-tolerant event streaming:
+
+```php
+#[ServiceContext]
+public function distributedEventChannel()
+{
+    return KafkaMessageChannelBuilder::create(
+        channelName: "distributed_events",
+        topicName: "distributed_events_topic",
+        messageGroupId: "order-service-consumer" // Kafka consumer group
+    )
+        ->withCommitInterval(50); // Commit offset every 50 messages
+}
+
+#[ServiceContext]
+public function serviceMap(): DistributedServiceMap
+{
+    return DistributedServiceMap::initialize()
+              ->withEventMapping(
+                        channelName: "distributed_events",
+                        subscriptionKeys: ["user.*", "ticket.*"],
+              )
+}
+```
+
+**Configuration Options:**
+* **topicName**: The Kafka topic to publish/consume from
+* **messageGroupId**: Kafka consumer group ID - each service should have its own
+* **commitInterval**: How often to commit the offset (in number of messages)
+
+### Multi-Service Example
+
+Here's a complete example showing how multiple services can share events using a streaming channel:
+
+**Shared Service Map and Channel**
+
+```php
+#[ServiceContext]
+public function serviceMap(): DistributedServiceMap
+{
+    return DistributedServiceMap::initialize()
+              ->withEventMapping(
+                        channelName: "shared_user_events",
+                        subscriptionKeys: ["user.*"],
+              )
+}
+```
+
+**Publisher Service (User Service):**
+```php
+// Publishing events
+public function registerUser(DistributedBus $distributedBus)
+{
+    $distributedBus->convertAndPublishEvent(
+        routingKey: "user.registered",
+        event: new UserRegistered($userId, $email)
+    );
+}
+```
+
+```php
+#[ServiceContext]
+public function eventStreamChannel()
+{
+    return AmqpStreamChannelBuilder::create(
+        channelName: "shared_user_events",
+        messageGroupId: "user-service-consumer" // Unique consumer group per Service
+    );
+}
+```
+
+**Consumer Service 1 (Ticket Service):**
+```php
+#[Distributed]
+#[EventHandler("user.registered")]
+public function onUserRegistered(UserRegistered $event): void
+{
+    // Create welcome ticket
+}
+```
+
+```php
+#[ServiceContext]
+public function eventStreamChannel()
+{
+    return AmqpStreamChannelBuilder::create(
+        channelName: "shared_user_events",
+        messageGroupId: "ticket-service-consumer" // Unique consumer group per Service
+    )
+        ->withCommitInterval(100);
+}
+```
+
+**Consumer Service 2 (Order Service):**
+```php
+#[Distributed]
+#[EventHandler("user.registered")]
+public function onUserRegistered(UserRegistered $event): void
+{
+    // Initialize user's order history
+}
+```
+
+```php
+#[ServiceContext]
+public function eventStreamChannel()
+{
+    return AmqpStreamChannelBuilder::create(
+        channelName: "shared_user_events",
+        messageGroupId: "order-service-consumer" // Unique consumer group per Service
+    )
+        ->withCommitInterval(100);
+}
+```
+
+{% hint style="info" %}
+Each consuming service uses the same `queueName` (RabbitMQ) or `topicName` (Kafka) but with a different `messageGroupId`. This allows them to consume the same events independently, each tracking their own position in the stream.
 {% endhint %}
