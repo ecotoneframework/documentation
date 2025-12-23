@@ -72,6 +72,22 @@ RabbitMQ Streams provide persistent event streaming capabilities. Unlike traditi
 Streaming channels are ideal for event-driven architectures where multiple services need to consume the same events independently, with support for independent consumption rates.
 {% endhint %}
 
+### Requirements
+
+To use RabbitMQ Streaming Channels, you need to install:
+
+1. **Ecotone DBAL Module** - Required for storing consumer position tracking
+
+```bash
+composer require ecotone/dbal
+```
+
+2. **AmqpLib Connection Factory** - Required for RabbitMQ streaming support (see [Connection Factory Setup](#connection-factory-setup) below)
+
+{% hint style="info" %}
+The DBAL module is used to persist the consumer position (offset) in the database. This ensures that if your application restarts, consumers can resume from where they left off.
+{% endhint %}
+
 ### Key Features
 
 * **Multiple Independent Consumers**: Each consumer maintains its own position in the stream
