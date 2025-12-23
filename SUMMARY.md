@@ -105,7 +105,7 @@
       * [Custom Features](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/custom-features.md)
       * [Non-Ecotone Application integration](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/non-ecotone-application-integration.md)
       * [Testing](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/testing.md)
-    * [AMQP Distributed Bus (RabbitMQ)](modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/README.md)
+    * [AMQP Distributed Bus (Legacy)](modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/README.md)
       * [Configuration](modelling/microservices-php/distributed-bus/amqp-distributed-bus-rabbitmq/configuration.md)
     * [Distributed Bus Interface](modelling/microservices-php/distributed-bus/distributed-bus-interface.md)
   * [Message Consumer](modelling/microservices-php/message-consumer.md)
