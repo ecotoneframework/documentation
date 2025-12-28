@@ -24,13 +24,13 @@ Read more in bellow sections:
 
 ### Demo implementation
 
-* Simple demo [using Ecotone Lite](https://github.com/ecotoneframework/quickstart-examples/tree/main/Microservices).&#x20;
+* Simple demo [using Ecotone Lite](https://github.com/ecotoneframework/quickstart-examples/tree/main/Microservices).
 * Advanced demo [using Ecotone Lite](https://github.com/ecotoneframework/quickstart-examples/tree/main/MicroservicesAdvanced).
 * Symfony and Laravel [application integration](https://github.com/ecotoneframework/php-ddd-cqrs-event-sourcing-symfony-laravel-ecotone).
 
 ### Links
 
+* [Implementing Event-Driven Architecture](https://blog.ecotone.tech/implementing-event-driven-architecture-in-php/) \[Article]
 * [Ecotone Enterprise and Distributed Bus with Service Mapping](https://blog.ecotone.tech/ecotone-enterprise-kafka-distributed-bus-dynamic-channels-and-more-2/) \[Article]
-* [Integrating PHP Applications using Distributed Bus with RabbitMQ](https://blog.ecotone.tech/integrating-php-applications-with-ecotone-and-rabbitmq/) \[Article]
 * [Starting with Microservices in PHP](https://blog.ecotone.tech/how-to-integrate-microservices-in-php/) \[Article]
 * [Loosely coupled Microservices in PHP](https://blog.ecotone.tech/loosely-coupled-microservices-in-php/) \[Article]
