@@ -29,7 +29,7 @@ When Customer is registered, we publish CustomerWasRegistered Event Message usin
 
 Ecotone by default propagate all Message Headers automatically. This as a result preserve context Tenant. In our case sending Notification will happen in context of the same Tenant, as Customer Registration was done:
 
-<figure><img src="../../../.gitbook/assets/image.png" alt=""><figcaption><p>Metadata is automatically propagated from Command to published Event</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (2).png" alt=""><figcaption><p>Metadata is automatically propagated from Command to published Event</p></figcaption></figure>
 
 This way we can of course access Tenant name in our Event Handlers too:
 
@@ -96,6 +96,6 @@ When we publish Message to Asynchronous Database Message Channel, Ecotone will p
 
 Depending on Business Domain we work in, we may have hundreds of Tenants, so running hundreds of Message Consumers may be far from ideal. For those situations, Ecotone by default use Round-Robin strategy to **consume using single process**. This means that we will be fetching from each Tenant in order:
 
-<figure><img src="../../../.gitbook/assets/image (1).png" alt=""><figcaption><p>Ecotone using Round Robin Strategy to consume Messages from multiple Tenants</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>Ecotone using Round Robin Strategy to consume Messages from multiple Tenants</p></figcaption></figure>
 
-This way of consuming works out of the box, we don’t need to do any customer configuration to make it happen.&#x20;
+This way of consuming works out of the box, we don’t need to do any customer configuration to make it happen.

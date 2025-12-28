@@ -21,9 +21,9 @@ class Product
 }
 ```
 
-When this Aggregate will be called via Command Bus with **CreateProduct** Command, it will then return new **ProductWasCreated** Event.&#x20;
+When this Aggregate will be called via Command Bus with **CreateProduct** Command, it will then return new **ProductWasCreated** Event.
 
-<figure><img src="../../../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 {% hint style="success" %}
 Command Handlers may return single events, multiple events or no events at all, if nothing is meant to be changed.
@@ -55,12 +55,12 @@ class Product
     use WithAggregateVersioning;
 ```
 
-Anyways, this is all we need to do, as Ecotone will take care of reading and writing to this property. \
+Anyways, this is all we need to do, as Ecotone will take care of reading and writing to this property.\
 This way we can focus on the business logic of the Aggregate, and Framework will take care of tracking the version.
 
 ### Aggregate Id (Partition Key)
 
-We need to tell to Ecotone what is the Identifier of our Event Sourcing Aggregate.  \
+We need to tell to Ecotone what is the Identifier of our Event Sourcing Aggregate.\
 This is done by having property marked with Identifier in the Aggregate:
 
 ```php
@@ -83,7 +83,7 @@ We will explore how applying Events works more in [next section](applying-events
 
 ### Aggregate Type
 
-Aggregate Type will be the same as Aggregate Class. \
+Aggregate Type will be the same as Aggregate Class.\
 We can decouple the class from the Aggregate Type, more about this can be found in "[Making Stream immune to changes](../persistence-strategy/making-stream-immune-to-changes.md)" section.
 
 ### Recording Events in the Event Stream
@@ -116,5 +116,5 @@ $eventStore->appendTo(
 );
 ```
 
-As storing in Event Store is abstracted away, the code stays clean and contains only of the business part. \
+As storing in Event Store is abstracted away, the code stays clean and contains only of the business part.\
 We can [customize](../persistence-strategy/making-stream-immune-to-changes.md) the Stream Name, Aggregate Type and even Event Names when needed.

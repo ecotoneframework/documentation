@@ -4,7 +4,7 @@ To understand the use case behind Message Channels read [Asynchronous Processing
 
 ## Message Channel
 
-To create AMQP Backed [Message Channel](../../modelling/asynchronous-handling/) (RabbitMQ Channel), we need to create [Service Context](../../messaging/service-application-configuration.md).&#x20;
+To create AMQP Backed [Message Channel](../../modelling/asynchronous-handling/) (RabbitMQ Channel), we need to create [Service Context](../../messaging/service-application-configuration.md).
 
 ```php
 class MessagingConfiguration
@@ -17,12 +17,12 @@ class MessagingConfiguration
 }
 ```
 
-Now `orders` channel will be available in our Messaging System.&#x20;
+Now `orders` channel will be available in our Messaging System.
 
 {% hint style="success" %}
-Message Channels simplify to the maximum integration with Message Broker. \
+Message Channels simplify to the maximum integration with Message Broker.\
 From application perspective all we need to do, is to provide channel implementation.\
-Ecotone will take care of whole publishing and consuming part.&#x20;
+Ecotone will take care of whole publishing and consuming part.
 {% endhint %}
 
 ### Message Channel Configuration
@@ -69,7 +69,9 @@ public function when(OrderWasPlaced $event) : void
 RabbitMQ Streams provide persistent event streaming capabilities. Unlike traditional queues where each message is consumed by a single consumer, streaming channels allow multiple independent consumers to read from the same stream, each tracking their own position.
 
 {% hint style="success" %}
-Streaming channels are ideal for event-driven architectures where multiple services need to consume the same events independently, with support for independent consumption rates.
+Streaming channels are ideal for event-driven architectures where multiple services need to consume the same events independently, with support for independent consumption rates.<br>
+
+This functionality is available as part of **Ecotone Enterprise.**
 {% endhint %}
 
 ### Requirements
@@ -82,7 +84,7 @@ To use RabbitMQ Streaming Channels, you need to install:
 composer require ecotone/dbal
 ```
 
-2. **AmqpLib Connection Factory** - Required for RabbitMQ streaming support (see [Connection Factory Setup](#connection-factory-setup) below)
+2. **AmqpLib Connection Factory** - Required for RabbitMQ streaming support (see [Connection Factory Setup](message-channel.md#connection-factory-setup) below)
 
 {% hint style="info" %}
 The DBAL module is used to persist the consumer position (offset) in the database. This ensures that if your application restarts, consumers can resume from where they left off.
@@ -239,9 +241,10 @@ AmqpStreamChannelBuilder::create(
 ```
 
 **How it works:**
-- `commitInterval=1`: Commit after every message (safest, slowest)
-- `commitInterval=100`: Commit after every 100 messages (better performance)
-- The last message in a batch is always committed, even if the interval hasn't been reached
+
+* `commitInterval=1`: Commit after every message (safest, slowest)
+* `commitInterval=100`: Commit after every 100 messages (better performance)
+* The last message in a batch is always committed, even if the interval hasn't been reached
 
 #### Prefetch Count
 
@@ -257,8 +260,9 @@ AmqpStreamChannelBuilder::create(
 ```
 
 **Guidelines:**
-- Lower values (e.g., 1-10): Better flow control, lower throughput
-- Higher values (e.g., 50-100): Higher throughput, more memory usage
+
+* Lower values (e.g., 1-10): Better flow control, lower throughput
+* Higher values (e.g., 50-100): Higher throughput, more memory usage
 
 ### Complete Example
 
