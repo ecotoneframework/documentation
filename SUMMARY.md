@@ -117,6 +117,7 @@
   * [Sagas: Workflows That Remember](modelling/business-workflows/sagas.md)
   * [Orchestrators: Declarative Workflow Automation](modelling/business-workflows/orchestrators.md)
   * [Handling Failures](modelling/business-workflows/handling-failures.md)
+* [Migrations / Storage](modelling/migrations-storage/README.md)
 * [Testing Support](modelling/testing-support/README.md)
   * [Testing Messaging](modelling/testing-support/testing-messaging.md)
   * [Testing Aggregates and Sagas with Message Flows](modelling/testing-support/testing-aggregates-and-sagas-with-message-flows.md)
