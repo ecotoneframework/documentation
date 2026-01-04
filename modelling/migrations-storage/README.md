@@ -12,11 +12,11 @@ This approach works great in most scenarios, especially during development and i
 
 In some scenarios, you may want to take over the initialization process however:
 
-- **Performance-sensitive HTTP applications** - If you send messages to a broker with each HTTP request and cannot cache initialization state between requests, the automatic check may add unnecessary overhead
-- **Strict deployment processes** - Some applications follow a process where all migrations must be completed before starting the application
-- **Visibility and control** - You want to see what storage resources exist and their initialization state
-- **Resource cleanup** - You need to delete storage resources when features are no longer needed
-- **Integration with existing tools** - You want to generate SQL statements for use with Doctrine Migrations, Laravel Migrations, or similar tools
+* **Performance-sensitive HTTP applications** - If we send messages to a broker with each HTTP request, then as each request is clear state, automatic initialization will continuesly re-try to create the resource
+* **Strict deployment processes** - Some applications follow a process where all migrations must be completed before starting the application
+* **Visibility and control** - You want to see what storage resources exist and their initialization state
+* **Resource cleanup** - You need to delete storage resources when features are no longer needed
+* **Integration with existing tools** - You want to generate SQL statements for use with Doctrine Migrations, Laravel Migrations, or similar tools
 
 For these cases, Ecotone provides migration commands to take over the process.
 
@@ -25,11 +25,11 @@ For these cases, Ecotone provides migration commands to take over the process.
 Ecotone offers two types of migration commands:
 
 1. **Database Migrations** - Manage database tables for features like deduplication, dead letter, document store, database message queues, event sourcing, and projections
-2. **Channel Migrations** - Manage message channel infrastructure (queues, exchanges, topics) for brokers like RabbitMQ, SQS, Redis, and Kafka
+2. **Channel Migrations** - Manage message channel infrastructure (queues, exchanges, topics) for brokers like RabbitMQ, SQS
 
 ## Disabling Automatic Initialization
 
-Before using migration commands, disable automatic initialization.  
+Before using migration commands, disable automatic initialization.\
 This way we disable automatic creation of tables and channels.
 
 ### Database Tables
@@ -272,15 +272,15 @@ The `--force` flag is required to actually delete tables. Without it, the comman
 
 ### Available Database Features
 
-| Feature | Description |
-|---------|-------------|
-| `dead_letter` | Failed message storage for error recovery |
-| `deduplication` | Message deduplication tracking |
-| `document_store` | Document store persistence |
-| `message_queue` | DBAL-backed message queue |
-| `event_streams` | Event sourcing stream storage |
-| `projection_state` | Projection state tracking |
-| `projections_v1` | Legacy projection tables |
+| Feature            | Description                               |
+| ------------------ | ----------------------------------------- |
+| `dead_letter`      | Failed message storage for error recovery |
+| `deduplication`    | Message deduplication tracking            |
+| `document_store`   | Document store persistence                |
+| `message_queue`    | DBAL-backed message queue                 |
+| `event_streams`    | Event sourcing stream storage             |
+| `projection_state` | Projection state tracking                 |
+| `projections_v1`   | Legacy projection tables                  |
 
 ## Channel Migration Commands
 
@@ -289,10 +289,10 @@ Message channels for brokers like RabbitMQ, SQS, and Kafka can be managed via mi
 {% hint style="info" %}
 Not all message channels require migration commands:
 
-- **Redis** - Does not require any resources to be created beforehand. Channel creation is fully automatic as it simply inserts values under given keys.
-- **DBAL (Database)** - Message channels backed by database are handled through the database migration commands using the `message_queue` feature. There is no need to use channel migration for DBAL channels.
+* **Redis** - Does not require any resources to be created beforehand. Channel creation is fully automatic as it simply inserts values under given keys.
+* **DBAL (Database)** - Message channels backed by database are handled through the database migration commands using the `message_queue` feature. There is no need to use channel migration for DBAL channels.
 
-Channel migration commands are primarily useful for **RabbitMQ** (queues, exchanges) and **SQS/Kafka** (queues, topics) where infrastructure must be declared before use.
+Channel migration commands are primarily useful for **RabbitMQ** (queues, exchanges) and **SQS** (queues, topics) where infrastructure must be declared before use. **Kafka** does not have supoort for migrations at this moment.
 {% endhint %}
 
 ### Viewing Status
@@ -433,17 +433,17 @@ Only channels that support managed initialization will appear in migration comma
 
 ### Database Commands
 
-| Command | Options | Description |
-|---------|---------|-------------|
-| `ecotone:migration:database:setup` | `--features`, `--initialize`, `--sql`, `--onlyUsed` | View status, initialize tables, or get SQL |
-| `ecotone:migration:database:delete` | `--features`, `--force`, `--onlyUsed` | Delete database tables |
+| Command                             | Options                                             | Description                                |
+| ----------------------------------- | --------------------------------------------------- | ------------------------------------------ |
+| `ecotone:migration:database:setup`  | `--features`, `--initialize`, `--sql`, `--onlyUsed` | View status, initialize tables, or get SQL |
+| `ecotone:migration:database:delete` | `--features`, `--force`, `--onlyUsed`               | Delete database tables                     |
 
 ### Channel Commands
 
-| Command | Options | Description |
-|---------|---------|-------------|
-| `ecotone:migration:channel:setup` | `--channel`, `--initialize` | View status or initialize channels |
-| `ecotone:migration:channel:delete` | `--channel`, `--force` | Delete message channels |
+| Command                            | Options                     | Description                        |
+| ---------------------------------- | --------------------------- | ---------------------------------- |
+| `ecotone:migration:channel:setup`  | `--channel`, `--initialize` | View status or initialize channels |
+| `ecotone:migration:channel:delete` | `--channel`, `--force`      | Delete message channels            |
 
 ## Testing
 
@@ -477,4 +477,3 @@ $ecotone->runConsoleCommand('ecotone:migration:channel:setup', ['initialize' => 
 $ecotone->runConsoleCommand('ecotone:migration:database:delete', ['force' => true]);
 $ecotone->runConsoleCommand('ecotone:migration:channel:delete', ['force' => true]);
 ```
-
