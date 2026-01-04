@@ -28,6 +28,7 @@ You may find demo implementation [here](https://github.com/ecotoneframework/quic
 
 ### Links
 
+* [Queues and Streaming Channels Architecture](https://blog.ecotone.tech/async-failure-recovery-queue-vs-streaming-channel-strategies/) \[Article]
 * [Asynchronous processing with zero configuration](https://blog.ecotone.tech/message-channels-zero-configuration-async-processing/) \[Article]
 * [Asynchronous PHP To Support Stability Of Your Application](https://blog.ecotone.tech/asynchronous-php/) \[Article]
 * [Asynchronous Messaging in Laravel](https://blog.ecotone.tech/ddd-and-messaging-with-laravel-and-ecotone/) \[Article]

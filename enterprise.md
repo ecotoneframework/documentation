@@ -4,7 +4,7 @@
 
 Ecotone comes with two plans:
 
-* **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE) for open features. It allows to build message-driven system in PHP, which solves resiliency and scalability at the architecture level. This covers all the features, which are not marked as Enterprise. \\
+* **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE) for open features. It allows to build message-driven system in PHP, which solves resiliency and scalability at the architecture level. This covers all the features, which are not marked as Enterprise.
 * **Ecotone Enterprise** is based Enterprise licence. It does provides more advanced set of features aim for Enterprise usage. It does bring to the table custom features, additional integrations, and ability to optimization resource usages.
 
 {% hint style="success" %}
@@ -26,10 +26,11 @@ To evaluate Enterprise features, **email us at** "**support@simplycodedsoftware.
 * [**Command Bus Error Channel** ](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#command-bus-error-channel)- Provides ability to configure Error Channel for Command Bus. This way we can handle with grace synchronous scenarios like failure on receiving webhook, by pushing the Message to Error Channel.
 * [**Gateway-Level Deduplication**](modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md#deduplication-with-command-bus) - Provides ability to deduplicate messages at the Command Bus/Gateway level, ensuring no duplicate commands are processed. This is especially useful for webhook integrations where the same command might be sent multiple times.
 * [**Instant Aggregate Fetch**](modelling/command-handling/repository/repository.md#instant-fetch-aggregate) - Provides ability to fetch Aggregates directly without the need to access Repositories. This way we can keep the code focused on the business logic instead of orchestration level code.
-* [**Orchestrators**](modelling/business-workflows/orchestrators.md) -  Perfect for building **predefined and dynamic workflows** where the workflow definition is separate from the individual steps.
+* [**Orchestrators**](modelling/business-workflows/orchestrators.md) - Perfect for building **predefined and dynamic workflows** where the workflow definition is separate from the individual steps.
 
 ## Materials
 
 ### Links
 
 * [Ecotone Enterprise and Kafka, Distributed Bus, Dynamic Channels](https://blog.ecotone.tech/ecotone-enterprise-kafka-distributed-bus-dynamic-channels-and-more-2/) \[Article]
+* [Implementing Event-Driven Architecture](https://blog.ecotone.tech/implementing-event-driven-architecture-in-php/) \[Article]
