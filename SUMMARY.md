@@ -203,4 +203,5 @@
 
 ## Other
 
+* [AI Integration](other/ai-integration.md)
 * [Contact, Workshops and Support](other/contact-workshops-and-support.md)
