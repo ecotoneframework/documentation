@@ -7,6 +7,7 @@ Ecotone provides multiple ways for AI assistants and code editors to access up-t
 The MCP server provides direct access to Ecotone documentation for AI assistants that support the Model Context Protocol.
 
 **MCP Server URL:**
+
 ```
 https://docs.ecotone.tech/~gitbook/mcp
 ```
@@ -63,9 +64,9 @@ Ecotone follows the [llmstxt.org](https://llmstxt.org) specification for AI-frie
 
 **Available files:**
 
-| File | Description |
-|------|-------------|
-| [llms.txt](https://ecotone.tech/llms.txt) | Concise overview with key links |
+| File                                                | Description                               |
+| --------------------------------------------------- | ----------------------------------------- |
+| [llms.txt](https://ecotone.tech/llms.txt)           | Concise overview with key links           |
 | [llms-full.txt](https://ecotone.tech/llms-full.txt) | Extended documentation with code examples |
 
 These files are automatically discovered by AI crawlers via `robots.txt`.
@@ -83,17 +84,22 @@ When using AI assistants with Ecotone:
 
 Ecotone documentation integrates with:
 
-- **Claude** (via MCP or direct context)
-- **ChatGPT** (via llms.txt)
-- **Cursor** (via MCP)
-- **VSCode Copilot** (via MCP)
-- **Windsurf** (via MCP)
-- **Context7-enabled tools**
+* **Claude** (via MCP or direct context)
+* **ChatGPT** (via llms.txt)
+* **Cursor** (via MCP)
+* **VSCode Copilot** (via MCP)
+* **Windsurf** (via MCP)
+* **Context7-enabled tools**
 
 ## Resources
 
-- [Ecotone Documentation](https://docs.ecotone.tech)
-- [Ecotone Blog](https://blog.ecotone.tech)
-- [GitHub Repository](https://github.com/ecotoneframework/ecotone-dev)
-- [Discord Community](https://discord.gg/GwM2BSuXeg)
+* [Ecotone Documentation](https://docs.ecotone.tech)
+* [Ecotone Blog](https://blog.ecotone.tech)
+* [GitHub Repository](https://github.com/ecotoneframework/ecotone-dev)
+* [Discord Community](https://discord.gg/GwM2BSuXeg)
 
+## Materials
+
+## Links
+
+* [Vibe coding Enterprise PHP Applications](https://blog.ecotone.tech/vibe-coding-enterprise-php-applications/)
