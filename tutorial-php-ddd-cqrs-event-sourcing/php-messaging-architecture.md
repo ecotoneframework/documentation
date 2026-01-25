@@ -109,13 +109,15 @@ Go to "app/EcotoneQuickstart.php"
 {% endtab %}
 
 {% tab title="Lite" %}
+{% code title="https://github.com/ecotoneframework/quickstart-lite/blob/lesson-1/src/EcotoneQuickstart.php" %}
 ```php
-https://github.com/ecotoneframework/quickstart-lite/blob/lesson-1/src/EcotoneQuickstart.php
+
 
 Go to "src/EcotoneQuickstart.php"
 
 # This class is autoregistered using PHP-DI
 ```
+{% endcode %}
 {% endtab %}
 {% endtabs %}
 
