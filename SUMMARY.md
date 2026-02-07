@@ -200,6 +200,7 @@
 * [DBAL Support](modules/dbal-support.md)
 * [Amazon SQS Support](modules/amazon-sqs-support.md)
 * [Redis Support](modules/redis-support.md)
+* [Data Protection](modules/data-protection.md)
 
 ## Other
 
