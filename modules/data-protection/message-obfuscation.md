@@ -1,54 +1,10 @@
----
-description: >-
-  Ecotone enables protection for data sent outside of the application (e.g.
-  using RabbitMQ) by obfuscating messages' payload and headers.
-icon: file-shield
----
+# Message Obfuscation
 
-# Data Protection
-
-{% hint style="info" %}
-## **This module is available as part of Ecotone Enterprise.**
-{% endhint %}
-
-Ecotone will encrypt you messeges (Events or Commands) right before they are sent to queue and decrypt them when they are received. In other words, message will remain readable within the application but once they leave the system, secured key is required for reading.
-
-## Installation
-
-```bash
-composer require ecotone/data-protection
-```
-
-## Configuration
-
-Required `DataProtectionConfiguration` will let you to provide set of encryption keys used within the system.
-
-```php
-use Defuse\Crypto\Key;
-use Ecotone\DataProtection\Configuration\DataProtectionConfiguration;
-
-class DataProtection
-{
-    #[ServiceContext]
-    public function dataProtectionConfiguration(): DataProtectionConfiguration
-    {
-        return DataProtectionConfiguration::create(name: 'primary-key', key: Key::loadFromAsciiSafeString(...)) // first key will be set as default
-            ->withKey(name: 'secondary-key', key: Key::loadFromAsciiSafeString(...))
-            ->withKey(name: 'default-key', key: Key::loadFromAsciiSafeString(...), asDefault: true) // overwrite default key passing `asDefault: true`
-        ;
-    }
-}
-```
-
-{% hint style="warning" %}
-Ecotone does not manage encryption keys
-{% endhint %}
-
-When defining sensitive data in your message, you can tell Ecotone whether it contains sensitive payload or specify which headers should be obfuscated.
+One of the methods to protect your data is to obfuscate messages which are sent with queue using secure key you've defined.
 
 ### Obfuscate Channel
 
-To obfuscate channel in general, you can provide `ChannelProtectionConfiguration`.&#x20;
+Channel can be protected in general which means every message will be obfuscated. In order to do that, you have to provide `ChannelProtectionConfiguration`.&#x20;
 
 ```php
 use Ecotone\DataProtection\Configuration\ChannelProtectionConfiguration;
@@ -81,9 +37,13 @@ class DataProtection
 
 ### Obfuscate Message
 
-To obfuscate single message, you can use Data Protection attributes directly in your messages.
+You can also obfuscate single message by using Data Protection attributes directly in your class.
 
 ```php
+use Ecotone\DataProtection\Attribute\Sensitive;
+use Ecotone\DataProtection\Attribute\WithEncryptionKey;
+use Ecotone\DataProtection\Attribute\WithSensitiveHeader;
+
 #[Sensitive] // tells Ecotone that this message is sensitive
 #[WithEncryptionKey('secondary-key')] // optional, tells Ecotone which key should be used. If not defined, Ecotone will use default key.
 #[WithSensitiveHeader('iban')] // optional (repeatable), tells Ecotone that if message is sent with `foo` header, its value should be encrypted as well
@@ -98,33 +58,20 @@ readonly class ChargeCreditCard
 
 ### Obfuscate Endpoint
 
-Message obfuscation can be also defined at endpoint.
+Message obfuscation can be also defined at endpoint. Data Protection attributes can be used with `#[Payload]` or `#[Header]` .
 
 ```php
-#[Asynchronous('payment')]
-class PaymentProcessor
-{
-    #[Sensitive] // tells Ecotone that message handled by this endpoint is sensitive 
-    #[WithSensitiveHeader('iban')] // optional
-    #[CommandHandler(endpointId: 'payment.chargeCreditCard')]
-    public function chargeCreditCard(
-        ChargeCreditCard $message,
-        // ...
-    ): void {
-        // ...
-    }
-}
-```
+use Ecotone\DataProtection\Attribute\Sensitive;
+use Ecotone\DataProtection\Attribute\WithEncryptionKey;
+use Ecotone\DataProtection\Attribute\WithSensitiveHeader;
 
-Data protection can be also defined in parameters
-
-```php
 #[Asynchronous('payment')]
 class PaymentProcessor
 {
     #[CommandHandler(endpointId: 'payment.chargeCreditCard')]
+    #[WithSensitiveHeader('name')] // headers unused in method can still be sent as sensitive
     public function chargeCreditCard(
-        #[Sensitive] ChargeCreditCard $message,
+        #[Sensitive] #[WithEncryptionKey('secondary-key')] ChargeCreditCard $message, // tells Ecotone that message handled by this endpoint is sensitive 
         #[Sensitive] #[Header('iban')] string $iban,
         // ...
     ): void {
@@ -137,9 +84,13 @@ class PaymentProcessor
 Message configuration will **always** have higher precedence.
 {% endhint %}
 
-In following example, `ChargeCreditCard` command and `iban` header will be secured with `secondary-key` despite `payment` channel uses `primary-key`.&#x20;
+In following example, `ChargeCreditCard` command and `iban` header will be secured with `secondary-key` despite `payment` channel uses `primary-key`  and endpoint is defined with `another-key`.
 
 ```php
+use Ecotone\DataProtection\Attribute\Sensitive;
+use Ecotone\DataProtection\Attribute\WithEncryptionKey;
+use Ecotone\DataProtection\Attribute\WithSensitiveHeader;
+
 #[Sensitive]
 #[WithEncryptionKey('secondary-key')]
 #[WithSensitiveHeader('iban')]
@@ -156,7 +107,7 @@ class PaymentProcessor
 {
     #[CommandHandler(endpointId: 'payment.chargeCreditCard')]
     public function chargeCreditCard(
-        #[Sensitive] #[WithEncryptionKey('another-key')] ChargeCreditCard $message, // encryption key can be defined with payload parameter
+        #[Sensitive] #[WithEncryptionKey('another-key')] ChargeCreditCard $message,
         #[Sensitive] #[Header('iban')] string $iban,
         // ...
     ): void {
