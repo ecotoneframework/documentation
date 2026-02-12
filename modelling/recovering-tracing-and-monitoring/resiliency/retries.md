@@ -52,8 +52,14 @@ By using instant retries for asynchronous endpoints we keep message ordering.&#x
 
 ## Command Bus Instant Retries
 
-The `InstantRetry` attribute allows you to specify different strategies for Retry in order to be able to customize it for specific Business use cases. For example we may create new Command Bus which will retry on **NetworkException** then use that in specific cases with custom retry.\
-We do it by extending **CommandBus** interface and adding **InstantRetry** attribute.
+Create custom Command Buses with tailored retry strategies for specific business scenarios. Instead of scattering try/catch retry loops across handlers, declare retry behaviour as an attribute -- specify which exceptions to retry and how many times.
+
+**You'll know you need this when:**
+
+* Database deadlocks cause intermittent command handler failures
+* External API calls fail transiently and a simple retry would succeed
+* You have try/catch retry loops scattered across your handlers
+* High-concurrency scenarios produce optimistic locking collisions that resolve on retry
 
 {% hint style="success" %}
 Customized Instant Retries are available as part of **Ecotone Enterprise.**

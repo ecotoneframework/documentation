@@ -1,6 +1,13 @@
 # Asynchronous Message Bus (Gateways)
 
-We may extend Gateways functionality with asynchronocity. This way we can pass any Message via given Message Channel first.
+Asynchronous Message Buses let you make an entire Command or Event Bus asynchronous with a single configuration change, instead of annotating every handler individually.
+
+**You'll know you need this when:**
+
+* Your entire application should process commands in the background, not just individual handlers
+* You're building a write API that accepts commands and queues all of them for async processing
+* Adding `#[Asynchronous]` to every handler individually has become repetitive
+* You need an Outbox pattern where events are committed as part of the same database transaction
 
 {% hint style="success" %}
 Asynchronous Gateways are available as part of **Ecotone Enterprise.**

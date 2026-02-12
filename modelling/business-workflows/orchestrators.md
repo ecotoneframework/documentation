@@ -6,22 +6,13 @@ description: Learn how to build predefined and dynamic workflows using Orchestra
 
 While [connecting handlers with channels](connecting-handlers-with-channels.md) works great for linear workflows, and [Sagas](sagas.md) excel at stateful processes, **Orchestrator** is perfect when you need **predefined workflows** where the workflow definition is separate from the individual steps.
 
-## When Do You Need Orchestrator?
+**You'll know you need this when:**
 
-Use Orchestrator when you want to:
-
-🎯 **Separate workflow from steps**: Define the flow independently of step implementation\
-🔄 **Reuse steps**: Use the same steps in different workflows\
-⚡ **Build dynamic workflows**: Construct workflows programmatically based on business rules\
-🧪 **Easy testing**: Test workflows and steps independently\
-📋 **Predefined processes**: Execute well-defined business processes consistently
-
-**Examples:**
-
-* Image processing pipeline (resize → watermark → optimize → upload)
-* Document approval workflow (validate → review → approve → notify)
-* Order fulfillment process (verify → payment → shipping → tracking)
-* Customer onboarding (registration → verification → welcome → setup)
+* You have multi-step business processes (order fulfillment, payment processing, onboarding flows) and the workflow logic is scattered across event handlers
+* Business stakeholders ask "what are the steps in this process?" and the answer requires reading multiple files
+* You need to add, remove, or reorder steps in a process and it touches code in many places
+* Different inputs should trigger different step sequences (e.g., digital vs. physical product fulfillment)
+* You want each step independently testable and reusable across different workflows
 
 **Think of Orchestrator as**: A conductor that knows the entire symphony (workflow) and tells each musician (step) when to play, while the musicians focus only on their part.
 

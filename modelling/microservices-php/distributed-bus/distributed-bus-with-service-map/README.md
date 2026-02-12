@@ -1,7 +1,13 @@
 # Distributed Bus with Service Map
 
-Ecotone comes with [Message Channel abstraction](../../../asynchronous-handling/) which allows for easily switching from [different Providers](../../../asynchronous-handling/) like Amazon SQS, RabbitiMQ, Redis, Kafka and more.\
-This abstraction is used for Service (application) level asynchronous communication like Asynchronous Message Handlers. However this abstraction can also be combined with Distributed Bus mechanism to enable cross Service Communication using **Service Map**.
+Cross-service messaging using a Service Map that supports multiple message channel providers (RabbitMQ, Amazon SQS, Redis, Kafka, and others) within a single application topology. Swap transports without changing application code.
+
+**You'll know you need this when:**
+
+* You're running 3+ microservices that need to exchange commands and events
+* Different services use different message brokers (some RabbitMQ, some SQS) and you need them to communicate
+* You're migrating from one broker to another and want to do it incrementally without rewriting application code
+* Building custom inter-service messaging wiring for each service pair has become unsustainable
 
 {% hint style="success" %}
 This functionality is available as part of **Ecotone Enterprise.**

@@ -135,12 +135,17 @@ class Ticket
 
 ## \[Enterprise] Accessing Metadata during Event Application
 
+Pass metadata to `#[EventSourcingHandler]` methods for context-aware aggregate reconstruction -- without polluting event payloads with infrastructure concerns.
+
+**You'll know you need this when:**
+
+* Your event-sourced aggregates serve multiple tenants and reconstruction logic varies by tenant context
+* Event streams are merged from multiple source systems and you need to distinguish origin during replay
+* You need to protect business invariants based on metadata stored alongside events (e.g., executor identity)
+
 {% hint style="success" %}
 This feature is available as part of **Ecotone Enterprise.**
 {% endhint %}
-
-We may also access Metadata inside our Event Sourcing Handler.\
-This may be useful when we need to protect business invariants based on the data, that is stored as part of Metadata.
 
 ```php
 #[EventSourcingAggregate]

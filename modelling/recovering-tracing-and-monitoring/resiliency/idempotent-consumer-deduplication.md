@@ -100,7 +100,16 @@ final class PaymentHandler
 
 ## Deduplication with Command Bus
 
-To reuse same deduplication mechanism across different Message Handlers we may want to decide to use Deduplication on the level of Command Bus. For this, it's enough to extend Command Bus interface with out custom one:
+Deduplicate messages at the Command Bus level to protect every handler behind that bus automatically -- without per-handler deduplication code.
+
+**You'll know you need this when:**
+
+* Users double-click submit buttons and create duplicate orders or payments
+* Webhook providers retry delivery and your handlers process the same event twice
+* Message replay during recovery causes duplicate processing
+* Your handlers contain manual deduplication checks against deduplication tables
+
+To reuse same deduplication mechanism across different Message Handlers, extend Command Bus interface with your custom one:
 
 ```php
 #[Deduplicated(expression: "headers['paymentId']")]

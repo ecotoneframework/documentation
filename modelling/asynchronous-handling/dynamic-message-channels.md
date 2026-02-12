@@ -1,11 +1,14 @@
 # Dynamic Message Channels
 
-\
-This chapter provides more details about advanced Message Channel functionalities using Dynamic Message Channels. Dynamic Channels can be used to:
+Dynamic Message Channels route messages to different async channels at runtime based on message headers, tenant context, or custom logic. They solve common growth challenges without requiring custom routing infrastructure.
 
-* Simplify deployment strategy&#x20;
-* Optimize system resources&#x20;
-* Adjust message consumption or sending process, which is especially useful in SaaS and Multi-Tenant Environments
+**You'll know you need this when:**
+
+* You're onboarding multiple tenants and each needs isolated message processing
+* A noisy tenant's queue backlog is affecting other tenants' latency
+* You want to optimize system resources by combining low-volume channels under a single consumer
+* You need blue/green or canary deployment strategies for message routing
+* You're building per-tenant scaling and don't want to manage routing code yourself
 
 {% hint style="success" %}
 Dynamic Message Channels are available as part of **Ecotone Enterprise.**

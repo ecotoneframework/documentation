@@ -66,11 +66,16 @@ public function when(OrderWasPlaced $event) : void
 
 ## RabbitMQ Streaming Channel
 
-RabbitMQ Streams provide persistent event streaming capabilities. Unlike traditional queues where each message is consumed by a single consumer, streaming channels allow multiple independent consumers to read from the same stream, each tracking their own position.
+Persistent event streaming on existing RabbitMQ infrastructure -- Kafka-like semantics without adding Kafka. Multiple independent consumers read from the same stream, each tracking their own position. Events are persisted and can be replayed from any offset.
+
+**You'll know you need this when:**
+
+* You need multiple independent consumers reading the same event stream, each tracking their own position
+* You have existing RabbitMQ infrastructure and don't want the operational overhead of adding Kafka
+* You need event replay capabilities where consumers can re-read from specific positions
+* Standard RabbitMQ queues (where consumed messages disappear) don't fit your event-driven architecture
 
 {% hint style="success" %}
-Streaming channels are ideal for event-driven architectures where multiple services need to consume the same events independently, with support for independent consumption rates.<br>
-
 This functionality is available as part of **Ecotone Enterprise.**
 {% endhint %}
 

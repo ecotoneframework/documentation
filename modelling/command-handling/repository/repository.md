@@ -55,7 +55,13 @@ interface OrderRepository
 
 ## Instant Fetch Aggregate&#x20;
 
-In cases where we want to fetch Aggregate directly without introducing orchestration into our code base or depending on the Repositories, we can use Fetch Aggregate Attribute.
+Fetch aggregates directly in your handlers without repository injection boilerplate. Aggregates arrive automatically via the `#[Fetch]` attribute, keeping handler code focused on business logic.
+
+**You'll know you need this when:**
+
+* Every aggregate command handler follows the same pattern: inject repository, fetch aggregate, call method, save
+* Repository injection boilerplate obscures the actual business logic in your handlers
+* You want your domain code to express "what happens" without "how to load it"
 
 {% hint style="success" %}
 Instant Fetch Aggregate is available as part of **Ecotone Enterprise.**

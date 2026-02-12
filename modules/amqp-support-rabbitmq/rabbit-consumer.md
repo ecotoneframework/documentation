@@ -1,7 +1,13 @@
 # Rabbit Consumer
 
-To quickly get up and running with consuming existing Queues, we can use Rabbit Consumer feature.\
-Simply by marking given method with Amqp Consumer attribute, we are getting access to asynchronous process that will now run and consume Message from defined Queue.
+Set up production-grade RabbitMQ consumption with a single attribute. Built-in reconnection, graceful shutdown, and health checks replace custom consumer process management scripts.
+
+**You'll know you need this when:**
+
+* Your custom RabbitMQ consumer scripts need manual connection handling, reconnection logic, and shutdown management
+* Consumer processes crash on connection drops and require external restart supervision
+* You need health checks and graceful shutdown for containerized deployments
+* You want to combine consumption with instant retry, error channels, and deduplication declaratively
 
 {% hint style="success" %}
 This feature is available as part of **Ecotone Enterprise.**

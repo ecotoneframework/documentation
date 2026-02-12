@@ -157,9 +157,15 @@ Read more in related section.
 
 ## Command Bus Error Channel
 
-Ecotone provides ability to define Error Channel on the level of Command Bus. This way we can handle synchronous Command Handler execution failures with grace. \
-For example we may receive webhooks and in case of failure instead of throwing exception, we can store related Message in Dead Letter for later review, or push it for reprocessing on asynchronous channel. \
-This way we can ensure stability of our system, even for synchronous scenarios like HTTP integrations.
+Route failed synchronous commands to dedicated error handling with a single `#[ErrorChannel]` attribute. Instead of catching exceptions in each handler and manually routing to error handling, declare the error channel once. Failed messages are automatically routed for retry, logging, or dead-letter processing.
+
+**You'll know you need this when:**
+
+* Failed commands need specific error handling: alerting, manual review, or audit trails
+* Payment or financial operations require failure tracking for compliance
+* You receive webhooks and need to handle failures gracefully instead of throwing exceptions
+* Scattered try/catch blocks in handlers are becoming unmanageable
+* Different command categories need different error handling strategies
 
 {% hint style="success" %}
 Command Bus Error Channel is available as part of **Ecotone Enterprise.**

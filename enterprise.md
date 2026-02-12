@@ -4,8 +4,10 @@
 
 Ecotone comes with two plans:
 
-* **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE) for open features. It allows to build message-driven system in PHP, which solves resiliency and scalability at the architecture level. This covers all the features, which are not marked as Enterprise.
-* **Ecotone Enterprise** is based Enterprise licence. It does provides more advanced set of features aim for Enterprise usage. It does bring to the table custom features, additional integrations, and ability to optimization resource usages.
+* **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE). It provides everything you need to build message-driven systems in PHP -- CQRS, aggregates, event sourcing, sagas, async messaging, interceptors, and full testing support. This covers all features not marked as Enterprise.
+* **Ecotone Enterprise** adds production-grade capabilities for teams whose systems have grown into multi-tenant, multi-service, or high-throughput environments. It brings advanced workflow orchestration, cross-service communication, resilient command handling, and resource optimization.
+
+Every Enterprise licence directly funds continued development of Ecotone's open-source core. When Enterprise succeeds, the entire ecosystem benefits.
 
 {% hint style="success" %}
 Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\
@@ -13,20 +15,56 @@ Each Enterprise feature is marked with hint on the documentation page. Enterpris
 To evaluate Enterprise features, **email us at** "**support@simplycodedsoftware.com**" **to receive trial key**. **Production license keys** are available at [https://ecotone.tech](https://ecotone.tech/pricing).
 {% endhint %}
 
-## Available Enterprise Features
+## Signs You're Ready for Enterprise
 
-* [**Kafka Support**](modules/kafka-support/) - Enables integration with Kafka (Event Streaming Platform) to send, receive from Messages from topics, and to use Kafka in form of Message Channel abstraction for seamless integration into the System.
-* [**Rabbit Consumer**](modules/amqp-support-rabbitmq/rabbit-consumer.md) - Provides ability to set up whole consumption process with single Attribute, and to extend it with resiliency patterns like: instant-retry, dead letter or final failure strategy.
-* [**RabbitMQ Streaming Channel**](modules/amqp-support-rabbitmq/message-channel.md#rabbitmq-streaming-channel) - Enables persistent event streaming with RabbitMQ Streams, allowing multiple independent consumers to read from the same stream with position tracking. Perfect for event-driven architectures where multiple services need to consume the same events independently.
-* [**Dynamic Message Channels**](modelling/asynchronous-handling/dynamic-message-channels.md) - Provides ability to simplify deployment strategy, adjusting asynchronous processing to business scenarios, and configure processing per Client dynamically (which is especially useful in Multi-Tenant and SAAS environments).
-* [**Event Sourcing Handlers with Metadata**](modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md#enterprise-accessing-metadata-during-event-application) - Provides ability to pass Metadata to Aggregate's Event Sourcing Handlers. This can be used to to adjust Aggregate's reconstruction process, based on Metadata information stored in related Events.
-* [**Asynchronous Message Buses**](modelling/asynchronous-handling/asynchronous-message-bus-gateways.md) **-** This grants ability to build customized Command/Event Buses where Message will first go over given Asynchronous Channel. This can be used to build for example Outbox Command Bus.
-* [**Distributed Bus with Service Map**](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/) - Provides way to communicate between Services (Applications) with ease and in explicit and decoupled way. Make it possible to use all available Message Channels providers (RabbitMQ, Amazon SQS, Redis, Dbal, Kafka, Symfony Message Channels, Laravel Queues).
-* [**Command Bus Instant Retries**](modelling/recovering-tracing-and-monitoring/resiliency/retries.md#customized-instant-retries) - Provides ability to roll out new Command Bus with custom retry configuration. Allows to help in self-healing from scenarios like during HTTP request - external service went down, or our database connection was interrupted.
-* [**Command Bus Error Channel** ](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#command-bus-error-channel)- Provides ability to configure Error Channel for Command Bus. This way we can handle with grace synchronous scenarios like failure on receiving webhook, by pushing the Message to Error Channel.
-* [**Gateway-Level Deduplication**](modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md#deduplication-with-command-bus) - Provides ability to deduplicate messages at the Command Bus/Gateway level, ensuring no duplicate commands are processed. This is especially useful for webhook integrations where the same command might be sent multiple times.
-* [**Instant Aggregate Fetch**](modelling/command-handling/repository/repository.md#instant-fetch-aggregate) - Provides ability to fetch Aggregates directly without the need to access Repositories. This way we can keep the code focused on the business logic instead of orchestration level code.
-* [**Orchestrators**](modelling/business-workflows/orchestrators.md) - Perfect for building **predefined and dynamic workflows** where the workflow definition is separate from the individual steps.
+You don't need Enterprise on day one. These are the growth signals that tell you it's time:
+
+### "We're serving multiple tenants and need isolation"
+
+A noisy tenant's queue backlog shouldn't affect others. Per-tenant scaling shouldn't mean building custom routing infrastructure.
+
+* [**Dynamic Message Channels**](modelling/asynchronous-handling/dynamic-message-channels.md) -- Route messages per-tenant at runtime using header-based or round-robin strategies. Declare the routing once, Ecotone manages the rest. Add tenants by updating the mapping -- no handler code changes.
+
+### "We have complex multi-step business processes"
+
+Business stakeholders ask "what are the steps in this process?" and the answer requires reading multiple files. Adding or reordering steps touches code in many places.
+
+* [**Orchestrators**](modelling/business-workflows/orchestrators.md) -- Define workflow sequences declaratively in one place. Each step is independently testable and reusable. Dynamic step lists adapt to input data without touching step code.
+
+### "We're running multiple services that need to talk to each other"
+
+Building custom inter-service messaging wiring for each service pair has become unsustainable. Different services use different brokers and you need them to communicate.
+
+* [**Distributed Bus with Service Map**](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/) -- Cross-service messaging that supports multiple brokers (RabbitMQ, SQS, Redis, Kafka) in a single topology. Swap transports without changing application code.
+
+### "We need high-throughput event streaming"
+
+RabbitMQ throughput is becoming a bottleneck, or multiple services need to consume the same event stream independently.
+
+* [**Kafka Integration**](modules/kafka-support/) -- Native Kafka support with the same attribute-driven programming model. No separate producer/consumer boilerplate.
+* [**RabbitMQ Streaming Channel**](modules/amqp-support-rabbitmq/message-channel.md#rabbitmq-streaming-channel) -- Kafka-like persistent event streaming on existing RabbitMQ infrastructure. Multiple independent consumers with position tracking.
+
+### "Our production system needs to be resilient"
+
+Transient failures cause unnecessary handler failures. Duplicate commands from user retries or webhooks lead to double-processing. Exception handling is scattered across handlers.
+
+* [**Command Bus Instant Retries**](modelling/recovering-tracing-and-monitoring/resiliency/retries.md#customized-instant-retries) -- Recover from transient failures (deadlocks, network blips) with a single `#[InstantRetry]` attribute. No manual retry loops.
+* [**Command Bus Error Channel**](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#command-bus-error-channel) -- Route failed synchronous commands to dedicated error handling with `#[ErrorChannel]`. Replace scattered try/catch blocks with centralized error routing.
+* [**Gateway-Level Deduplication**](modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md#deduplication-with-command-bus) -- Prevent duplicate command processing at the bus level. Every handler behind that bus is automatically protected.
+
+### "We want less infrastructure code in our domain"
+
+Repository injection boilerplate obscures business logic. Every handler follows the same fetch-modify-save pattern. Making the entire bus async requires annotating every handler individually.
+
+* [**Instant Aggregate Fetch**](modelling/command-handling/repository/repository.md#instant-fetch-aggregate) -- Aggregates arrive in your handler automatically via `#[Fetch]`. No repository injection, just business logic.
+* [**Event Sourcing Handlers with Metadata**](modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md#enterprise-accessing-metadata-during-event-application) -- Pass metadata to `#[EventSourcingHandler]` for context-aware aggregate reconstruction without polluting event payloads.
+* [**Asynchronous Message Buses**](modelling/asynchronous-handling/asynchronous-message-bus-gateways.md) -- Make an entire command or event bus async with a single configuration change, instead of annotating every handler.
+
+### "We need production-grade RabbitMQ consumption"
+
+Custom consumer scripts need manual connection handling, reconnection logic, and shutdown management.
+
+* [**Rabbit Consumer**](modules/amqp-support-rabbitmq/rabbit-consumer.md) -- Set up RabbitMQ consumption with a single attribute. Built-in reconnection, graceful shutdown, and health checks out of the box.
 
 ## Materials
 
