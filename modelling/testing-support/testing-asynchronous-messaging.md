@@ -227,6 +227,32 @@ $this->assertEquals(
 );
 ```
 
+### Changing Time
+
+We can also change the time based on the needs
+
+```php
+// advance time to specific point in time
+$ecotoneTestSupport
+    ->changeTimeTo(new \DateTimeImmutable('2026-05-05 12:00:00')
+    ->run('notifications');
+    
+$this->assertEquals(
+    1,
+    count($this->notifier->getNotifications())
+);
+
+// advance time by specific duration
+$ecotoneTestSupport
+    ->advanceTimeTo(Duration::minutes(60))
+    ->run('notifications');
+    
+$this->assertEquals(
+    1,
+    count($this->notifier->getNotifications())
+);
+```
+
 ## Dropping all messages coming to given channel
 
 In some scenarios, you may just want to turn off given channel, because you're not interested in messages that goes through it.
