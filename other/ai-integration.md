@@ -2,6 +2,85 @@
 
 Ecotone provides multiple ways for AI assistants and code editors to access up-to-date documentation. This ensures AI tools give accurate, current answers about Ecotone Framework.
 
+## Ecotone Skills
+
+Ecotone provides **Agent Skills** that give AI coding agents deep knowledge of Ecotone's patterns, conventions, and best practices. Skills follow the open [Agent Skills standard](https://agentskills.io/specification) (SKILL.md), making them compatible with a growing number of coding agents.
+
+When installed, Ecotone Skills are automatically activated based on context — the AI agent detects when you're working with Ecotone and loads relevant guidance for Message Handlers, Aggregates, Event Sourcing, Asynchronous Processing, Workflows, Testing, and more.
+
+**Skills repository:** [github.com/ecotoneframework/skills](https://github.com/ecotoneframework/skills)
+
+### Claude Code
+
+Install Ecotone Skills as a plugin:
+
+```
+/plugin install ecotone-skills@ecotone
+```
+
+This installs skills, slash commands, and subagents tailored for Ecotone development. Manage the plugin with:
+
+```
+/plugin disable ecotone-skills@ecotone
+/plugin enable ecotone-skills@ecotone
+/plugin uninstall ecotone-skills@ecotone
+```
+
+### Cursor
+
+Cursor supports the SKILL.md standard natively. Install using the Vercel skills CLI:
+
+```bash
+npx skills add ecotoneframework/skills -a cursor
+```
+
+Or place Ecotone skills manually in your project:
+
+```
+.cursor/skills/<skill-name>/SKILL.md
+```
+
+### Windsurf
+
+Windsurf's Cascade agent supports Agent Skills. Place skills in:
+
+```
+.windsurf/skills/<skill-name>/SKILL.md
+```
+
+### GitHub Copilot
+
+GitHub Copilot supports Agent Skills in VS Code. Place skills in:
+
+```
+.github/skills/<skill-name>/SKILL.md
+```
+
+### Cline
+
+Cline supports skills since version 3.48.0. Enable them in **Settings → Features → Enable Skills**. Skills are placed in the standard `.claude/skills/` directory.
+
+### Augment Code
+
+Augment Code discovers skills automatically from multiple directories:
+
+```
+.augment/skills/<skill-name>/SKILL.md
+.claude/skills/<skill-name>/SKILL.md
+```
+
+### Kiro
+
+Kiro supports skills at user and workspace level:
+
+```
+.kiro/skills/<skill-name>/SKILL.md
+```
+
+### OpenAI Codex CLI
+
+Codex CLI reads skills from `~/.codex/skills/` and must be started with the `--enable skills` flag.
+
 ## MCP Server (Model Context Protocol)
 
 The MCP server provides direct access to Ecotone documentation for AI assistants that support the Model Context Protocol.
@@ -84,12 +163,18 @@ When using AI assistants with Ecotone:
 
 Ecotone documentation integrates with:
 
-* **Claude** (via MCP or direct context)
-* **ChatGPT** (via llms.txt)
-* **Cursor** (via MCP)
-* **VSCode Copilot** (via MCP)
-* **Windsurf** (via MCP)
-* **Context7-enabled tools**
+| Tool | MCP | Skills | llms.txt |
+| ---- | --- | ------ | -------- |
+| **Claude Code** | Yes | Yes (`/plugin install`) | Yes |
+| **Cursor** | Yes | Yes (`.cursor/skills/`) | Yes |
+| **Windsurf** | Yes | Yes (`.windsurf/skills/`) | Yes |
+| **GitHub Copilot** | Yes | Yes (`.github/skills/`) | Yes |
+| **Cline** | Yes | Yes (Settings → Enable Skills) | — |
+| **Augment Code** | — | Yes (`.augment/skills/`) | — |
+| **Kiro** | — | Yes (`.kiro/skills/`) | — |
+| **OpenAI Codex CLI** | — | Yes (`~/.codex/skills/`) | — |
+| **ChatGPT** | — | — | Yes |
+| **Context7-enabled tools** | Yes | — | — |
 
 ## Resources
 
