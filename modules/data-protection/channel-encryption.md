@@ -1,3 +1,7 @@
+---
+description: Protect Messages using channel encryption
+---
+
 # Channel Encryption
 
 Channel can be protected in general which means every message sent with it will be encrypted. In order to do that, you have to provide `ChannelProtectionConfiguration`.&#x20;
