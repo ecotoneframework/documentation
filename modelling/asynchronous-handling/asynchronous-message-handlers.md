@@ -225,6 +225,73 @@ You may put `Asynchronous` on the class, level so all the endpoints within a cla
 All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint`\
 If you want to [intercept](../extending-messaging-middlewares/interceptors/) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors/#pointcut) on this.
 
+### Endpoint Annotations (Enterprise)
+
+{% hint style="success" %}
+This is Enterprise feature. To use it, **email us at** "**support@simplycodedsoftware.com**" **to receive trial key**. **Production license keys** are available at [https://ecotone.tech](https://ecotone.tech/pricing).
+{% endhint %}
+
+When database transactions are globally enabled for a message channel, all async handlers on that channel are wrapped in a transaction. However, some handlers may not need a transaction — for example, a handler that only calls a 3rd party API, sends an email, or triggers a webhook. Wrapping such handlers in an unnecessary database transaction wastes resources and holds connections open longer than needed.
+
+With **endpoint annotations** on the `#[Asynchronous]` attribute, you can configure interceptor behavior per-handler. Annotations must implement the `AsynchronousEndpointAttribute` interface.
+
+```php
+use Ecotone\Messaging\Attribute\Asynchronous;
+use Ecotone\Messaging\Attribute\WithoutDatabaseTransaction;
+
+#[Asynchronous("orders", endpointAnnotations: [new WithoutDatabaseTransaction()])]
+#[CommandHandler(endpointId: "send_order_confirmation")]
+public function sendConfirmation(SendOrderConfirmation $command, EmailService $emailService): void
+{
+    // This handler only sends an email — no database work needed.
+    // The global transaction is skipped for this specific handler,
+    // while other handlers on the "orders" channel still use transactions.
+    $emailService->send($command->email, $command->orderId);
+}
+```
+
+The annotations are resolved at runtime when the message is consumed, and are available to interceptors targeting `AsynchronousRunningEndpoint`.
+
+#### Built-in Endpoint Annotations
+
+| Annotation | Effect |
+|---|---|
+| `WithoutDatabaseTransaction` | Skips the global DBAL transaction interceptor for this handler |
+| `WithoutMessageCollector` | Skips message collection — events are sent directly to channels during handler execution instead of being buffered and released after completion |
+
+#### Custom Endpoint Annotations
+
+You can create your own endpoint annotations and inject them into interceptors:
+
+```php
+use Ecotone\Messaging\Attribute\AsynchronousEndpointAttribute;
+
+#[Attribute]
+class CustomRetryPolicy implements AsynchronousEndpointAttribute
+{
+    public function __construct(public int $maxRetries = 3) {}
+}
+```
+
+```php
+#[Asynchronous("orders", endpointAnnotations: [new CustomRetryPolicy(maxRetries: 5)])]
+#[CommandHandler(endpointId: "place_order_endpoint")]
+public function placeOrder(PlaceOrderCommand $command): void {}
+```
+
+Then access it in an interceptor:
+
+```php
+#[Around(pointcut: AsynchronousRunningEndpoint::class)]
+public function retry(
+    MethodInvocation $invocation,
+    ?CustomRetryPolicy $policy = null
+): mixed {
+    // $policy is injected from the handler's endpointAnnotations
+    return $invocation->proceed();
+}
+```
+
 ## Endpoint Id
 
 Each Asynchronous Message Handler requires us to define **"endpointId"**. It's unique identifier of your Message Handler.

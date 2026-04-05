@@ -60,6 +60,12 @@ Repository injection boilerplate obscures business logic. Every handler follows 
 * [**Event Sourcing Handlers with Metadata**](modelling/event-sourcing/event-sourcing-introduction/working-with-metadata.md#enterprise-accessing-metadata-during-event-application) -- Pass metadata to `#[EventSourcingHandler]` for context-aware aggregate reconstruction without polluting event payloads.
 * [**Asynchronous Message Buses**](modelling/asynchronous-handling/asynchronous-message-bus-gateways.md) -- Make an entire command or event bus async with a single configuration change, instead of annotating every handler.
 
+### "We need per-handler control over async endpoint behavior"
+
+Database transactions are globally enabled for your message channel, but some handlers only call a 3rd party API or send emails — wrapping them in a transaction wastes connections and holds locks unnecessarily.
+
+* [**Async Endpoint Annotations**](modelling/asynchronous-handling/asynchronous-message-handlers.md#endpoint-annotations-enterprise) -- Pass `endpointAnnotations` on `#[Asynchronous]` to selectively disable transactions, message collectors, or inject custom configuration for specific handlers while keeping global defaults for the rest of the channel.
+
 ### "We need production-grade RabbitMQ consumption"
 
 Custom consumer scripts need manual connection handling, reconnection logic, and shutdown management.
