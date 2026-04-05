@@ -1,7 +1,5 @@
 ---
-description: >-
-  Ecotone enables protection for data sent outside of the application (e.g.
-  using RabbitMQ) by obfuscating messages' payload and headers.
+description: Ecotone enables protection for data sent in messages.
 icon: file-shield
 ---
 
@@ -11,7 +9,7 @@ icon: file-shield
 ## **This module is available as part of Ecotone Enterprise.**
 {% endhint %}
 
-Ecotone will encrypt you messeges (Events or Commands) right before they are sent to queue and decrypt them when they are received. In other words, message will remain readable within the application but once they leave the system, secured key is required for reading.
+Ecotone will help you to encrypt your messeges (Events or Commands) right before they leave and decrypt them when they are received by your domain. In other words, message will remain readable within the application but once they leave the system, secured key is required for reading.
 
 ## Installation
 
@@ -24,8 +22,8 @@ composer require ecotone/data-protection
 Required `DataProtectionConfiguration` will let you to provide set of encryption keys used within the system.
 
 ```php
-use Defuse\Crypto\Key;
 use Ecotone\DataProtection\Configuration\DataProtectionConfiguration;
+use Ecotone\DataProtection\Encryption\Key;
 
 class DataProtection
 {
@@ -41,7 +39,5 @@ class DataProtection
 ```
 
 {% hint style="warning" %}
-Ecotone does not manage encryption keys
+Ecotone does not manage your encryption keys. They are used based on given configuration.
 {% endhint %}
-
-When defining sensitive data in your message, you can tell Ecotone whether it contains sensitive payload or specify sensitive headers.

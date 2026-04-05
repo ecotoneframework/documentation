@@ -201,7 +201,8 @@
 * [Amazon SQS Support](modules/amazon-sqs-support.md)
 * [Redis Support](modules/redis-support.md)
 * [Data Protection](modules/data-protection/README.md)
-  * [Message Obfuscation](modules/data-protection/message-obfuscation.md)
+  * [Channel Encryption](modules/data-protection/channel-encryption.md)
+  * [Message Encryption](modules/data-protection/message-encryption.md)
 
 ## Other
 

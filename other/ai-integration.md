@@ -163,18 +163,18 @@ When using AI assistants with Ecotone:
 
 Ecotone documentation integrates with:
 
-| Tool | MCP | Skills | llms.txt |
-| ---- | --- | ------ | -------- |
-| **Claude Code** | Yes | Yes (`/plugin install`) | Yes |
-| **Cursor** | Yes | Yes (`.cursor/skills/`) | Yes |
-| **Windsurf** | Yes | Yes (`.windsurf/skills/`) | Yes |
-| **GitHub Copilot** | Yes | Yes (`.github/skills/`) | Yes |
-| **Cline** | Yes | Yes (Settings → Enable Skills) | — |
-| **Augment Code** | — | Yes (`.augment/skills/`) | — |
-| **Kiro** | — | Yes (`.kiro/skills/`) | — |
-| **OpenAI Codex CLI** | — | Yes (`~/.codex/skills/`) | — |
-| **ChatGPT** | — | — | Yes |
-| **Context7-enabled tools** | Yes | — | — |
+| Tool                       | MCP | Skills                         | llms.txt |
+| -------------------------- | --- | ------------------------------ | -------- |
+| **Claude Code**            | Yes | Yes (`/plugin install`)        | Yes      |
+| **Cursor**                 | Yes | Yes (`.cursor/skills/`)        | Yes      |
+| **Windsurf**               | Yes | Yes (`.windsurf/skills/`)      | Yes      |
+| **GitHub Copilot**         | Yes | Yes (`.github/skills/`)        | Yes      |
+| **Cline**                  | Yes | Yes (Settings → Enable Skills) | —        |
+| **Augment Code**           | —   | Yes (`.augment/skills/`)       | —        |
+| **Kiro**                   | —   | Yes (`.kiro/skills/`)          | —        |
+| **OpenAI Codex CLI**       | —   | Yes (`~/.codex/skills/`)       | —        |
+| **ChatGPT**                | —   | —                              | Yes      |
+| **Context7-enabled tools** | Yes | —                              | —        |
 
 ## Resources
 
@@ -188,3 +188,4 @@ Ecotone documentation integrates with:
 ## Links
 
 * [Vibe coding Enterprise PHP Applications](https://blog.ecotone.tech/vibe-coding-enterprise-php-applications/)
+* [Ecotone Agentic Skills on your command](https://blog.ecotone.tech/building-event-sourcing-ddd-cqrs-with-agentic-skills-in-php/)
