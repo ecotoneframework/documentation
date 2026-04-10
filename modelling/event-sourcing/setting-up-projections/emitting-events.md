@@ -1,95 +1,141 @@
-# Emitting events
+---
+description: PHP Event Sourcing Projection Event Emission
+---
 
-One of the drawback of Event Sourcing is eventual consistency. \
-Whenever event happens we want to do two things, update our projection and inform the end user about change. However user need to be informed about the change after projection is refreshed, as otherwise he will get stale view. \
-\
-In order to solve this drawback Ecotone brings possibility for emitting events directly from projection. So instead of subscribing to Domain Events (Aggregate State Changed), end user may subscribe to change in the projection.
+# Emitting Events
 
-## Emit the event
+## The Problem
+
+You update a wallet balance projection and want to notify the user via WebSocket — but if you subscribe to the domain event directly, the user sees the old balance because the projection hasn't refreshed yet. How do you notify **after** the projection is up to date?
+
+The challenge is timing: domain events fire before the projection processes them. If a subscriber sends a notification immediately, the user loads the page and sees stale data.
+
+## The Solution: Emit Events from Projections
+
+Instead of subscribing to domain events (which fire before the projection updates), subscribe to events **emitted by the projection itself** — these fire after the Read Model is up to date.
+
+## Emit the Event
+
+Use `EventStreamEmitter` inside your projection to emit events after updating the Read Model:
 
 ```php
-#[Projection( "wallet_balance", Wallet::class)]
-final class WalletBalanceProjection
+#[ProjectionV2('wallet_balance')]
+#[FromAggregateStream(Wallet::class)]
+class WalletBalanceProjection
 {
     #[EventHandler]
-    public function whenMoneyWasAdded(MoneyWasAddedToWallet $event, EventStreamEmitter $eventStreamEmitter): void
-    {
-        $wallet =  $this->getWalletFor($event->walletId);
+    public function whenMoneyWasAdded(
+        MoneyWasAddedToWallet $event,
+        EventStreamEmitter $eventStreamEmitter
+    ): void {
+        $wallet = $this->getWalletFor($event->walletId);
         $wallet = $wallet->add($event->amount);
         $this->saveWallet($wallet);
 
-        $eventStreamEmitter->emit([new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)]);
+        $eventStreamEmitter->emit([
+            new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)
+        ]);
     }
 
     #[EventHandler]
-    public function whenMoneyWasSubtract(MoneyWasSubtractedFromWallet $event, EventStreamEmitter $eventStreamEmitter): void
-    {
-        $wallet =  $this->getWalletFor($event->walletId);
+    public function whenMoneyWasSubtracted(
+        MoneyWasSubtractedFromWallet $event,
+        EventStreamEmitter $eventStreamEmitter
+    ): void {
+        $wallet = $this->getWalletFor($event->walletId);
         $wallet = $wallet->subtract($event->amount);
         $this->saveWallet($wallet);
 
-        $eventStreamEmitter->emit([new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)]);
+        $eventStreamEmitter->emit([
+            new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)
+        ]);
     }
 
     (...)
 }
 ```
 
-In order to emit the events, we are using `EventStreamEmitter`.\
-Whenever we `emit` given events, they are stored in Projection's stream.
+Emitted events are stored in the projection's own stream.
 
 {% hint style="info" %}
-Events are stored in stream called projec&#x74;_{projectionName}._ In above case it will be _project\_wallet\_balance._
+Events are stored in a stream called `project_{projectionName}`. In the example above: `project_wallet_balance`.
 {% endhint %}
 
-After that you may subscribe to given events, just like to any other events.
+## Subscribing to Emitted Events
+
+After emitting, you can subscribe to these events just like any other event — in a regular event handler or even another projection:
 
 ```php
-final class NotificationService
+class NotificationService
 {
     #[EventHandler]
     public function when(WalletBalanceWasChanged $event): void
     {
-        // sending websocket event
+        // Send WebSocket notification — the Read Model is already up to date
     }
 }
 ```
 
 {% hint style="success" %}
-All the events are stored in the streams, this means that in case of need we may create another projection that will subscribe to those events.
+All emitted events are stored in streams, so you can create another projection that subscribes to them — building derived views from derived views.
 {% endhint %}
 
-## Linking Events
+## Linking Events to Other Streams
 
-In some cases we may want to emit event to existing stream (for example to provide summary event), or to fresh new stream.\
-In order to do that we may use `linkTo` method on `EventStreamEmitter`.
+In some cases you may want to emit an event to an existing stream (for example, to provide a summary event) or to a custom stream:
 
 ```php
-$eventStreamEmitter->linkTo("wallet", [new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)]);
+$eventStreamEmitter->linkTo('wallet', [
+    new WalletBalanceWasChanged($event->walletId, $wallet->currentBalance)
+]);
 ```
 
 {% hint style="success" %}
-`LinkTo` works from any place in the code, however `emit` as it stores in projection's stream works only inside projection.
+`linkTo` works from any place in the code. `emit` stores events in the projection's own stream and only works inside a projection.
 {% endhint %}
 
-## Rebuilding the projection
+## Controlling Event Emission
 
-When we rebuild the projection events could be republished and that would affect our end users, plus would link duplicated events to our stream. \
-Luckily Ecotone will handle this scenario and will not republish or store any events that are emitted during reset phase.&#x20;
+### During Rebuild
+
+When a projection is rebuilt (reset and replayed from the beginning), emitted events could be republished — causing duplicate notifications and duplicate linked events.
+
+Ecotone handles this automatically: **events emitted during a reset/rebuild phase are not republished or stored**. This is safe by default.
 
 {% hint style="warning" %}
-This is the biggest difference between using `EventBus` versus `EventStreamEmitter`.\
-As EventBus would simple republish the events during rebuild phase.
+This is the key difference between using `EventStreamEmitter` versus `EventBus`. The `EventBus` would simply republish events during a rebuild, causing duplicates. `EventStreamEmitter` suppresses them.
 {% endhint %}
 
-## Deleting the projection
+### With ProjectionDeployment (Enterprise)
 
-When projection is deleted, Ecotone will automatically delete projection stream.
+You can also explicitly suppress event emission by setting `live: false` on `#[ProjectionDeployment]`:
+
+```php
+#[ProjectionV2('wallet_balance')]
+#[FromAggregateStream(Wallet::class)]
+#[ProjectionDeployment(live: false)]
+class WalletBalanceProjection
+{
+    // EventStreamEmitter calls are silently skipped — no events are stored or published
+}
+```
+
+This is important because **backfill will emit events** — it replays historical events through your handlers, and if those handlers call `EventStreamEmitter`, all those events will be published to downstream consumers. If you're backfilling a projection with 2 years of history, that means thousands of duplicate notifications.
+
+Use `live: false` during backfill to prevent this, then switch to `live: true` once the projection is caught up. This is the pattern used in [blue-green deployments](blue-green-deployments.md).
 
 {% hint style="info" %}
-In case when custom stream is provided by [linking events](emitting-events.md#linking-events) they will not be automatically deleted.
+`#[ProjectionDeployment]` is available as part of Ecotone Enterprise.
+{% endhint %}
+
+## Deleting the Projection
+
+When a projection is deleted, Ecotone automatically deletes the projection's event stream (`project_{name}`).
+
+{% hint style="info" %}
+Custom streams created via `linkTo` are not automatically deleted — they may be shared with other consumers.
 {% endhint %}
 
 ## Demo
 
-[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/master/EmittingEventsFromProjection)\
+[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/master/EmittingEventsFromProjection)

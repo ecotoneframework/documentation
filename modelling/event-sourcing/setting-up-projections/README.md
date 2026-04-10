@@ -4,211 +4,144 @@ description: PHP Event Sourcing Projections
 
 # Projection Introduction
 
-Before diving into this topic, read the [Event Sourcing Introduction](../event-sourcing-introduction/) first.
+## The Problem
 
-## Introduction
+Once you start storing storing events instead of updating rows — you will quickly find out your users still need a ticket list page, a dashboard, a report. How do you turn a stream of "what happened" into a table you can query?
 
-The power of Event Sourcing is not only the full history of what happened. \
-As we do have a full history, it's easy to imagine that we may want to use it for different purposes.\
-And one of our purposes will be related to view this data in specific way. \
+In traditional applications, when a ticket is created you run an `INSERT`, when it's closed you run an `UPDATE`. The database always holds the current state. But with Event Sourcing, you store **what happened** — `TicketWasRegistered`, `TicketWasClosed` — as an append-only log of events.
 
+Think of it like a bank account: instead of storing "balance = 500", you store every deposit and withdrawal. The balance is derived by replaying the history.
 
-Let's take as an example our Ticket's Event Stream:
+But your users don't want to replay history every time they load a page. They need a ready-to-query table. That's what **Projections** do.
 
-<figure><img src="../../../.gitbook/assets/ticket_event_stream_2.png" alt=""><figcaption></figcaption></figure>
+## What is a Projection?
 
-In most of the situations besides knowing the history, we would also want to know how all does Tickets looks at present moment. Therefore it means we need to build an view from those events which will represent current state, and for this we use **Projections**.&#x20;
+A **Projection** reads events from an **Event Stream** (the append-only log) and builds a read-optimized view from them — a database table, a document, a cache entry. Think of it as a **materialized view** built from events.
 
-## Projections
+Another analogy: the Event Stream is like your **Git history** — every commit ever made. The Projection is like your **working directory** — the current state of the files, derived from that history.
 
-So we may be in need to build the list of all the tickets and their current status
+The views built by Projections are called **Read Models**. They exist only for reading and can be rebuilt at any time from the Event Stream.
 
-<figure><img src="../../../.gitbook/assets/ticket-list (1).png" alt=""><figcaption><p>List of tickets available in the system with current status</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/ticket_event_stream_2.png" alt=""><figcaption><p>Events stored in the Event Stream</p></figcaption></figure>
 
-For example this list can be stored in the database table with three columns:
+From these events, we want to build a list of all tickets with their current status:
 
-* id
-* type
-* status
+<figure><img src="../../../.gitbook/assets/ticket-list (1).png" alt=""><figcaption><p>Read Model: list of tickets with current status</p></figcaption></figure>
 
-The difference between the traditional approach and ES approach is that we will be delivering this view from the Event Stream. Therefore this will be only the representation build up from the past events, and will be used only for reading. Data delivered from Events to shape specific view, we call **Read Models**.
+## Building Your First Projection
 
-## Building first Projection
-
-Ecotone provides abstraction to quickly build new Projections, it does follow Ecotone's declarative configuration. Before we will jump into implementation, let's quickly review how our Ticket Event Sourced Aggregate could look like:
+Let's say we have a `Ticket` Event Sourced Aggregate that produces two events — `TicketWasRegistered` and `TicketWasClosed`. We want to build a read model table showing all in-progress tickets.
 
 ```php
-#[EventSourcingAggregate]
-class Ticket
+#[ProjectionV2('ticket_list')]
+#[FromAggregateStream(Ticket::class)]
+class TicketListProjection
 {
-    use WithAggregateVersioning;
-
-    #[Identifier]
-    private string $ticketId;
-
-    public static function register(RegisterTicket $command): array
-    {
-        return [new TicketWasRegistered($command->id, $command->type)];
-    }
-
-    #[CommandHandler]
-    public function close(CloseTicket $command) : array
-    {
-        return [new TicketWasClosed($this->ticketId)];
-    }
-}
-```
-
-So we do have two Events here, **TicketWasRegistered** and **TicketWasClosed**. \
-We will be subscribing to those in order to build our new **Ticket List Projection.**\
-
-
-* Let's first define our new **Ticket List Projection**
-
-```php
-#[Projection("ticket_list", Ticket::class)]
-class TicketListProjection {
-
-    // This is Connection to our Database or wherever we want to store the data
     public function __construct(private Connection $connection) {}
 
-(...)
-```
-
-We do start by creating new class, which we mark with **Projection** attribute.\
-The first argument is the name of our new projection **"ticket\_list",** the second is the related ES Aggregate **"Ticket"** from which we will be subscribing Events. We will touch on the second argument more in next sections.
-
-* Ecotone **will take care of creating the Projection for us**, therefore we can tell it how to do it
-
-```php
-#[ProjectionInitialization]
-public function initializeProjection() : void
-{
-    if ($this->connection->createSchemaManager()->tablesExist('ticket_list')) {
-        return;
+    #[ProjectionInitialization]
+    public function init(): void
+    {
+        $this->connection->executeStatement(<<<SQL
+            CREATE TABLE IF NOT EXISTS ticket_list (
+                ticket_id VARCHAR(36) PRIMARY KEY,
+                ticket_type VARCHAR(25),
+                status VARCHAR(25)
+            )
+        SQL);
     }
 
-    $table = new Table('ticket_list');
+    #[EventHandler]
+    public function onTicketRegistered(TicketWasRegistered $event): void
+    {
+        $this->connection->insert('ticket_list', [
+            'ticket_id' => $event->ticketId,
+            'ticket_type' => $event->type,
+            'status' => 'open',
+        ]);
+    }
 
-    $table->addColumn('id', Types::STRING);
-    $table->addColumn('type', Types::STRING);
-    $table->addColumn('status', Types::STRING);
+    #[EventHandler]
+    public function onTicketClosed(TicketWasClosed $event): void
+    {
+        $this->connection->update(
+            'ticket_list',
+            ['status' => 'closed'],
+            ['ticket_id' => $event->ticketId]
+        );
+    }
 
-    $this->connection->createSchemaManager()->createTable($table);
+    #[ProjectionDelete]
+    public function delete(): void
+    {
+        $this->connection->executeStatement('DROP TABLE IF EXISTS ticket_list');
+    }
+
+    #[ProjectionReset]
+    public function reset(): void
+    {
+        $this->connection->executeStatement('DELETE FROM ticket_list');
+    }
 }
 ```
 
-* Now we are ready to subscribe to Ticket related Events
+That's all you need. Let's break down what each part does:
 
-```php
-#[EventHandler]
-public function onTicketWasPrepared(TicketWasRegistered $event) : void
-{
-    $this->connection->insert('ticket_list', [
-        "id" => $event->id,
-        "ticket_type" => $event->type,
-        "status" => "open"
-    ]);
-}
-```
+1. `#[ProjectionV2('ticket_list')]` — marks this class as a Projection with name `ticket_list`
+2. `#[FromAggregateStream(Ticket::class)]` — tells the Projection to read events from the Ticket aggregate's stream
+3. `#[ProjectionInitialization]` — called when the Projection is first set up (creates the table)
+4. `#[EventHandler]` — subscribes to specific event types. Ecotone routes events by the type-hint.
+5. `#[ProjectionDelete]` and `#[ProjectionReset]` — called when the projection is deleted or reset
 
-This is enough for Ecotone to know that this should be triggered whenever **TicketWasRegistered** happens. As a result of triggering this Event Handler we store new ticket in the our database table
+There is no additional configuration needed. Ecotone takes care of delivering events, initializing, and triggering the Projection.
 
-We also want to change the status, when ticket is closed, so let's add that now:
+## Position Tracking
 
-```php
-#[EventHandler]
-public function onTicketWasCancelled(TicketWasCancelled $event) : void
-{
-    $this->connection->update(
-        'ticket_list, 
-        ["status" => "cancelled"], 
-        ["ticket_id" => $event->getTicketId()]
-    );
-}
-```
+Each Projection remembers **where it left off** in the Event Stream — like a bookmark in a book. When a new event triggers the Projection, it fetches only the events after its last position.
 
-This is all to make our Projection work. There is no any additional configuration needed as we are working from higher level abstraction. We tell what events we want to have delivered, and Ecotone will take care of delivering and initializing and triggering our Projections.
+This means:
+- **New Projections** start from the beginning of the stream and catch up to the present
+- **Existing Projections** only process new events they haven't seen yet
+- **After a failure**, the Projection resumes from its last successfully committed position
 
-## How Projections are triggered
+This is what makes it possible to deploy a new Projection at any point in time and have it automatically build up from the full event history.
 
-By default this Projection will be triggered synchronously. This means that after Event Sourced Aggregate is called, Events will first be stored in the Event Stream, and then Projection will be called.&#x20;
+## Feature Overview
 
-<figure><img src="../../../.gitbook/assets/aggregate.png" alt=""><figcaption><p>Event Sourced Aggregate stores Event in the Event Stream and then it's published</p></figcaption></figure>
+Ecotone Projections come in two editions. The open-source edition covers the full projection lifecycle for globally tracked projections. Enterprise adds scaling, advanced operations, and deployment strategies.
 
-Our Projection subscribe to those Events, therefore it will be triggered as a result
+| Feature | Open Source | Enterprise |
+|---------|:----------:|:----------:|
+| **Global (non-partitioned) projection** | Yes | Yes |
+| [Synchronous event-driven execution](execution-modes.md) | Yes | Yes |
+| [Asynchronous event-driven execution](execution-modes.md) | Yes | Yes |
+| [Lifecycle management](lifecycle-management.md) (init, delete, reset, trigger) | Yes | Yes |
+| [Multiple event streams](event-streams-and-handlers.md) | Yes | Yes |
+| [Projection state](projections-with-state.md) | Yes | Yes |
+| [Event emission](emitting-events.md) (EventStreamEmitter) | Yes | Yes |
+| [Sync backfill](backfill-and-rebuild.md) | Yes | Yes |
+| [Batch size configuration](execution-modes.md#batch-size-and-flushing) | Yes | Yes |
+| [Gap detection](gap-detection-and-consistency.md) | Yes | Yes |
+| [Self-healing / automatic recovery](failure-handling.md) | Yes | Yes |
+| [Polling execution](scaling-and-advanced.md#polling-projections) | — | Yes |
+| [Partitioned projections](scaling-and-advanced.md#partitioned-projections) | — | Yes |
+| [Streaming projections](scaling-and-advanced.md#streaming-projections) (Kafka, RabbitMQ) | — | Yes |
+| [Async backfill](backfill-and-rebuild.md#async-backfill-enterprise) (parallel workers for partitioned) | — | Yes |
+| [Rebuild](backfill-and-rebuild.md#rebuild--reset-and-replay-enterprise) (sync and async with parallel workers) | — | Yes |
+| [Blue-green deployments](blue-green-deployments.md) | — | Yes |
+| [High-performance flush state](projections-with-state.md#high-performance-projections-with-flush-state-enterprise) | — | Yes |
+| [Multi-tenant projections](scaling-and-advanced.md#multi-tenant-projections) | — | Yes |
+| Custom extensions (StreamSource, StateStorage, PartitionProvider) | — | Yes |
 
-<figure><img src="../../../.gitbook/assets/describe (1).png" alt=""><figcaption><p>Projection is executed as a result of published Event</p></figcaption></figure>
+## What's Next
 
-
-
-By default projections work synchronously as part of the same process of Command Handler execution. This ensures that our Projection is always consistent with changes in the Event Stream, because it's wrapped in database transaction.&#x20;
-
-
-
-<figure><img src="../../../.gitbook/assets/db (1) (1).png" alt=""><figcaption><p>Command Handler and Projection execution is wrapped in same transaction</p></figcaption></figure>
-
-{% hint style="success" %}
-Synchronous projects are done within same transaction as the Command execution. This way Ecotone ensures consistency of the data by default. This behaviour is configurable.
-{% endhint %}
-
-This works well for scenarios when there are no much changes to happening to given instance of Event Sourced Aggregate. How Ecotone handles Concurrency was described in more details in [previous section](../event-sourcing-introduction/working-with-event-streams.md). \
-What is important is that for low writes this solution will work perfectly, for high volume of writes on other hand we may want to trigger Projections asynchronously.
-
-{% hint style="success" %}
-Synchronous projections are simpler in development, as we can immediately fetch the data from Read Model and be sure that is consistent with the changes.\
-With Asynchronous data may be refreshed after some time, therefore if fetched immediately, we may get stale results.
-{% endhint %}
-
-## Asynchronous Projections
-
-Ecotone provides great abstraction for making the code asynchronous. From development perspective the code stays the same like synchronous, yet under the hood thanks to Messaging abstraction it can be easily switched to work [asynchronously via Message Channels](../../asynchronous-handling/asynchronous-message-handlers.md).&#x20;
-
-So to make the Projection asynchronous, the only thing which we need to do, is to mark it as asynchronous.
-
-```php
-#[Asynchronous('async')]
-#[Projection("ticket_list", Ticket::class)]
-class TicketListProjection
-```
-
-Ecotone will take care of delivering the triggering Event via given **async** channel to the Projection. \
-This way we can start with synchronous projections, and when we will feel the need, simply switch them to Asynchronous without any single line of code being changed. \
-You may read more about execution process in [next section](executing-and-managing/).\
-\
-We need to touch on one more important topic. Where do we actually get the data from for Projections.
-
-## The source of data for Projection
-
-Events that trigger Projections are not actually a source of the data for them.\
-This is because if we would lose Event Message along the way due some failure (For example we don't use [Outbox](../../recovering-tracing-and-monitoring/resiliency/outbox-pattern.md)) or it would and in [Dead Letter](../../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/) then we would basically skip over an Event.
-
-Let's take as an example Asynchronous Projection, where we want to store Ticket with new "**alert-warning**" type. However let's suppose we've created column with limited size for type - which is up to  10 characters. Therefore our Projection will fail on storing that, because the type is 13 characters long:
-
-<figure><img src="../../../.gitbook/assets/alert-warning.png" alt=""><figcaption></figcaption></figure>
-
-Now if after that we will receive **Ticket was closed** event, then related Event Handler would update nothing, as there is no this Ticket stored in our Read Model:
-
-<figure><img src="../../../.gitbook/assets/closed-2.png" alt=""><figcaption></figcaption></figure>
-
-So this is obviously not way of ensuring consistency in the system. \
-Ecotone does it differently and treats the incoming Events just as "triggers". \
-It works like information for the Projection to fetch the Events from the Event Stream and start Projecting.\
-
-
-<figure><img src="../../../.gitbook/assets/projection (2).png" alt=""><figcaption><p>Projection fetches the Event from Event Stream. Incoming Event is just a trigger.</p></figcaption></figure>
-
-This way if even so Ticket Was Registered failed, when Ticket was Closed would come after it would still get the original event first. So if we would fix the problem with column size, it would basically self-heal automatically.&#x20;
-
-{% hint style="success" %}
-Each Projection keep track of it's position. Therefore whenever new Event comes in, it knows from which point in Event Stream it should fetch the Events from.
-{% endhint %}
-
-There is one more important reason for building Projections from Event Stream, **Projection Rebuilding**.
-
-### Setting up new Projections and Rebuilding
-
-Thanks to Projections ability to build the projection from the Event Stream, we are not bound by time. When we deploy new Projection, it will go over previous Events as part of the projecting process.\
-This way we can ability to be able to ship new Projections at any point of time, yet with ability to use all the previous Events from the past.&#x20;
-
-Besides that we can rebuild existing Projection, as rebuilding is all about reseting the Projection's position, and start to fetch from scretch. You may read about available actions in [Executing and Managing section](executing-and-managing/).
+- [Event Streams and Handlers](event-streams-and-handlers.md) — control which events reach your projection
+- [Execution Modes](execution-modes.md) — sync, async, and when to use each
+- [Lifecycle Management](lifecycle-management.md) — CLI commands, initialization, reset
+- [Projections with State](projections-with-state.md) — keep state between events without external storage
+- [Emitting Events](emitting-events.md) — notify after the projection is up to date
+- [Backfill and Rebuild](backfill-and-rebuild.md) — populate with historical data
+- [Failure Handling](failure-handling.md) — transactions, rollback, self-healing
+- [Gap Detection](gap-detection-and-consistency.md) — how Ecotone guarantees no events are lost
+- [Scaling and Advanced](scaling-and-advanced.md) — partitioned, streaming, polling (Enterprise)
+- [Blue-Green Deployments](blue-green-deployments.md) — zero-downtime projection changes (Enterprise)

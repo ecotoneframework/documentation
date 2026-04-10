@@ -37,6 +37,16 @@ Building custom inter-service messaging wiring for each service pair has become 
 
 * [**Distributed Bus with Service Map**](modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/) -- Cross-service messaging that supports multiple brokers (RabbitMQ, SQS, Redis, Kafka) in a single topology. Swap transports without changing application code.
 
+### "Our projections need to scale, rebuild safely, or deploy without downtime"
+
+A single global projection can't keep up with event volume. Rebuilding wipes the read model for 30 minutes. Changing projection schema means downtime for users.
+
+* [**Partitioned Projections**](modelling/event-sourcing/setting-up-projections/scaling-and-advanced.md#partitioned-projections) -- One partition per aggregate with independent position tracking. Failures isolate to a single aggregate instead of blocking everything. Indexed event loading skips irrelevant events for dramatically faster processing. Works with both sync and async execution.
+* [**Async Backfill & Rebuild**](modelling/event-sourcing/setting-up-projections/backfill-and-rebuild.md) -- Push backfill and rebuild to asynchronous background workers with `asyncChannelName`. Combined with partitioned projections, the work is split into batches that multiple workers process in parallel — throughput scales linearly with worker count. A backfill that takes 2 hours with 1 worker takes 12 minutes with 10.
+* [**Blue-Green Deployments**](modelling/event-sourcing/setting-up-projections/blue-green-deployments.md) -- Deploy a new projection version alongside the old one. The new version catches up from history while the old one serves traffic. Switch when ready, delete the old one. Zero downtime.
+* [**Streaming Projections**](modelling/event-sourcing/setting-up-projections/scaling-and-advanced.md#streaming-projections) -- Consume events directly from Kafka or RabbitMQ Streams instead of the database event store. For cross-system integration and external event sources.
+* [**High-Performance Flush State**](modelling/event-sourcing/setting-up-projections/projections-with-state.md#high-performance-projections-with-flush-state-enterprise) -- Accumulate state in memory across a batch of events and persist once at flush. Process 1000 events with zero database writes, then one bulk insert. Dramatically faster rebuilds.
+
 ### "We need high-throughput event streaming"
 
 RabbitMQ throughput is becoming a bottleneck, or multiple services need to consume the same event stream independently.
