@@ -4,22 +4,23 @@ description: Message Driven System with Domain Driven Design principles in PHP
 
 # Introduction
 
-The foundation idea
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
 
-The roots of Object Oriented Programming were mainly about communication using Messages and logic encapsulation. The aim was to focus on the flows and communication, not on the objects itself. Objects were meant to be encapsulating logic, and expose clear interfaces of what they do, and what have they done.
+## What Ecotone Gives You
 
-If you know things like Events, Commands and Aggregates, then what was written above should feel familiar to you. This is because those concepts are build around same principles of old OOP where communication is done through Messages and Objects are meant to encapsulate logic. \
-And Ecotone is about returning to those roots of Object Oriented Programming. It's about explicit System design where communication happen through Messages, in a way that is clear to follow and understand.
+Ecotone is a messaging framework that brings enterprise architecture patterns to PHP. It provides the infrastructure for **CQRS**, **Event Sourcing**, **Sagas**, **Distributed Messaging**, and **Production Resilience** — so you write business logic, not boilerplate.
 
-## Message based communication
+Everything in Ecotone is built around **Messages**. Commands express intentions ("place this order"), Events express facts ("order was placed"), and Queries express questions ("what are this user's orders?"). This isn't just a naming convention — it's the architectural foundation that enables async processing, resilience, workflows, and distributed systems.
 
-There is no possibility to immerse fully into Message based communication, as long as the foundation is not fully Message Driven. This means that each communication within the Application (not only between Applications) has to happen through Messages. This way it can become natural practice of how the system is being designed.
+## Built on Enterprise Integration Patterns
 
-Ecotone follows on this making the Messaging the core of the Framework. It introduce Message based communication build around [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) as the underlying foundation. This way even communication between PHP Objects can be done through Messages in seamless way.&#x20;
+Ecotone is built on [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) — the same foundation that powers Spring Integration (Java), NServiceBus (.NET), and Apache Camel. Communication between objects happens through **Message Channels** — pipes where one side sends messages and the other consumes them.
 
 <figure><img src="../.gitbook/assets/communication.png" alt=""><figcaption><p>Communication between Objects using Messages</p></figcaption></figure>
 
-As Ecotone follows Enterprise Integration Patterns, it makes the **communication between Objects happening through Message Channels.** We can think of Message Channel as pipe, where one side send Messages into, and the other consumes from it. As communication goes through Message Channels, it becomes really easy to switch the pipes. This basically means we can easily switch Message Channel implementations to use synchronous or asynchronous Channel, different Message Brokers, and yet our Objects will not be affected by that anyhow.
+Because communication goes through Message Channels, switching from synchronous to asynchronous, or from one message broker to another, doesn't affect your business code. You change the channel configuration — your handlers stay the same.
 
 ## Application level code
 
