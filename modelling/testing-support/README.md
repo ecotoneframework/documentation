@@ -4,6 +4,20 @@ coverY: -559.3548387096773
 
 # Testing Support
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+Testing your message handlers requires bootstrapping the entire framework, setting up queues, and hoping the async parts work. Unit testing a saga means mocking half the application. There's no way to test a message flow end-to-end without spinning up infrastructure.
+
+## How Ecotone Solves It
+
+Ecotone provides **in-memory testing** that lets you test message flows, aggregates, sagas, and event sourcing without external infrastructure. Send commands, verify events were published, check saga state — all in isolated unit tests.
+
+---
+
 Ecotone provides comprehensive testing tools to help you write reliable tests for your message-driven applications. This section covers everything from basic unit testing to complex integration scenarios.
 
 ## Getting Started
