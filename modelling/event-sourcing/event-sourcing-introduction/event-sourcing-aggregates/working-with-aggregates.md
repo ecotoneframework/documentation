@@ -1,3 +1,7 @@
+---
+description: "Working with Event Sourcing Aggregates in Ecotone PHP"
+---
+
 # Working with Aggregates
 
 ## Working with Event Sourcing Aggregates

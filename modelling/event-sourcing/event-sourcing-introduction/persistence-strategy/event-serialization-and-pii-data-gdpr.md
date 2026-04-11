@@ -1,3 +1,7 @@
+---
+description: "Event serialization and GDPR-compliant PII data handling"
+---
+
 # Event Serialization and PII Data (GDPR)
 
 ## Event Serialization

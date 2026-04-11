@@ -1,3 +1,7 @@
+---
+description: "Installing Event Sourcing support in Ecotone PHP"
+---
+
 # Installation
 
 Ecotone comes with full automation for setting up Event Sourcing for us. This we can we really easily roll out new features with Event Sourcing with just minimal or none setup at all.&#x20;

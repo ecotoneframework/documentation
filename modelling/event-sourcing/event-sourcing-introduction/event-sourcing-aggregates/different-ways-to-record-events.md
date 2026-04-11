@@ -1,3 +1,7 @@
+---
+description: "Different ways to record events in Event Sourcing Aggregates"
+---
+
 # Different ways to Record Events
 
 ## Two ways of setting up Event Sourced Aggregates

@@ -1,3 +1,7 @@
+---
+description: "Configuring Event Sourcing repositories in Ecotone PHP"
+---
+
 # Event Sourcing Repository
 
 Ecotone comes with inbuilt Event Sourcing repository after [Event Sourcing package is installed](../../installation.md). However you want to roll out your own storage for Events, or maybe you already use some event-sourcing framework and would like to integrate with it. \

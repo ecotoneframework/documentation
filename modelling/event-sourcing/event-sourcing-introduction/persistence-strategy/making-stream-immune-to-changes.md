@@ -1,3 +1,7 @@
+---
+description: "Making event streams immune to class and namespace changes"
+---
+
 # Making Stream immune to changes
 
 Changes in the Application will happen. After some time we may want to refactor namespaces, change the name of Aggregate or an Event. However those kind of changes may break our system, if we already have production data which references to any of those. \

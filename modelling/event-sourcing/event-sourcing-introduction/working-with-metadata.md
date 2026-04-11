@@ -1,3 +1,7 @@
+---
+description: "Working with event metadata in Event Sourcing"
+---
+
 # Working with Metadata
 
 All Events may contain additional Metadata. This is especially useful for storing information that are not required for Command to be handled, yet are important for auditing and projecting purposes.

@@ -1,3 +1,7 @@
+---
+description: "Event versioning and upcasting for Event Sourcing in PHP"
+---
+
 # Event versioning
 
 In its lifetime events may change. In order to track those changes Ecotone provides possibility of versioning events.&#x20;

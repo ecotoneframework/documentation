@@ -1,3 +1,7 @@
+---
+description: "Event stream persistence strategies in Ecotone PHP"
+---
+
 # Persistence Strategies
 
 ## Persistence Strategy

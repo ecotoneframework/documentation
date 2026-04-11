@@ -1,3 +1,7 @@
+---
+description: "Applying events to rebuild Event Sourcing Aggregate state in PHP"
+---
+
 # Applying Events
 
 As [mentioned earlier](../), Events are stored in form of a Event Stream.\

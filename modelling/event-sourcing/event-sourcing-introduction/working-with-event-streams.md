@@ -1,3 +1,7 @@
+---
+description: "Working with Event Streams in Ecotone PHP"
+---
+
 # Working with Event Streams
 
 In [previous chapter ](./)we discussed that Event Sourcing Aggregates are built from Event Streams stored in the data store. Yet it's important to understand how those Events gets to the Event Stream in the first place.&#x20;
