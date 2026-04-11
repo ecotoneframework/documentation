@@ -38,6 +38,9 @@ Start with [Laravel Quick Start](quick-start-php-ddd-cqrs-event-sourcing/laravel
 **Symfony developers** — Go beyond Symfony Messenger.\
 Start with [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) or [Symfony Module docs](modules/symfony/).
 
+**Other PHP frameworks** — Use Ecotone with any PHP application.\
+Start with [Ecotone Lite docs](modules/ecotone-lite/).
+
 **Architects** — PHP can do what Spring and Axon do.\
 Read [Why Ecotone?](why-ecotone.md) to understand the positioning.
 
