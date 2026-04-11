@@ -18,17 +18,18 @@ Ecotone fills that gap. Built on the same [Enterprise Integration Patterns](http
 
 ## How Ecotone Compares
 
-| Capability | Java (Axon) | .NET (NServiceBus) | PHP (Ecotone) |
-|-----------|-------------|---------------------|---------------|
-| CQRS | Yes | Yes | Yes |
-| Event Sourcing | Yes | Community | Yes |
-| Sagas | Yes | Yes | Yes |
-| Workflow Orchestration | Yes | Yes | Yes (Enterprise) |
-| Distributed Messaging | Yes | Yes | Yes |
-| Multi-Tenancy | Manual | Manual | Built-in |
+| Capability | Java (Axon)           | .NET (NServiceBus) | PHP (Ecotone) |
+|-----------|-----------------------|---------------------|--------------|
+| CQRS | Yes                   | Yes | Yes |
+| Event Sourcing | Yes                   | Manual | Yes |
+| Sagas | Yes                   | Yes | Yes |
+| Workflow Orchestration | Manual                | Yes | Yes |
+| Resiliency (Retries, Dead Letter, Outbox) | Yes                   | Yes | Yes |
+| Distributed Messaging | Yes                   | Yes | Yes |
+| Multi-Tenancy | Manual                | Manual | Built-in |
 | Message Broker Support | Kafka, RabbitMQ, etc. | RabbitMQ, Azure, etc. | RabbitMQ, Kafka, SQS, Redis |
-| Observability | Micrometer | OpenTelemetry | OpenTelemetry |
-| Testing Support | Axon Test Fixtures | NServiceBus Testing | Built-in Test Support |
+| Observability | Micrometer            | OpenTelemetry | OpenTelemetry |
+| Testing Support | Axon Test Fixtures    | NServiceBus Testing | Built-in Test Support |
 
 ## What You Get With Ecotone
 
