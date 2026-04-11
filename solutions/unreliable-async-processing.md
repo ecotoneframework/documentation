@@ -12,12 +12,13 @@ You added async processing to handle background work — sending emails, process
 - You **can't replay** a failed message after fixing the bug — the data is gone
 - A **duplicate webhook** triggers the same handler twice, leading to double charges or duplicate emails
 - Going async **required touching every handler** — adding queue configuration, serialization, and retry logic to each one
+- **Retrying a failed event triggers all handlers again** — if one of three event handlers fails, the retry re-executes the two that already succeeded, causing side effects like duplicate emails or double charges
 
 In **Laravel**, you've scattered `dispatch()` calls and `ShouldQueue` implementations across your codebase. In **Symfony**, you've configured Messenger transports and retry strategies in YAML, but each handler still needs custom error handling.
 
 ## What the Industry Calls It
 
-**Resilient Messaging** — a combination of patterns: automatic retries, error channels, dead letter queues, the outbox pattern for guaranteed delivery, and idempotency for deduplication.
+**Resilient Messaging** — a combination of patterns: failure isolation (per-handler message delivery), automatic retries, error channels, dead letter queues, the outbox pattern for guaranteed delivery, and idempotency for deduplication.
 
 ## How Ecotone Solves It
 
@@ -35,23 +36,31 @@ public function sendWelcomeEmail(UserRegistered $event): void
 }
 ```
 
-Retries, error channels, and dead letter queues are configured once at the channel level — every handler on that channel gets production resilience automatically:
+**Failure isolation** — when multiple handlers subscribe to the same event, Ecotone delivers a separate copy of the message to each handler. If one fails, only that handler is retried — the others are not affected:
 
 ```php
-// Deduplication prevents double-processing
-#[ServiceContext]
-public function messagingConfiguration(): array
+#[Asynchronous("notifications")]
+#[EventHandler]
+public function sendWelcomeEmail(UserRegistered $event): void
 {
-    return [
-        // All handlers on "notifications" channel get these settings
-        SimpleMessageChannelBuilder::createQueueChannel("notifications"),
-    ];
+    // If this fails, only this handler retries
+    // The inventory handler below is NOT re-triggered
+}
+
+#[Asynchronous("inventory")]
+#[EventHandler]
+public function reserveInventory(UserRegistered $event): void
+{
+    // Runs independently — isolated from email handler failures
 }
 ```
+
+Retries, error channels, and dead letter queues are configured once at the channel level — every handler on that channel gets production resilience automatically. No per-handler boilerplate.
 
 ## Next Steps
 
 - [Asynchronous Handling](../modelling/asynchronous-handling/) — Make handlers async with a single attribute
+- [Message Handling Isolation](../modelling/recovering-tracing-and-monitoring/message-handling-isolation.md) — Each handler gets its own message copy for safe retries
 - [Retries](../modelling/recovering-tracing-and-monitoring/resiliency/retries.md) — Configure automatic retry strategies
 - [Error Channel and Dead Letter](../modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/) — Store failed messages for replay
 - [Outbox Pattern](../modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md) — Guarantee message delivery
