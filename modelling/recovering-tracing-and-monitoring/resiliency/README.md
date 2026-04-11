@@ -10,7 +10,7 @@ A failed HTTP call crashes your handler. A duplicate webhook triggers double-pro
 
 ## How Ecotone Solves It
 
-Ecotone handles failures at the **messaging layer** — not per handler. Automatic retries, error channels, dead letter queues, the outbox pattern, and idempotency are configured once and apply to all handlers on a channel. When something fails, messages are preserved and can be replayed after the bug is fixed.
+Ecotone handles failures at the **messaging layer** — not per feature. Automatic retries, error channels, dead letter queues, the outbox pattern, and idempotency are configured once and apply to all handlers on a channel. When something fails, messages are preserved and can be replayed after the bug is fixed.
 
 ---
 

@@ -14,7 +14,7 @@ Business rules are enforced in multiple places — a validation here, a check th
 
 ## How Ecotone Solves It
 
-Ecotone's **Aggregates** encapsulate business rules in a single class. Commands are routed directly to the aggregate, which protects its own invariants. Ecotone handles loading and saving — you write business logic, not infrastructure code.
+Ecotone's **Aggregates** encapsulate business rules in a single place. Commands are routed directly to the aggregate, which protects its own invariants. Ecotone handles loading and saving — you write business logic, not infrastructure code.
 
 ---
 

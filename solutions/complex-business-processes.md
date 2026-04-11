@@ -35,6 +35,7 @@ public function placeOrder(PlaceOrder $command): OrderData
     // Step 1: Create the order, pass to next step
 }
 
+#[Asynchronous('async')]
 #[InternalHandler(
     inputChannelName: "order.verify_payment",
     outputChannelName: "order.ship"

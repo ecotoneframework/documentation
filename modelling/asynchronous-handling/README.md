@@ -14,7 +14,7 @@ You added async processing, but now you can't tell which messages are stuck, whi
 
 ## How Ecotone Solves It
 
-Ecotone makes any handler async with a single `#[Asynchronous]` attribute. Retries, error handling, and dead letter are configured at the channel level, not per handler. Switch between synchronous and asynchronous execution without changing your business code.
+Ecotone makes any handler async with a single `#[Asynchronous]` attribute. Retries, error handling, and dead letter are configured at the channel level And switch between synchronous and asynchronous execution without changing your business code.
 
 ---
 
