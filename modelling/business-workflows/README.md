@@ -1,5 +1,19 @@
 # Business Workflows
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+Your order fulfillment process spans 6 steps across 4 services. The logic is spread across event listeners, cron jobs, and status flags. Nobody can explain the full flow without reading all the code. Adding or reordering steps risks breaking the entire process.
+
+## How Ecotone Solves It
+
+Ecotone provides three workflow approaches — from simple handler chaining to stateful sagas to declarative orchestrators. Each step is independently testable. The workflow definition lives in one place, not scattered across the codebase.
+
+---
+
 Ecotone provides three different ways to build Workflows:
 
 ### 🔄 **Use** [**Handler Chaining**](connecting-handlers-with-channels.md) **when:**

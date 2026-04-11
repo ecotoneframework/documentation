@@ -4,6 +4,20 @@ description: Asynchronous PHP
 
 # Asynchronous Handling and Scheduling
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+You added async processing, but now you can't tell which messages are stuck, which failed silently, and which will retry forever. Going async required touching every handler — adding queue configuration, serialization logic, and retry strategies individually.
+
+## How Ecotone Solves It
+
+Ecotone makes any handler async with a single `#[Asynchronous]` attribute. Retries, error handling, and dead letter are configured at the channel level, not per handler. Switch between synchronous and asynchronous execution without changing your business code.
+
+---
+
 {% content-ref url="asynchronous-message-handlers.md" %}
 [asynchronous-message-handlers.md](asynchronous-message-handlers.md)
 {% endcontent-ref %}

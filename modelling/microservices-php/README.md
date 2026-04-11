@@ -4,6 +4,20 @@ description: Implementing Microservices and Event Driven Architecture in PHP
 
 # Distributed Bus and Microservices
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+You're calling other services via HTTP. When Service B is down, Service A fails too. You've built custom retry logic, custom serialization, and custom routing for each service pair. There's no event sharing — services can't subscribe to each other's events without point-to-point integrations.
+
+## How Ecotone Solves It
+
+Ecotone's **Distributed Bus** provides cross-service messaging through message brokers (RabbitMQ, SQS, Redis, Kafka). Services send commands and publish events to each other with guaranteed delivery. Swap transports without changing application code.
+
+---
+
 Ecotone comes with Support for integrating Service (Applications) together in decoupled way, for this Ecotone provides `Distributed Bus`.
 
 Read more in bellow sections:
