@@ -1,3 +1,7 @@
+---
+description: Configuring AMQP Distributed Bus with RabbitMQ
+---
+
 # Configuration
 
 ## Service Name Configuration

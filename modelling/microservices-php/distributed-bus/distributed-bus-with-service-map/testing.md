@@ -1,3 +1,7 @@
+---
+description: Testing Distributed Bus and cross-service messaging
+---
+
 # Testing
 
 Distributed Bus with Service Map comes with ability to test using real or in memory Message Channels. We can test run the tests using [Ecotone Lite test support](testing.md).

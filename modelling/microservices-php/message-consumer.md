@@ -1,3 +1,7 @@
+---
+description: Message Consumer for consuming from external message brokers
+---
+
 # Message Consumer
 
 Message Consumers allows you to connect your Service (application) with other Services, that can be written in different language or not using Ecotone's [Distributed Bus](distributed-bus/).

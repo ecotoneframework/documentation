@@ -1,3 +1,7 @@
+---
+description: Configuring Distributed Bus with Service Map
+---
+
 # Configuration
 
 ## Service Name Configuration

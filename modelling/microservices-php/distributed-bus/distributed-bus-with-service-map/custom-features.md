@@ -1,3 +1,7 @@
+---
+description: Custom features for Distributed Bus with Service Map
+---
+
 # Custom Features
 
 ## Outbox Distributed Bus

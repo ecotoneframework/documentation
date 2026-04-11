@@ -1,3 +1,7 @@
+---
+description: Sharing events between services with streaming channels
+---
+
 # Sharing Events with Streaming Channels
 
 ## Sharing Events using Streaming Channels

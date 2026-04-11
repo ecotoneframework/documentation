@@ -1,3 +1,7 @@
+---
+description: AMQP Distributed Bus with RabbitMQ for legacy inter-service communication
+---
+
 # AMQP Distributed Bus (RabbitMQ)
 
 In case of RabbitMQ, Ecotone will create specific income queue for each Consuming Distributed Service (with by default the name of the service).&#x20;

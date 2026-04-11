@@ -1,3 +1,7 @@
+---
+description: Distributed Bus with Service Map for multi-broker microservice communication
+---
+
 # Distributed Bus with Service Map
 
 Cross-service messaging using a Service Map that supports multiple message channel providers (RabbitMQ, Amazon SQS, Redis, Kafka, and others) within a single application topology. Swap transports without changing application code.

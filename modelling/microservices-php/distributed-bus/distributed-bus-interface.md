@@ -1,3 +1,7 @@
+---
+description: Distributed Bus Interface for sending commands and events across services
+---
+
 # Distributed Bus Interface
 
 ## Distribution Bus

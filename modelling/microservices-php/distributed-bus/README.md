@@ -1,3 +1,7 @@
+---
+description: Distributed Bus for cross-service messaging in PHP
+---
+
 # Distributed Bus
 
 ## Distribution

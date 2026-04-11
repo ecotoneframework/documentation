@@ -1,3 +1,7 @@
+---
+description: Message Publisher for publishing to external message brokers
+---
+
 # Message Publisher
 
 Message Publisher provide abstraction to send Message to other Services.\
