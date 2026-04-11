@@ -1,3 +1,7 @@
+---
+description: Recovering, tracing, and monitoring message-driven applications
+---
+
 # Recovering, Tracing and Monitoring
 
 To keep the system reliable and resilient it's important to handle errors with grace.\

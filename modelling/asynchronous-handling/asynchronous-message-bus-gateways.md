@@ -1,3 +1,7 @@
+---
+description: Asynchronous Message Bus Gateways for channel-wide async processing
+---
+
 # Asynchronous Message Bus (Gateways)
 
 Asynchronous Message Buses let you make an entire Command or Event Bus asynchronous with a single configuration change, instead of annotating every handler individually.

@@ -1,3 +1,7 @@
+---
+description: Resilient sending for guaranteed message delivery to async channels
+---
+
 # Resilient Sending
 
 Whenever we use more than one storage during single action, storing to first storage may end up with success, yet the second may not.\

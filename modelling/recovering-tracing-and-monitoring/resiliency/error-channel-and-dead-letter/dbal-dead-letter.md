@@ -1,3 +1,7 @@
+---
+description: DBAL-based dead letter queue for storing and replaying failed messages
+---
+
 # Dbal Dead Letter
 
 ## Dbal Dead Letter

@@ -1,3 +1,7 @@
+---
+description: Message handling isolation for safe retries without side effects
+---
+
 # Message Handling Isolation
 
 It's good to know how Ecotone solves the problem of **Message Handling Isolation**, which is one of the key features that allows us to build Resilient Messaging Systems.

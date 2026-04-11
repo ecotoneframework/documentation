@@ -1,3 +1,7 @@
+---
+description: Time to live for automatic message expiration
+---
+
 # Time to Live
 
 We may define Time to Live for Messages. This way if Message will not be handled within specific amount of time, it will be automatically discarded. \

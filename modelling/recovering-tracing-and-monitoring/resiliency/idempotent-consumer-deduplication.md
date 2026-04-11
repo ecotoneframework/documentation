@@ -1,3 +1,7 @@
+---
+description: Idempotent consumer pattern for message deduplication in PHP
+---
+
 # Idempotency (Deduplication)
 
 ## Installation

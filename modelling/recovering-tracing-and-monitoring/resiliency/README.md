@@ -1,3 +1,7 @@
+---
+description: Production resilience with retries, dead letter, outbox, and deduplication
+---
+
 # Resiliency
 
 {% hint style="info" %}

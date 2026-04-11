@@ -1,3 +1,7 @@
+---
+description: Configuring automatic message retry strategies in Ecotone PHP
+---
+
 # Retries
 
 ## Instant Retries

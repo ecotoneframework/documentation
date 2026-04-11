@@ -1,3 +1,7 @@
+---
+description: Handling concurrency with optimistic and pessimistic locking
+---
+
 # Concurrency Handling
 
 Concurrency exceptions when multiple processes or threads access and modify shared resources simultaneously. These exceptions happen because two or more operations conflict try to change same piece of data. Ecotone provides built-in support for concurrency handling.&#x20;

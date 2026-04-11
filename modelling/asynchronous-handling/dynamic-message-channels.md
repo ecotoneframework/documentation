@@ -1,3 +1,7 @@
+---
+description: Dynamic message channels for per-tenant routing and isolation
+---
+
 # Dynamic Message Channels
 
 Dynamic Message Channels route messages to different async channels at runtime based on message headers, tenant context, or custom logic. They solve common growth challenges without requiring custom routing infrastructure.

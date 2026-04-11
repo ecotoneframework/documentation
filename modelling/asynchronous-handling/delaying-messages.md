@@ -1,3 +1,7 @@
+---
+description: Delaying message delivery for scheduled processing
+---
+
 # Delaying Messages
 
 In case of Ecotone we don't delay whole Message, but specific Message Handler. \

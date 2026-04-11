@@ -1,3 +1,7 @@
+---
+description: Outbox pattern for atomic message publishing with database transactions
+---
+
 # Outbox Pattern
 
 ## Outbox Pattern

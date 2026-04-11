@@ -1,3 +1,7 @@
+---
+description: Making message handlers asynchronous with a single attribute
+---
+
 # Asynchronous Message Handlers
 
 ## Running Asynchronously

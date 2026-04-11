@@ -1,3 +1,7 @@
+---
+description: Ecotone Pulse service dashboard for monitoring message consumers
+---
+
 # Ecotone Pulse (Service Dashboard)
 
 <figure><img src="../../.gitbook/assets/Screenshot from 2022-09-23 21-11-16 (1).png" alt=""><figcaption><p>View your Error Messages and Replay them when fix directly from the Dashboard</p></figcaption></figure>

@@ -1,3 +1,7 @@
+---
+description: Message priority for controlling processing order
+---
+
 # Message Priority
 
 In case of Ecotone we don't prioritize whole Message, but specific Message Handler. \

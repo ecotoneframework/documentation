@@ -1,3 +1,7 @@
+---
+description: Error channels and dead letter queues for failed message handling
+---
+
 # Error Channel
 
 Error Channel
