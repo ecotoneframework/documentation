@@ -4,6 +4,20 @@ description: Using Event Sourcing in PHP
 
 # Event Sourcing Introduction
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+You store the current state but not how you got there. When a customer disputes a charge, you can't answer "what exactly happened?" Rebuilding read models after a schema change means writing migration scripts by hand.
+
+## How Ecotone Solves It
+
+Ecotone's **Event Sourced Aggregates** store events instead of current state. Every state change is an immutable event in a stream. Projections rebuild read models from event history — change the schema, replay the events, get a correct read model.
+
+---
+
 Before diving into this section be sure to understand how Aggregates works in Ecotone based on [previous sections](../../command-handling/state-stored-aggregate/).
 
 ## Difference between Aggregate Types
