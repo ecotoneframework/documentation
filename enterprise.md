@@ -1,5 +1,33 @@
 # Enterprise
 
+Ecotone Free gives you production-ready CQRS, Event Sourcing, and Workflows — message buses, aggregates, sagas, async messaging, retries, error handling, and full testing support.
+
+Ecotone Enterprise is for when your system outgrows single-tenant, single-service, or needs advanced resilience and scalability.
+
+## Free vs Enterprise at a Glance
+
+| Capability | Free | Enterprise |
+|-----------|------|------------|
+| CQRS (Commands, Queries, Events) | Yes | Yes |
+| Event Sourcing & Projections | Yes | Yes |
+| Sagas (Stateful Workflows) | Yes | Yes |
+| Handler Chaining (Pipe & Filter) | Yes | Yes |
+| Async Messaging (RabbitMQ, SQS, Redis) | Yes | Yes |
+| Retries & Dead Letter | Yes | Yes |
+| Outbox Pattern | Yes | Yes |
+| Interceptors (Middlewares) | Yes | Yes |
+| Testing Support | Yes | Yes |
+| Multi-Tenancy | Yes | Yes |
+| OpenTelemetry | Yes | Yes |
+| Orchestrators | | Yes |
+| Distributed Bus with Service Map | | Yes |
+| Dynamic Message Channels | | Yes |
+| Partitioned Projections | | Yes |
+| Blue-Green Deployments | | Yes |
+| Kafka Integration | | Yes |
+| Command Bus Instant Retries | | Yes |
+| Gateway-Level Deduplication | | Yes |
+
 ## Ecotone Plans
 
 Ecotone comes with two plans:
