@@ -1,6 +1,14 @@
 # Table of contents
 
 * [About](README.md)
+* [Why Ecotone?](why-ecotone.md)
+* [Solutions](solutions/README.md)
+  * [Scattered Application Logic](solutions/scattered-application-logic.md)
+  * [Unreliable Async Processing](solutions/unreliable-async-processing.md)
+  * [Complex Business Processes](solutions/complex-business-processes.md)
+  * [Audit Trail & State Rebuild](solutions/audit-trail-and-state-rebuild.md)
+  * [Microservice Communication](solutions/microservice-communication.md)
+  * [PHP for Enterprise Architecture](solutions/php-for-enterprise-architecture.md)
 * [Installation](install-php-service-bus.md)
 * [How to use](quick-start-php-ddd-cqrs-event-sourcing/README.md)
   * [CQRS PHP](quick-start-php-ddd-cqrs-event-sourcing/php-cqrs.md)
