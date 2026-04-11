@@ -4,6 +4,8 @@ description: Laravel CQRS DDD Event Sourcing with Ecotone
 
 # Laravel
 
+Ecotone integrates with your existing Laravel application — **Eloquent** for aggregate persistence, **Laravel Queues** for async message channels, and **Laravel Octane** for high-performance scenarios. You keep Laravel's developer experience and add enterprise messaging architecture.
+
 ## Installation
 
 Follow [Installation menu](../../install-php-service-bus.md#install-for-laravel).

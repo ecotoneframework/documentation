@@ -4,6 +4,8 @@ description: Symfony CQRS DDD Event Sourcing with Ecotone
 
 # Symfony
 
+Ecotone builds on top of your Symfony application — **Doctrine ORM** for aggregate persistence, **Symfony Messenger Transport** for async message channels, and standard **Bundle configuration**. Everything you know stays, enterprise patterns get added.
+
 ## Installation
 
 Follow Installation from [Installation menu](../../install-php-service-bus.md#install-for-symfony).
