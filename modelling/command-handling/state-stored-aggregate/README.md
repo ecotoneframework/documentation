@@ -4,6 +4,20 @@ description: DDD Aggregates PHP
 
 # Aggregate Introduction
 
+{% hint style="info" %}
+Works with: **Laravel**, **Symfony**, and **Standalone PHP**
+{% endhint %}
+
+## The Problem
+
+Business rules are enforced in multiple places — a validation here, a check there. When rules change, you update three files and miss a fourth. There's no single source of truth for what an Order or User can do, and no guarantee that business invariants are always protected.
+
+## How Ecotone Solves It
+
+Ecotone's **Aggregates** encapsulate business rules in a single class. Commands are routed directly to the aggregate, which protects its own invariants. Ecotone handles loading and saving — you write business logic, not infrastructure code.
+
+---
+
 This chapter will cover the basics on how to implement an [Aggregate](../../message-driven-php-introduction.md#aggregates). \
 We will be using Command Handlers in this section, so ensure reading [External Command Handler](../external-command-handlers/) section first, to understand how Command are sent and handled.
 
