@@ -1,3 +1,7 @@
+---
+description: Converting parameters in Database Business Interface queries
+---
+
 # Converting Parameters
 
 We may want to use higher level object within our Interface than simple scalar types. As those can't be understood by our Database, it means we need Conversion. Ecotone provides default conversions and possibility to customize the process.

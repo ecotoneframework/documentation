@@ -1,3 +1,7 @@
+---
+description: Working with Message Headers and metadata in Ecotone PHP
+---
+
 # Message Headers
 
 Ecotone provides easy way to pass Message Headers (Metadata) with your Message and use it in your Message Handlers or [Interceptors](interceptors/).\

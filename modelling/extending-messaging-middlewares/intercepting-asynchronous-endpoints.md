@@ -1,3 +1,7 @@
+---
+description: Intercepting asynchronous message endpoints in Ecotone PHP
+---
+
 # Intercepting Asynchronous Endpoints
 
 Read [previous section](interceptors/) to find out more about Interceptors.

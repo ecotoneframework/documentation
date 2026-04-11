@@ -1,3 +1,7 @@
+---
+description: Fetching and storing Aggregates with repositories in Ecotone PHP
+---
+
 # Fetching/Storing Aggregates
 
 ## Default flow

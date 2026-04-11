@@ -1,3 +1,7 @@
+---
+description: Converting query results in Database Business Interface
+---
+
 # Converting Results
 
 ## Converting Results

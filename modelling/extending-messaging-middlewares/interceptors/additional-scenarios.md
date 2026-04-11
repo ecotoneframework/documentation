@@ -1,3 +1,7 @@
+---
+description: Advanced Interceptor scenarios and configurations in Ecotone
+---
+
 # Additional Scenarios
 
 ## Access attribute from interceptor

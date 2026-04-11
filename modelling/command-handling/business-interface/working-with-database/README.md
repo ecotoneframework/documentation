@@ -1,3 +1,7 @@
+---
+description: Database Business Interface for type-safe database access in PHP
+---
+
 # Working with Database
 
 Ecotone allows to work with Database using _DbalBusinessMethod_. The goal is to create abstraction which significantly reduce the amount of boilerplate code required to implement data access layers.\

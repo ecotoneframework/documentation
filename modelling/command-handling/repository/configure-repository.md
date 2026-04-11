@@ -1,3 +1,7 @@
+---
+description: Configuring custom Aggregate repositories in Ecotone PHP
+---
+
 # Configure Repository
 
 To use Ecotone's Aggregate functionality, we need a registered repository. Ecotone comes with built-in support for popular persistence options like Doctrine ORM, Eloquent, and document stores, so there's a good chance we can use what we already have without extra work. If our storage solution isn't supported yet, or if we have specific requirements, we can easily register our own custom repository by following the steps in this section. This flexibility means we're not locked into any particular database or ORM—we can use whatever fits our project best.

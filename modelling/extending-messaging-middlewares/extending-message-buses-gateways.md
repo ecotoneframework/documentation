@@ -1,3 +1,7 @@
+---
+description: Extending Command, Event, and Query Buses with custom Gateways
+---
+
 # Extending Message Buses (Gateways)
 
 Ecotone provides ability to extend any Messaging Gateway using Interceptors. We can hook into the flow and add additional behavior.

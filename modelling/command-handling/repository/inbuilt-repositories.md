@@ -1,3 +1,7 @@
+---
+description: Built-in Aggregate repositories for Doctrine ORM, Eloquent, and DBAL
+---
+
 # Inbuilt Repositories
 
 Ecotone comes with inbuilt repositories, so we don't need to configure Repositories ourselves. It often happen that those are similar between projects, therefore it may be that there is no need to roll out your own.

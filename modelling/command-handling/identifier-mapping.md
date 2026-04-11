@@ -1,3 +1,7 @@
+---
+description: Mapping identifiers for Aggregate and Saga routing in Ecotone
+---
+
 # Identifier Mapping
 
 When loading Aggregates or Sagas we need to know what Identifier should be used for that. \

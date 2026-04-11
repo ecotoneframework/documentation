@@ -1,3 +1,7 @@
+---
+description: Database migrations and storage management in Ecotone PHP
+---
+
 # Migrations / Storage
 
 Ecotone provides comprehensive migration commands to manage your storage infrastructure, giving you full control over when and how storage resources are created or removed.

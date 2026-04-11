@@ -1,3 +1,7 @@
+---
+description: Introduction to Business Interfaces in Ecotone PHP
+---
+
 # Introduction
 
 Be sure to read [CQRS Introduction](../) before diving in this chapter.
