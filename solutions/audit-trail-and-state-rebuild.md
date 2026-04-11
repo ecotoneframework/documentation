@@ -47,7 +47,8 @@ class Order
 Build read models (projections) that can be rebuilt at any time from the event history:
 
 ```php
-#[Projection("order_list", OrderStream::class)]
+#[ProjectionV2('order_list')]
+#[FromAggregateStream(Order::class)]
 class OrderListProjection
 {
     #[EventHandler]
