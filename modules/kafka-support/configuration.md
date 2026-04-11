@@ -1,3 +1,7 @@
+---
+description: Configuring Kafka connection and topics in Ecotone
+---
+
 # Configuration
 
 ## Installation

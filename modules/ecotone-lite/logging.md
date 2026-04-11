@@ -1,3 +1,7 @@
+---
+description: Configuring logging in Ecotone Lite applications
+---
+
 # Logging
 
 ## Logging with Ecotone Lite

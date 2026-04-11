@@ -1,3 +1,7 @@
+---
+description: Database connection with DBAL module in Laravel
+---
+
 # Database Connection (DBAL Module)
 
 We can use Ecotone's Laravel integration to reuse Connections that are already defined in your Application.

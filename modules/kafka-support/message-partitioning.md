@@ -1,3 +1,7 @@
+---
+description: Message partitioning for ordered processing with Kafka
+---
+
 # Message partitioning
 
 ## Kafka architecture

@@ -1,3 +1,7 @@
+---
+description: Configuring RabbitMQ connection and exchanges in Ecotone
+---
+
 # Configuration
 
 ## Installation

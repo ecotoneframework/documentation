@@ -1,3 +1,7 @@
+---
+description: Production-grade RabbitMQ consumer with Ecotone
+---
+
 # Rabbit Consumer
 
 Set up production-grade RabbitMQ consumption with a single attribute. Built-in reconnection, graceful shutdown, and health checks replace custom consumer process management scripts.

@@ -1,3 +1,7 @@
+---
+description: Using Laravel Queues as async message channels in Ecotone
+---
+
 # Laravel Queues
 
 Ecotone comes with Laravel Queues integration. \

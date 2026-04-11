@@ -1,3 +1,7 @@
+---
+description: Overview of Ecotone modules for Laravel, Symfony, and message brokers
+---
+
 # Overview
 
 `Modules` are extensions to your `Ecotone` based application. \

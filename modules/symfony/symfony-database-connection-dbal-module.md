@@ -1,3 +1,7 @@
+---
+description: Database connection with DBAL module in Symfony
+---
+
 # Symfony Database Connection (DBAL Module)
 
 We can use Ecotone's Symfony integration to reuse Connections that are already defined in your Symfony Application.

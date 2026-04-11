@@ -1,3 +1,7 @@
+---
+description: Ecotone Lite for standalone PHP applications without Laravel or Symfony
+---
+
 # Ecotone Lite
 
 Ecotone Lite is standalone solution for running Ecotone Framework. You may combine it with your internal company framework, use it alone or combine it with any other framework (e.g. Laminas, CodeIgniter, Magento).\

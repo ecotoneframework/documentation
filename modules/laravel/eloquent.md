@@ -1,3 +1,7 @@
+---
+description: Using Eloquent ORM with Ecotone Aggregates in Laravel
+---
+
 # Eloquent
 
 Ecotone comes with out of the box integration with Eloquent for [State-Stored Aggregates](../../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate).\

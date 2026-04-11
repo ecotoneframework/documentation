@@ -1,3 +1,7 @@
+---
+description: Using Doctrine ORM with Ecotone Aggregates in Symfony
+---
+
 # Doctrine ORM
 
 Ecotone comes with out of the box Doctrine ORM support for Aggregates.&#x20;

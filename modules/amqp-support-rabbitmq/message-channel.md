@@ -1,3 +1,7 @@
+---
+description: RabbitMQ message channels for async processing in Ecotone
+---
+
 # Message Channel
 
 To understand the use case behind Message Channels read [Asynchronous Processing](../../modelling/asynchronous-handling/asynchronous-message-handlers.md) section for Application level processing and [Distributed Bus](../../modelling/microservices-php/distributed-bus/distributed-bus-with-service-map/) section for cross application communication.

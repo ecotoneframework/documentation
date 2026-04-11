@@ -1,3 +1,7 @@
+---
+description: Kafka integration for high-throughput event streaming in PHP
+---
+
 # Kafka Support
 
 Native integration with [Apache Kafka](https://kafka.apache.org/) for high-throughput event streaming, using Ecotone's attribute-driven programming model. No separate producer/consumer boilerplate -- use `#[Asynchronous]` and message channels as with any other transport.

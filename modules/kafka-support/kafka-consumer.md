@@ -1,3 +1,7 @@
+---
+description: Kafka consumer for event streaming in Ecotone
+---
+
 # Kafka Consumer
 
 To quickly get up and running with consuming existing Topics, we can use Kafka Consumer feature.\

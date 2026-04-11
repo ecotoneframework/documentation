@@ -1,3 +1,7 @@
+---
+description: Running Ecotone with Laravel Octane for high-performance PHP
+---
+
 # Laravel Octane
 
 [Laravel Octane](https://github.com/laravel/octane) supercharges your application's performance by serving your application using high-powered application servers, including [Open Swoole](https://openswoole.com/), [Swoole](https://github.com/swoole/swoole-src), and [RoadRunner](https://roadrunner.dev/).

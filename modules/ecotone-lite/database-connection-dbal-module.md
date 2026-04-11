@@ -1,3 +1,7 @@
+---
+description: Database connection with DBAL module in Ecotone Lite
+---
+
 # Database Connection (DBAL Module)
 
 We can use Ecotone's simple Connection setup to define Connection to be used by [Dbal Module](../dbal-support.md).

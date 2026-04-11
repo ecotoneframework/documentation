@@ -1,3 +1,7 @@
+---
+description: Publishing messages to Kafka with Ecotone
+---
+
 # Message Publisher
 
 ## Custom Publisher

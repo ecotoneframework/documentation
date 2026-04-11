@@ -1,3 +1,7 @@
+---
+description: OpenTelemetry integration for tracing and metrics in Ecotone PHP
+---
+
 # OpenTelemetry (Tracing and Metrics)
 
 <figure><img src="../../.gitbook/assets/Screenshot from 2023-11-04 17-59-51.png" alt=""><figcaption><p>Trace your flows using OpenTelemetry</p></figcaption></figure>

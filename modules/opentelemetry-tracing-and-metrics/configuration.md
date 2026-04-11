@@ -1,3 +1,7 @@
+---
+description: Configuring OpenTelemetry tracing and metrics in Ecotone
+---
+
 # Configuration
 
 ## Installation

@@ -1,3 +1,7 @@
+---
+description: Publishing messages to RabbitMQ with Ecotone
+---
+
 # Message Publisher
 
 ## AMQP Distributed Bus
