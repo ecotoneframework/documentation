@@ -1,3 +1,7 @@
+---
+description: Symfony demo with Doctrine ORM and Ecotone
+---
+
 # Doctrine ORM
 
 ## Demo

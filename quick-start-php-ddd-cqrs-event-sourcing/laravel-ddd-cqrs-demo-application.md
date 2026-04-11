@@ -1,3 +1,7 @@
+---
+description: Laravel demo applications with DDD, CQRS, and Event Sourcing
+---
+
 # Laravel Demos
 
 ## Demo Message Bus

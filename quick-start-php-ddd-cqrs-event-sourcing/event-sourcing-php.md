@@ -1,3 +1,7 @@
+---
+description: Quick start with Event Sourcing in Ecotone PHP
+---
+
 # Event Sourcing PHP
 
 Store events instead of current state — get a full audit trail and rebuildable read models for free.

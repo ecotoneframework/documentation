@@ -1,3 +1,7 @@
+---
+description: Ecotone — CQRS, Event Sourcing, Workflows, and Production Resilience for Laravel and Symfony
+---
+
 # About
 
 <figure><img src=".gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="563"><figcaption></figcaption></figure>

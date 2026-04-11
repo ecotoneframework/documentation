@@ -1,3 +1,7 @@
+---
+description: Prerequisites and setup before starting the Ecotone tutorial
+---
+
 # Before we start tutorial
 
 ## Setup for tutorial

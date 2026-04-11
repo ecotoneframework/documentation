@@ -1,3 +1,7 @@
+---
+description: Building SQS message consumer and publisher
+---
+
 # Message Consumer and Publisher
 
 ## Message Consumer

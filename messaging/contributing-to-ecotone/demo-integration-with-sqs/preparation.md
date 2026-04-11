@@ -1,3 +1,7 @@
+---
+description: Preparing the SQS integration demo environment
+---
+
 # Preparation
 
 Let's integrate real life scenario together and make integration with [Amazon SQS](https://aws.amazon.com/sqs/).\

@@ -1,3 +1,7 @@
+---
+description: Registering a new module package in Ecotone
+---
+
 # Registering new Module Package
 
 If you want to provide new integration with external tooling, or you want to expose your set of features as separate package, then we will need to create new `Module Package`.

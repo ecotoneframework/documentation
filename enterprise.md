@@ -1,3 +1,7 @@
+---
+description: Ecotone Enterprise features for scaling multi-tenant and multi-service PHP systems
+---
+
 # Enterprise
 
 Ecotone Free gives you production-ready CQRS, Event Sourcing, and Workflows — message buses, aggregates, sagas, async messaging, retries, error handling, and full testing support.

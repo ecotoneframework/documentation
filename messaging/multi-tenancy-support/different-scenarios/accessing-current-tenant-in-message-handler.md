@@ -1,3 +1,7 @@
+---
+description: Accessing the current tenant context in message handlers
+---
+
 # Accessing Current Tenant in Message Handler
 
 For specific scenarios we may need to be aware of Tenant’s context in which execution is done. For example given Tenant may have luxury Shop where delivery should happen right away after order is made, where for other Tenant time does not matter.

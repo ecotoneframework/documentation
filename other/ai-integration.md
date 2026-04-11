@@ -1,3 +1,7 @@
+---
+description: AI integration with Ecotone — MCP Server, Agent Skills, and llms.txt
+---
+
 # AI Integration
 
 Ecotone provides multiple ways for AI assistants and code editors to access up-to-date documentation. This ensures AI tools give accurate, current answers about Ecotone Framework.

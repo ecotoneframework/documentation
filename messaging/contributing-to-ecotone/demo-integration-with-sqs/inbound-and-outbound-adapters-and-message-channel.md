@@ -1,3 +1,7 @@
+---
+description: Building SQS inbound and outbound adapters and message channels
+---
+
 # Inbound and Outbound Adapters and Message Channel
 
 [Inbound Channel Adapters ](../../messaging-concepts/inbound-outbound-channel-adapter.md#inbound-channel-adapter)are entrypoint for Messaging System. They do connect to external sources and consume Messages from them, which then are converted to Ecotone's Messages.

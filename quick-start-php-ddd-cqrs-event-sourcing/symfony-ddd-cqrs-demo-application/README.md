@@ -1,3 +1,7 @@
+---
+description: Symfony demo applications with DDD, CQRS, and Event Sourcing
+---
+
 # Symfony Demos
 
 ## Message Bus Demo

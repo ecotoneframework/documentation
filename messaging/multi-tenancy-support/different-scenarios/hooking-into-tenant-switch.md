@@ -1,3 +1,7 @@
+---
+description: Hooking into tenant switch for custom tenant initialization
+---
+
 # Hooking into Tenant Switch
 
 If we already have Multi-Tenant application running, most likely we are using some custom libraries or integration. In such cases, it may be required to trigger some code when given Tenant is activated or deactivated.

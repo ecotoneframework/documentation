@@ -1,3 +1,7 @@
+---
+description: Quick start with Aggregates and Sagas in Ecotone PHP
+---
+
 # Aggregates & Sagas
 
 ## Demo

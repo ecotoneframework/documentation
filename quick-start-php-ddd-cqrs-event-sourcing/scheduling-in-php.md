@@ -1,3 +1,7 @@
+---
+description: Quick start with scheduled tasks and periodic processing in PHP
+---
+
 # Scheduling in PHP
 
 ## Demo

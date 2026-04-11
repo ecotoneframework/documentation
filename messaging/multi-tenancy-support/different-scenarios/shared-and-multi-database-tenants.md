@@ -1,3 +1,7 @@
+---
+description: Shared and multi-database tenant configurations
+---
+
 # Shared and Multi Database Tenants
 
 We may have business model where by default we put every Tenant in the same Database, yet if Customer will buy premium he will receive separate Database instance.

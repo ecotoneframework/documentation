@@ -1,3 +1,7 @@
+---
+description: Console commands for managing Ecotone message consumers and projections
+---
+
 # Console Commands
 
 Ecotone provides support for creating Console Commands. \

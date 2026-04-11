@@ -1,3 +1,7 @@
+---
+description: Demo integration with Amazon SQS in Ecotone
+---
+
 # Demo Integration with SQS
 
 {% content-ref url="preparation.md" %}

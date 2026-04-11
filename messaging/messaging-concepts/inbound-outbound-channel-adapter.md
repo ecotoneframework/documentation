@@ -1,3 +1,7 @@
+---
+description: Inbound and Outbound Channel Adapters for external system integration
+---
+
 # Inbound/Outbound Channel Adapter
 
 When you will go through the code base you will meet `Channel Adapters`.\

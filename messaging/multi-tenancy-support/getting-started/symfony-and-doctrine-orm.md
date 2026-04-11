@@ -1,3 +1,7 @@
+---
+description: Multi-tenancy configuration for Symfony and Doctrine ORM
+---
+
 # Symfony and Doctrine ORM
 
 ## Configuration with Symfony

@@ -1,3 +1,7 @@
+---
+description: How Ecotone works under the hood — internal architecture
+---
+
 # How Ecotone works under the hood
 
 ## Ecotone's Heart (Configuration)

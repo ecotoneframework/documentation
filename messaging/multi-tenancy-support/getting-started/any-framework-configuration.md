@@ -1,3 +1,7 @@
+---
+description: Multi-tenancy configuration for any PHP framework
+---
+
 # Any Framework Configuration
 
 ## Configuring Connections

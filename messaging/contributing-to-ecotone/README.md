@@ -1,3 +1,7 @@
+---
+description: Contributing to Ecotone framework development
+---
+
 # Contributing to Ecotone
 
 ## Preparing development environment

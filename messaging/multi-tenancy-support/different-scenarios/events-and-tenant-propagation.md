@@ -1,3 +1,7 @@
+---
+description: Event publishing and tenant context propagation
+---
+
 # Events and Tenant Propagation
 
 When Customer is registered we may want to trigger side effects, like sending an Email with Welcome Message. For those situation we can define Events and Event Handlers.

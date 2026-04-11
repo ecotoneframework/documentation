@@ -1,3 +1,7 @@
+---
+description: Document Store for schema-less data storage in Ecotone PHP
+---
+
 # Document Store
 
 Document Store provides set of functionalities to store and retrieve JSON, Arrays, Objects, and Collection of Objects in a way that you are free from knowledge about storage and serialization and deserialization.&#x20;

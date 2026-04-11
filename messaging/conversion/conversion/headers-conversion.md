@@ -1,3 +1,7 @@
+---
+description: Converting message headers in Ecotone PHP
+---
+
 # Headers Conversion
 
 Ecotone allows for serialization of Message Headers before they go the Message Channel (Queue).

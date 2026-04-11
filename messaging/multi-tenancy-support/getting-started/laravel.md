@@ -1,3 +1,7 @@
+---
+description: Multi-tenancy configuration for Laravel with Ecotone
+---
+
 # Laravel
 
 ## Configuring Connections

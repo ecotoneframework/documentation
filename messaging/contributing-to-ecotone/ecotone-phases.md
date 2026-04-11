@@ -1,3 +1,7 @@
+---
+description: Ecotone bootstrap phases and lifecycle
+---
+
 # Ecotone Phases
 
 ## Phases

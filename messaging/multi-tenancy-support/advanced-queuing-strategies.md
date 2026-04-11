@@ -1,3 +1,7 @@
+---
+description: Advanced queuing strategies for multi-tenant message processing
+---
+
 # Advanced Queuing Strategies
 
 For Multi-Tenant environments we may be in need to use advanced Queuing Strategies, to rate limit Tenants, increase processing speed and handle deployment process with simplicity.&#x20;
