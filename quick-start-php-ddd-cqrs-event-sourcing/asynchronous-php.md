@@ -4,6 +4,8 @@ description: Running the code asynchronously
 
 # Asynchronous PHP
 
+Make any handler async with a single attribute — retries, error handling, and dead letter included automatically.
+
 ## Demo
 
 {% embed url="https://github.com/ecotoneframework/quickstart-examples/tree/main/Asynchronous" %}

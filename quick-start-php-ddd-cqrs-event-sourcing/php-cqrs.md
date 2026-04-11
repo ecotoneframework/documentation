@@ -4,6 +4,8 @@ description: Command Query Responsibility Segregation PHP
 
 # CQRS PHP
 
+Separate the code that changes state from the code that reads it — clear command and query handlers with zero boilerplate.
+
 ## Demo
 
 {% embed url="https://github.com/ecotoneframework/quickstart-examples/tree/main/CQRS" %}

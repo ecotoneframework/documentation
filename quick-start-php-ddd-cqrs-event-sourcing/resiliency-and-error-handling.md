@@ -4,6 +4,8 @@ description: Outbox pattern implementation in PHP
 
 # Resiliency and Error Handling
 
+Automatic retries, dead letter queues, and message replay — production resilience without per-handler boilerplate.
+
 ## Demo
 
 {% embed url="https://github.com/ecotoneframework/quickstart-examples/tree/main/RefactorToReactiveSystem" %}
