@@ -1,74 +1,166 @@
 ---
-description: Ecotone — CQRS, Event Sourcing, Workflows, and Production Resilience for Laravel and Symfony
+description: Ecotone — The enterprise architecture layer for Laravel and Symfony
 ---
 
 # About
 
 <figure><img src=".gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="563"><figcaption></figcaption></figure>
 
-## CQRS, Event Sourcing, Workflows, and Production Resilience for Laravel and Symfony
+## Ecotone extends your existing Laravel and Symfony application with the enterprise architecture layer
 
-Add production-grade architecture to your existing framework with a single Composer package. No framework change. No base classes. Just PHP attributes.
+One Composer package adds CQRS, Event Sourcing, Workflows, and production resilience to your codebase. No framework change. No base classes. Just PHP attributes on your existing code.
 
----
-
-## What problem does Ecotone solve?
-
-### Your app grew, your architecture didn't
-
-Controllers doing too much. Business logic scattered across listeners, services, and middleware. Every change risks breaking something unrelated. Testing requires bootstrapping the entire framework.
-
-**Ecotone introduces clear separation** — Command Handlers for writes, Query Handlers for reads, Event Handlers for reactions. Each has a single responsibility, wired automatically through PHP attributes.
-
-### Async processing is fragile
-
-Failed jobs disappear silently. There's no retry strategy beyond "try again 3 times." You can't replay failed messages or see what's stuck in the queue. Going async required touching every handler.
-
-**Ecotone provides production resilience** — automatic retries, error channels, dead letter queues, outbox pattern, and idempotency. All declarative via attributes, with a single attribute to make any handler async.
-
-### Enterprise patterns feel out of reach in PHP
-
-You've seen CQRS, Event Sourcing, and Sagas in Java and .NET ecosystems. Every PHP implementation requires rewriting your application or adopting an opinionated framework.
-
-**Ecotone brings these patterns to your existing stack** — works with Laravel (Eloquent, Queues, Octane) and Symfony (Doctrine, Messenger Transport) without requiring a framework change. No base classes to extend, no interfaces to implement.
+```bash
+composer require ecotone/laravel    # or ecotone/symfony-bundle
+```
 
 ---
 
-## Choose your path
+## See what it looks like
 
-**Laravel developers** — Keep Eloquent, add enterprise messaging.\
-Start with [Laravel Quick Start](quick-start-php-ddd-cqrs-event-sourcing/laravel-ddd-cqrs-demo-application.md) or [Laravel Module docs](modules/laravel/).
+```php
+class OrderService
+{
+    #[CommandHandler] 
+    public function placeOrder(PlaceOrder $command, EventBus $eventBus): void
+    {
+        // your business logic
+        $eventBus->publish(new OrderWasPlaced($command->orderId));
+    }
 
-**Symfony developers** — Go beyond Symfony Messenger.\
-Start with [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) or [Symfony Module docs](modules/symfony/).
+    #[QueryHandler('order.getStatus')]
+    public function getStatus(string $orderId): string
+    {
+        return $this->orders[$orderId]->status;
+    }
+}
 
-**Other PHP frameworks** — Use Ecotone with any PHP application.\
-Start with [Ecotone Lite docs](modules/ecotone-lite/).
+class NotificationService
+{
+    #[Asynchronous('notifications')]
+    #[EventHandler]  
+    public function whenOrderPlaced(OrderWasPlaced $event, NotificationSender $sender): void
+    {
+        $sender->sendOrderConfirmation($event->orderId);
+    }
+}
+```
 
-**Architects** — PHP can do what Spring and Axon do.\
-Read [Why Ecotone?](why-ecotone.md) to understand the positioning.
+**That's the entire setup.** No bus configuration. No handler registration. No retry config. No serialization wiring. Ecotone reads your attributes and handles the rest:
+
+* **Command and Query Bus** — wired automatically from your `#[CommandHandler]` and `#[QueryHandler]` attributes
+* **Event routing** — `NotificationService` subscribes to `OrderWasPlaced` without any manual wiring
+* **Async execution** — `#[Asynchronous('notifications')]` routes to RabbitMQ, SQS, Kafka, or DBAL — your choice of transport
+* **Failure isolation** — each event handler gets its own copy of the message, so one handler's failure never blocks another
+* **Retries and dead letter** — failed messages retry automatically, permanently failed ones go to a [dead letter queue](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/) you can inspect and replay
+* **Tracing** — [OpenTelemetry integration](modelling/recovering-tracing-and-monitoring/) traces every message across sync and async flows
+
+### Test the full flow — including async — without any infrastructure
+
+```php
+$ecotone = EcotoneLite::bootstrapFlowTesting(
+    [OrderService::class, NotificationService::class],
+);
+
+$ecotone->sendCommand(new PlaceOrder('order-1'));
+
+// Async handlers execute synchronously in tests — no message broker needed
+$this->assertEquals(
+    'placed',
+    $ecotone->sendQueryWithRouting('order.getStatus', 'order-1')
+);
+```
+
+No RabbitMQ running. No test containers. No sleep-and-pray timing. Your full messaging flow — including async handlers — [executes synchronously in tests](modelling/testing-support/), giving you deterministic, fast test suites for your entire architecture.
 
 ---
 
-## How it works
+## What changes in your daily work
 
-1. **Install via Composer** — `composer require ecotone/laravel` or `ecotone/symfony-bundle`
-2. **Add attributes to your code** — Mark methods as Command Handlers, Event Handlers, or Queries using PHP attributes
-3. **Ecotone wires the messaging** — Message buses, async channels, retries, and event sourcing are handled automatically
+### Business logic is the only code you write
+
+No command bus configuration. No handler registration. No message serialization setup. You write a PHP class with an attribute, and Ecotone wires the bus, the routing, the serialization, and the async transport. Your code stays focused on what your application actually does — your domain.
+
+### Going async never means rewriting handlers
+
+Add `#[Asynchronous('channel')]` to any handler. The handler code stays identical. Switch from synchronous to [RabbitMQ](modules/amqp-support-rabbitmq/) to [SQS](modules/sqs-support/) to [Kafka](modules/kafka-support/) by changing one line of configuration. Your business logic never knows the difference.
+
+### Failed messages don't disappear
+
+Every failed message is captured in a [dead letter queue](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/). You see what failed, the full exception, and the original message. [Replay it](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/dbal-dead-letter.md) with one command. No more silent failures. No more guessing what happened to that order at 3am.
+
+### Complex workflows live in one place
+
+A multi-step business process — order placement, payment, shipping, notification — doesn't need to be scattered across event listeners, cron jobs, and database flags. Ecotone gives you [Sagas](modelling/business-workflows/sagas.md) for stateful workflows, [handler chaining](modelling/business-workflows/connecting-handlers-with-channels.md) for linear pipelines, and [Orchestrators](modelling/business-workflows/orchestrators.md) for declarative process control. The entire business flow is readable in one class.
+
+### Your codebase tells the story of your business
+
+When a new developer opens your code, they see `PlaceOrder`, `OrderWasPlaced`, `ShipOrder` — not `AbstractMessageBusHandlerFactory`. Ecotone keeps your domain clean: no base classes to extend, no framework interfaces to implement, no infrastructure leaking into your business logic. Just [plain PHP objects](modelling/command-handling/) with attributes that declare their intent.
 
 ---
 
-## Get started in minutes
+## The full capability set
 
-* [Install](install-php-service-bus.md) for Symfony, Laravel, or any PHP framework
+| Capability | What it gives you | Learn more |
+|---|---|---|
+| **CQRS** | Separate command and query handlers. Clean responsibility boundaries. Automatic bus wiring. | [Command Handling](modelling/command-handling/) |
+| **Event Sourcing** | Store events instead of state. Full audit trail. Rebuild read models anytime. Time travel and replay. | [Event Sourcing](modelling/event-sourcing/) |
+| **Workflows & Sagas** | Orchestrate multi-step business processes. Stateful workflows with compensation logic. | [Business Workflows](modelling/business-workflows/) |
+| **Async Messaging** | RabbitMQ, Kafka, SQS, Redis, DBAL. One attribute to go async. Swap transports without code changes. | [Asynchronous Handling](modelling/asynchronous-handling/) |
+| **Production Resilience** | Automatic retries, dead letter queues, outbox pattern, message deduplication, failure isolation. | [Resiliency](modelling/recovering-tracing-and-monitoring/resiliency/) |
+| **Domain-Driven Design** | Aggregates, domain events, bounded contexts. Pure PHP objects with no framework coupling. | [Aggregates](modelling/command-handling/state-stored-aggregate/) |
+| **Distributed Bus** | Cross-service messaging. Share events and commands between microservices with guaranteed delivery. | [Microservices](modelling/microservices-php/) |
+| **Multi-Tenancy** | Tenant-isolated processing, projections, and event streams. Built in, not bolted on. | [Multi-Tenancy](messaging/multi-tenancy-support/) |
+| **Observability** | OpenTelemetry integration. Trace every message — sync or async — across your entire system. | [Monitoring](modelling/recovering-tracing-and-monitoring/) |
+| **Interceptors** | Cross-cutting concerns — authorization, logging, transactions — applied declaratively via attributes. | [Interceptors](modelling/extending-messaging-middlewares/interceptors/) |
+
+---
+
+## The enterprise gap in PHP, closed
+
+Every mature ecosystem has an enterprise architecture layer on top of its web framework:
+
+| Ecosystem | Web Framework | Enterprise Architecture Layer |
+|---|---|---|
+| **Java** | Spring Boot | Spring Integration + Axon Framework |
+| **.NET** | ASP.NET | NServiceBus / MassTransit |
+| **PHP** | Laravel / Symfony | **Ecotone** |
+
+Ecotone is built on the same foundation — [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) — that powers Spring Integration, NServiceBus, and Apache Camel. In active development since 2017 and used in production by teams running multi-tenant, event-sourced systems at scale, Ecotone brings the same patterns that run banking, logistics, and telecom systems in Java and .NET to PHP.
+
+This isn't about PHP catching up. It's about your team using proven architecture patterns — with the development speed that PHP gives you — without giving up the ecosystem you already know.
+
+[Read more: Why Ecotone?](why-ecotone.md)
+
+---
+
+## Start with your framework
+
+**Laravel** — Keep Eloquent, Laravel Queues, and Octane. Add what Laravel doesn't have: Event Sourcing, Sagas, failure isolation per handler, synchronous testing of async flows, and outbox pattern.\
+`composer require ecotone/laravel`\
+→ [Laravel Quick Start](quick-start-php-ddd-cqrs-event-sourcing/laravel-ddd-cqrs-demo-application.md) · [Laravel Module docs](modules/laravel/)
+
+**Symfony** — Symfony Messenger gives you a message bus. Ecotone gives you the complete architecture: Event Sourcing with projections, Sagas for stateful workflows, per-handler failure isolation, dead letter queue with replay, and synchronous testing of async flows.\
+`composer require ecotone/symfony-bundle`\
+→ [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) · [Symfony Module docs](modules/symfony/)
+
+**Any PHP framework** — Ecotone Lite works with any PSR-11 compatible container.\
+`composer require ecotone/lite-application`\
+→ [Ecotone Lite docs](modules/ecotone-lite/)
+
+---
+
+**Try it in one handler.** You don't need to migrate your application. Install Ecotone, add an attribute to one handler, and see what happens. If you like what you see, add more. If you don't — remove the package. Zero commitment.
+
+* [Install](install-php-service-bus.md) — Setup guide for any framework
 * [Learn by example](quick-start-php-ddd-cqrs-event-sourcing/) — Send your first command in 5 minutes
 * [Go through tutorial](tutorial-php-ddd-cqrs-event-sourcing/) — Build a complete messaging flow step by step
 * [Workshops, Support, Consultancy](other/contact-workshops-and-support.md) — Hands-on training for your team
 
 {% hint style="info" %}
-Built on [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/). Used in production by teams running multi-tenant, event-sourced systems at scale.
+The full CQRS, Event Sourcing, and Workflow feature set is [free and open source](enterprise.md) under the Apache 2.0 License. [Enterprise features](enterprise.md) are available for teams that need advanced scaling, distributed bus with service map, orchestrators, and production-grade Kafka integration.
 {% endhint %}
 
 {% hint style="success" %}
-Join [Ecotone's Community Channel](https://discord.gg/GwM2BSuXeg), and ask questions there.
+Join [Ecotone's Community Channel](https://discord.gg/GwM2BSuXeg) — ask questions and share what you're building.
 {% endhint %}
