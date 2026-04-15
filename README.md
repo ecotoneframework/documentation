@@ -55,23 +55,43 @@ class NotificationService
 * **Retries and dead letter** — failed messages retry automatically, permanently failed ones go to a [dead letter queue](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/) you can inspect and replay
 * **Tracing** — [OpenTelemetry integration](modelling/recovering-tracing-and-monitoring/) traces every message across sync and async flows
 
-### Test the full flow — including async — without any infrastructure
+### Test exactly the flow you care about
+
+Extract a specific flow and test it in isolation — only the services you need:
 
 ```php
-$ecotone = EcotoneLite::bootstrapFlowTesting(
-    [OrderService::class, NotificationService::class],
-);
+$ecotone = EcotoneLite::bootstrapFlowTesting([OrderService::class]);
 
 $ecotone->sendCommand(new PlaceOrder('order-1'));
 
-// Async handlers execute synchronously in tests — no message broker needed
-$this->assertEquals(
-    'placed',
-    $ecotone->sendQueryWithRouting('order.getStatus', 'order-1')
-);
+$this->assertEquals('placed', $ecotone->sendQueryWithRouting('order.getStatus', 'order-1'));
 ```
 
-No RabbitMQ running. No test containers. No sleep-and-pray timing. Your full messaging flow — including async handlers — [executes synchronously in tests](modelling/testing-support/), giving you deterministic, fast test suites for your entire architecture.
+Only `OrderService` is loaded. No notifications, no other handlers — just the flow you're verifying.
+
+Now bring in the full async flow. Enable an in-memory channel and run it within the same test process:
+
+```php
+$notifier = new InMemoryNotificationSender();
+
+$ecotone = EcotoneLite::bootstrapFlowTesting(
+    [OrderService::class, NotificationService::class],
+    [NotificationSender::class => $notifier],
+    enableAsynchronousProcessing: [
+        SimpleMessageChannelBuilder::createQueueChannel('notifications')
+    ]
+);
+
+$ecotone
+    ->sendCommand(new PlaceOrder('order-1'))
+    ->run('notifications');
+
+$this->assertEquals(['order-1'], $notifier->getSentOrderConfirmations());
+```
+
+`->run('notifications')` processes messages from the in-memory queue — right in the same process. The async handler executes deterministically, no timing issues, no polling, no external broker.
+
+**The key:** swap the in-memory channel for [DBAL](modules/dbal-support/), [RabbitMQ](modules/amqp-support-rabbitmq/), or [Kafka](modules/kafka-support/) to test what runs in production — the test stays the same. Ecotone runs the consumer within the same process, so switching transports never changes how you test. The ease of in-memory testing [stays with you](modelling/testing-support/) no matter what backs your production system.
 
 ---
 
@@ -87,7 +107,7 @@ Add `#[Asynchronous('channel')]` to any handler. The handler code stays identica
 
 ### Failed messages don't disappear
 
-Every failed message is captured in a [dead letter queue](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/). You see what failed, the full exception, and the original message. [Replay it](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/dbal-dead-letter.md) with one command. No more silent failures. No more guessing what happened to that order at 3am.
+Every failed message is captured in a [dead letter queue](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/). You see what failed, the full exception, and the original message. [Replay it](modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/dbal-dead-letter.md) with one command. And can be combined with inbuilt Outbox pattern to ensure full consistency. No more silent failures. No more guessing what happened to that order at 3am.
 
 ### Complex workflows live in one place
 
