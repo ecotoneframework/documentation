@@ -119,6 +119,24 @@ When a new developer opens your code, they see `PlaceOrder`, `OrderWasPlaced`, `
 
 ---
 
+## AI-ready by design
+
+Ecotone's declarative, attribute-based architecture is inherently friendly to AI code generators. When your AI assistant works with Ecotone code, two things happen:
+
+**Less context needed, less code generated.** A command handler with `#[CommandHandler]` and `#[Asynchronous('orders')]` tells the full story in two attributes — no bus configuration files, no handler registration, no retry setup to feed into the AI's context window. The input is smaller because there's less infrastructure to read, and the output is smaller because there's less boilerplate to generate. That means lower token cost and faster iteration cycles.
+
+**AI that knows Ecotone.** Your AI assistant can work with Ecotone out of the box:
+
+* **[Agentic Skills](other/ai-integration.md)** — 17 ready-to-use skills that teach any coding agent how to correctly write handlers, aggregates, sagas, projections, tests, and more. Install with one command and your AI generates idiomatic Ecotone code from the start.
+* **[MCP Server](other/ai-integration.md)** — Direct access to Ecotone documentation for any AI assistant that supports Model Context Protocol — Claude Code, Cursor, Windsurf, GitHub Copilot, and others.
+* **[llms.txt](other/ai-integration.md)** — AI-optimized documentation files that give any LLM instant context about Ecotone's API and patterns.
+
+**Testing that AI can actually run.** Ecotone's [testing support](modelling/testing-support/) runs async flows synchronously within the same process — no worker processes to spawn, no message brokers to configure, no timing to get right. This matters for AI-assisted development: even the most complex flows involving async handlers, sagas, and event-driven projections can be tested with a simple `->sendCommand()` and `->run()` call. Your coding agent can write and verify tests for async workflows without getting confused by infrastructure setup or hallucinating non-existent test utilities.
+
+The result: your AI assistant writes correct Ecotone code faster, with less back-and-forth, because the framework's declarative design means there's simply less to get wrong — and it can verify its own work by running the tests.
+
+---
+
 ## The full capability set
 
 | Capability | What it gives you | Learn more |
