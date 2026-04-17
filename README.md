@@ -123,17 +123,17 @@ When a new developer opens your code, they see `PlaceOrder`, `OrderWasPlaced`, `
 
 Ecotone's declarative, attribute-based architecture is inherently friendly to AI code generators. When your AI assistant works with Ecotone code, two things happen:
 
-**Less context needed, less code generated.** A command handler with `#[CommandHandler]` and `#[Asynchronous('orders')]` tells the full story in two attributes — no bus configuration files, no handler registration, no retry setup to feed into the AI's context window. The input is smaller because there's less infrastructure to read, and the output is smaller because there's less boilerplate to generate. That means lower token cost and faster iteration cycles.
+**Less context needed, less code generated.** A command handler with `#[CommandHandler]` and `#[Asynchronous('orders')]` tells the full story in two attributes — no bus configuration files, no handler registration, no retry setup to feed into the AI's context window. The input is smaller because there's less infrastructure to read, and the output is smaller because there's less boilerplate to generate. That means lower token cost, faster iteration cycles, and more accurate results.
 
 **AI that knows Ecotone.** Your AI assistant can work with Ecotone out of the box:
 
-* **[Agentic Skills](other/ai-integration.md)** — 17 ready-to-use skills that teach any coding agent how to correctly write handlers, aggregates, sagas, projections, tests, and more. Install with one command and your AI generates idiomatic Ecotone code from the start.
+* **[Agentic Skills](other/ai-integration.md)** — Ready-to-use skills that teach any coding agent how to correctly write handlers, aggregates, sagas, projections, tests, and more. Install with one command and your AI generates idiomatic Ecotone code from the start.
 * **[MCP Server](other/ai-integration.md)** — Direct access to Ecotone documentation for any AI assistant that supports Model Context Protocol — Claude Code, Cursor, Windsurf, GitHub Copilot, and others.
 * **[llms.txt](other/ai-integration.md)** — AI-optimized documentation files that give any LLM instant context about Ecotone's API and patterns.
 
-**Testing that AI can actually run.** Ecotone's [testing support](modelling/testing-support/) runs async flows synchronously within the same process — no worker processes to spawn, no message brokers to configure, no timing to get right. This matters for AI-assisted development: even the most complex flows involving async handlers, sagas, and event-driven projections can be tested with a simple `->sendCommand()` and `->run()` call. Your coding agent can write and verify tests for async workflows without getting confused by infrastructure setup or hallucinating non-existent test utilities.
+**Testing that AI can actually run.** Ecotone's [testing support](modelling/testing-support/) runs async flows in the same process — even complex workflows with sagas and projections can be tested with `->sendCommand()` and `->run()`. Your coding agent writes and verifies tests without needing to set up external infrastructure or guess at test utilities.
 
-The result: your AI assistant writes correct Ecotone code faster, with less back-and-forth, because the framework's declarative design means there's simply less to get wrong — and it can verify its own work by running the tests.
+Declarative configuration that any coding agent can follow and reproduce. Testing support that lets it verify even the most advanced flows. Less guessing, no hallucinating — just confident iteration.
 
 ---
 
@@ -174,11 +174,11 @@ This isn't about PHP catching up. It's about your team using proven architecture
 
 ## Start with your framework
 
-**Laravel** — Keep Eloquent, Laravel Queues, and Octane. Add what Laravel doesn't have: Event Sourcing, Sagas, failure isolation per handler, synchronous testing of async flows, and outbox pattern.\
+**Laravel** — Laravel's queue runs jobs, not business processes. Stop stitching Spatie + Laravel Workflow + `Bus::chain` + DIY outbox. Ecotone replaces the patchwork with one attribute-driven toolkit: aggregates with auto-published events, piped workflows, sagas, snapshots, transactional outbox — testable in-process, running on the queues you already have.\
 `composer require ecotone/laravel`\
 → [Laravel Quick Start](quick-start-php-ddd-cqrs-event-sourcing/laravel-ddd-cqrs-demo-application.md) · [Laravel Module docs](modules/laravel/)
 
-**Symfony** — Symfony Messenger gives you a message bus. Ecotone gives you the complete architecture: Event Sourcing with projections, Sagas for stateful workflows, per-handler failure isolation, dead letter queue with replay, and synchronous testing of async flows.\
+**Symfony** — Symfony Messenger handles dispatch. For aggregates, sagas, or event sourcing the usual path is bolting on a separate event sourcing library, rolling your own outbox, and writing dedup middleware per handler. Ecotone replaces the patchwork with one attribute-driven toolkit: aggregates, sagas, event sourcing, piped workflows, transactional outbox, and per-handler failure isolation so one failing listener doesn't double-charge customers on retry. Pure POPOs, Bundle auto-config, your Messenger transports preserved.\
 `composer require ecotone/symfony-bundle`\
 → [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) · [Symfony Module docs](modules/symfony/)
 
