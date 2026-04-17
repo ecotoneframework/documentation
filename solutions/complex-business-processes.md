@@ -17,13 +17,16 @@ Nobody can explain the full flow without reading all the code. Adding a step mea
 
 ## What the Industry Calls It
 
-**Sagas** (stateful workflows that remember where they are) and **Workflow Orchestration** (declarative step-by-step process definitions).
+Two distinct patterns solve this, and they're often confused:
+
+- **Workflows** — stateless pipe-and-filter chaining. The message flows from one handler to the next via output channels. Each step is independent; nothing is remembered across steps.
+- **Sagas** — stateful long-running coordination. The saga remembers where it is across events that may arrive seconds, minutes, or days apart, and decides what to do next based on prior state.
+
+Neither Symfony Messenger nor Laravel Queues has a first-class equivalent — both stop at "dispatch a job." Ecotone provides both patterns natively.
 
 ## How Ecotone Solves It
 
-Ecotone provides three approaches depending on your complexity level:
-
-**Simple linear workflows** — Chain handlers together with output channels:
+**Workflows — chained handlers.** Connect handlers through input and output channels. Each handler does one thing and passes the message on. No coordinator, no state; just declarative flow:
 
 ```php
 #[CommandHandler(
@@ -46,7 +49,7 @@ public function verifyPayment(OrderData $order): OrderData
 }
 ```
 
-**Stateful workflows** — Sagas remember state across long-running processes:
+**Sagas — stateful coordination.** Track state across events that arrive over time. The saga remembers where it is and reacts to each event based on what came before:
 
 ```php
 #[Saga]
