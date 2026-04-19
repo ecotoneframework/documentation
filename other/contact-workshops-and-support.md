@@ -4,12 +4,10 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 
 # Contact, Workshops and Support
 
-<figure><img src="../.gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="375"><figcaption><p>Ecotone -Because Business matters</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="375"><figcaption><p>Ecotone — the enterprise architecture layer for Laravel and Symfony</p></figcaption></figure>
 
 {% hint style="success" %}
-An Ecotone is a transition area between Eco-Systems, where they meet and integrate.\
-Ecotone Framework follows on that and provide abstraction, which allows us to join different Business functionality in seamless way.\
-Each Business functionality can work as autonomous unit, where Ecotone respect it's boundary, yet allowing it to connect to the wider part of the System.
+Workshops and consulting are delivered remotely by Ecotone's author, [Dariusz Gafka](https://medium.com/@dariuszgafka). They combine presentation, hands-on coding, and Q&A — customized to your stack (Laravel, Symfony, or Ecotone Lite) and the scenarios your team is actually facing.
 {% endhint %}
 
 ## Sponsorship
@@ -35,21 +33,22 @@ We will touch important topics like **Messaging, asynchronous processing, system
 
 **Price: 1500 EUR**\
 **Place: Online**\
-**Duration: Up to 5 hours**
+**Duration: Up to 5 hours**\
+**Group size: up to 12 people**
 
-**To get the most out of workshop, it's suggested to bring up to 10 people.**
+An Event Sourcing workshop is also available — see [ecotone.tech/workshops](https://ecotone.tech/workshops) for the full curriculum and pricing.
 
 ## **Consulting**
 
-In case of specific questions or problems, Ecotone's founder is **available for consulting sessions**. Consulting session allows for **pair programming**, **discussing your business or technical problems**, or even doing mini-workshop from the topics you're interested in.\
-Consulting session happens online at previously scheduled day for up to 5 hours.\
+In case of specific questions or problems, Ecotone's founder is **available for consulting sessions**. A consulting session allows for **pair programming**, **discussing your business or technical problems**, or even a mini-workshop on topics you're interested in.\
+Consulting sessions happen online at a previously scheduled day for up to 5 hours.\
 \
-**Price: 1200 EUR**\
+**Price: 1500 EUR**\
 **Place: Online**\
 **Duration: Up to 5 hours**
 
 ## **Contact:**
 
-* [**Twitter**](https://twitter.com/EcotonePHP)
-* **ecotone@simplycodedsoftware.com**
+* **support@simplycodedsoftware.com**
 * [**Community on Discord**](https://discord.gg/GwM2BSuXeg)
+* [**Twitter/X**](https://twitter.com/EcotonePHP)

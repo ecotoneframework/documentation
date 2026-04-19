@@ -4,6 +4,10 @@ description: Installing Ecotone for Symfony, Laravel or Stand Alone
 
 # Installation
 
+Ecotone is the enterprise architecture layer for Laravel and Symfony. One Composer package adds CQRS, Event Sourcing, Sagas, Projections, Workflows, and Outbox messaging via declarative PHP attributes — no rewrite, no bespoke glue.
+
+Pick your stack below. Symfony and Laravel get dedicated integration packages with auto-configuration; any other framework (or no framework) runs on **Ecotone Lite** through a PSR-11 container.
+
 ## Prerequisites
 
 Before installing Ecotone, ensure you have:
