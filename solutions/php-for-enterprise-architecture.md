@@ -12,9 +12,9 @@ The alternative is migrating to Java (Spring + Axon) or .NET (NServiceBus, MassT
 
 ## PHP Has Grown Up
 
-PHP is no longer just for simple web applications. Modern PHP (8.1+) has union types, enums, fibers, readonly properties, and first-class attributes. Frameworks like Laravel and Symfony provide the web layer. What was missing was the **enterprise messaging layer** — the equivalent of what Spring Integration and NServiceBus provide in their ecosystems.
+PHP is no longer just for simple web applications. Modern PHP (8.1+) has union types, enums, fibers, readonly properties, and first-class attributes. Frameworks like Laravel and Symfony provide the web layer. What was missing was the **architecture layer** that lets a system grow from first command handler to event-sourced microservices without rewrites — the equivalent of what Spring Integration and NServiceBus provide in their ecosystems.
 
-Ecotone fills that gap. Built on the same [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) that underpin Spring Integration, NServiceBus, and Apache Camel, Ecotone brings production-grade enterprise patterns to PHP.
+Ecotone fills that gap. Built on the same [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) that underpin Spring Integration, NServiceBus, and Apache Camel, Ecotone brings decades-proven architectural patterns to PHP as attribute-driven code on your existing Laravel or Symfony application.
 
 ## How Ecotone Compares
 
