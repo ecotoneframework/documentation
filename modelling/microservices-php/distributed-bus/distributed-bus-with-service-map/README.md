@@ -25,11 +25,11 @@ Therefore there is a need for different approach which keeps the things simple, 
 
 **Service Map** is a map of integrated Services (Applications), and points to specific Message Channels to which Messages for given Service should be sent:
 
-<figure><img src="../../../../.gitbook/assets/service-map (1).png" alt=""><figcaption><p>Distributed Service Map</p></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/service-map.png" alt=""><figcaption><p>Distributed Service Map</p></figcaption></figure>
 
 In this approach **Message Channels (Pipes) are simple transport layer**, and the **routing is done on the Application (Endpoint)** level using **Service Map to make the decision**.
 
-<figure><img src="../../../../.gitbook/assets/routing (1) (1).png" alt=""><figcaption><p>Distributed Bus making decision to which Message Channel send the Message</p></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/routing (1).png" alt=""><figcaption><p>Distributed Bus making decision to which Message Channel send the Message</p></figcaption></figure>
 
 Making Service available for integration is matter of adding it to the Service Map:
 
@@ -177,7 +177,7 @@ Like you can see there is no **targetServiceName** in the parameters anymore (co
 
 Filtered publishing allows for optimalization in publishing. This way we can publish Events only to the Services that are actually interested in those.
 
-<figure><img src="../../../../.gitbook/assets/publishers (1).png" alt=""><figcaption><p>Publishing based on Service Map subscribition keys</p></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/publishers.png" alt=""><figcaption><p>Publishing based on Service Map subscribition keys</p></figcaption></figure>
 
 To configure map with subscription keys, we will be using **withEventMapping()** method in Service Map configuration:
 

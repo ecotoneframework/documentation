@@ -4,10 +4,10 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 
 # Contact, Workshops and Support
 
-<figure><img src="../.gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="375"><figcaption><p>Ecotone — the PHP architecture layer that grows with your system, without rewrites</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption><p>Ecotone — the PHP architecture layer that grows with your system, without rewrites</p></figcaption></figure>
 
 {% hint style="success" %}
-Workshops and consulting are delivered remotely by Ecotone's author, [Dariusz Gafka](https://medium.com/@dariuszgafka). They combine presentation, hands-on coding, and Q&A — customized to your stack (Laravel, Symfony, or Ecotone Lite) and the scenarios your team is actually facing.
+Workshops and consulting are delivered remotely by Ecotone's author, [Dariusz Gafka](https://medium.com/@dariuszgafka). They combine presentation, hands-on coding, and Q\&A — customized to your stack (Laravel, Symfony, or Ecotone Lite) and the scenarios your team is actually facing.
 {% endhint %}
 
 ## Sponsorship

@@ -1,10 +1,12 @@
 ---
-description: Ecotone — the PHP architecture layer that grows with your system, without rewrites
+description: >-
+  Ecotone — the PHP architecture layer that grows with your system, without
+  rewrites
 ---
 
 # About
 
-<figure><img src=".gitbook/assets/ecotone_logo_no_background (1).png" alt="" width="563"><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/ecotone_logo_no_background.png" alt="" width="563"><figcaption></figcaption></figure>
 
 ## The PHP architecture layer that grows with your system — without rewrites
 
@@ -18,7 +20,7 @@ composer require ecotone/laravel    # or ecotone/symfony-bundle
 
 **Install today. Write a command handler in the next five minutes. Add event sourcing three years from now on the same codebase — by writing new classes, not swapping libraries.**
 
----
+***
 
 ## The 30-second proof
 
@@ -97,7 +99,7 @@ $this->assertEquals(['order-1'], $notifier->getSentOrderConfirmations());
 
 **The key:** swap the in-memory channel for [DBAL](modules/dbal-support/), [RabbitMQ](modules/amqp-support-rabbitmq/), or [Kafka](modules/kafka-support/) to test what runs in production — the test stays the same. The ease of in-memory testing [stays with you](modelling/testing-support/) no matter what backs your production system.
 
----
+***
 
 ## The growth ladder
 
@@ -118,7 +120,7 @@ $this->assertEquals(['order-1'], $notifier->getSentOrderConfirmations());
 
 Every other PHP alternative forces you to re-decide architecture at each column break — swap libraries, add glue, or stitch together a multi-package stack. No other _single_ PHP package spans the full set of growth stages.
 
----
+***
 
 ## Why companies pick Ecotone
 
@@ -126,15 +128,15 @@ Every other PHP alternative forces you to re-decide architecture at each column 
 
 Every other PHP choice commits to a ceiling on day one — beyond it lies integration work:
 
-| Alternative | What it is | Integration you'll need | Ceilings as you scale |
-|---|---|---|---|
-| **Spatie laravel-event-sourcing** | Laravel-only event sourcing. Aggregates, projectors, reactors — ergonomic on Eloquent and Laravel queues. | Asynchronous messaging · sagas · outbox · dedup middleware · PII encryption · parallel-rebuild strategy. | **Single-process projection rebuild.** No per-projector cursor; **no gap detection** — events committed in concurrent transactions can be silently skipped; async retry re-runs every handler; projectors cannot emit downstream events — integration cannot fix the underlying dispatch model. |
-| **EventSauce** | Framework-agnostic event-sourcing library. Clean aggregate + event-store primitives with minimal opinion. | Asynchronous messaging · command/query bus · sagas · workflows · outbox · dedup · PII encryption. | **Per-handler failure isolation.** The first throwing consumer aborts dispatch for siblings; retry re-runs every consumer on the same envelope. No subscription engine, no per-consumer cursor, **no gap detection** (concurrent-commit sequences can be silently skipped). Projections cannot emit downstream events. |
-| **Patchlevel event-sourcing** | Doctrine-based event sourcing with command/query bus, subscription engine, per-subscription isolation, PostgreSQL push streaming, crypto-shredding inside the event store. | Asynchronous messaging · sagas · outbox · distributed bus · PII encryption for messages on brokers · automatic correlation/causation propagation. | **Intra-projection partitioning.** Rebuild supports blue-green via subscriber-id version bump, but a single projection still runs on one cursor — no parallel-worker rebuild for millions of events. Encryption stops at the event-store boundary. Subscriptions cannot emit downstream events. |
-| **Temporal PHP SDK** | Durable workflows, polyglot across Go / Java / TypeScript / PHP. Workflow execution with signals, queries, activities. | Event-sourcing library · CQRS bus · broker adapters inside activities (Temporal can't use your existing RabbitMQ / Kafka / SQS) · glue to push events into Temporal as workflow signals. | **Domain event stream ownership.** Workflow state lives in Temporal's internal event history — not a stream you own. You cannot add new subscribers later or build custom projections from replay history as your domain evolves. Also brings its own cluster (Frontend / History / Matching / Worker). |
-| **Symfony Messenger alone** | Message dispatch with pluggable transports, retry, failure transport, middleware. First-class Symfony component. | Event-sourcing library (plus glue to push stream events through the bus and handle its custom serialization) · sagas · outbox · idempotency/dedup · PII encryption · correlation/causation propagation · multi-tenant routing middleware. | **Per-handler failure isolation + multi-tenant topology.** A single envelope is dispatched through all handlers. No built-in outbox, dedup, idempotency, or multi-tenant queue support. |
-| **Laravel Queues / Horizon** | Job runner with supervisors, retries, rate limiting, batches, chains. Excellent operational UI via Horizon. | Command/query/event bus · aggregates · event sourcing · sagas · outbox · dedup · PII encryption · correlation/causation propagation. | **Every architectural pattern.** It's a job runner, not a message bus — every pattern becomes a separate library decision. |
-| **Ecotone** | PHP architecture layer. Command/query/event buses, aggregates, event sourcing, sagas, projections, outbox, distributed bus, EIP routing, per-handler isolation, and end-to-end PII encryption — all attribute-driven, on the brokers you already operate (RabbitMQ, Kafka, SQS, Redis, DBAL). | Integrates seamlessly into your existing architecture via the Symfony Bundle, the Laravel Provider, or Ecotone Lite for any other framework. | **Built on a messaging foundation.** Scalability, resiliency, and per-handler failure isolation are provided uniformly for every higher-level building block — asynchronous event handlers, projections, sagas, and workflows all inherit them. New capabilities are new attributes on the same code. |
+| Alternative                       | What it is                                                                                                                                                                                                                                                                                    | Integration you'll need                                                                                                                                                                                                                   | Ceilings as you scale                                                                                                                                                                                                                                                                                                  |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Spatie laravel-event-sourcing** | Laravel-only event sourcing. Aggregates, projectors, reactors — ergonomic on Eloquent and Laravel queues.                                                                                                                                                                                     | Asynchronous messaging · sagas · outbox · dedup middleware · PII encryption · parallel-rebuild strategy.                                                                                                                                  | **Single-process projection rebuild.** No per-projector cursor; **no gap detection** — events committed in concurrent transactions can be silently skipped; async retry re-runs every handler; projectors cannot emit downstream events — integration cannot fix the underlying dispatch model.                        |
+| **EventSauce**                    | Framework-agnostic event-sourcing library. Clean aggregate + event-store primitives with minimal opinion.                                                                                                                                                                                     | Asynchronous messaging · command/query bus · sagas · workflows · outbox · dedup · PII encryption.                                                                                                                                         | **Per-handler failure isolation.** The first throwing consumer aborts dispatch for siblings; retry re-runs every consumer on the same envelope. No subscription engine, no per-consumer cursor, **no gap detection** (concurrent-commit sequences can be silently skipped). Projections cannot emit downstream events. |
+| **Patchlevel event-sourcing**     | Doctrine-based event sourcing with command/query bus, subscription engine, per-subscription isolation, PostgreSQL push streaming, crypto-shredding inside the event store.                                                                                                                    | Asynchronous messaging · sagas · outbox · distributed bus · PII encryption for messages on brokers · automatic correlation/causation propagation.                                                                                         | **Intra-projection partitioning.** Rebuild supports blue-green via subscriber-id version bump, but a single projection still runs on one cursor — no parallel-worker rebuild for millions of events. Encryption stops at the event-store boundary. Subscriptions cannot emit downstream events.                        |
+| **Temporal PHP SDK**              | Durable workflows, polyglot across Go / Java / TypeScript / PHP. Workflow execution with signals, queries, activities.                                                                                                                                                                        | Event-sourcing library · CQRS bus · broker adapters inside activities (Temporal can't use your existing RabbitMQ / Kafka / SQS) · glue to push events into Temporal as workflow signals.                                                  | **Domain event stream ownership.** Workflow state lives in Temporal's internal event history — not a stream you own. You cannot add new subscribers later or build custom projections from replay history as your domain evolves. Also brings its own cluster (Frontend / History / Matching / Worker).                |
+| **Symfony Messenger alone**       | Message dispatch with pluggable transports, retry, failure transport, middleware. First-class Symfony component.                                                                                                                                                                              | Event-sourcing library (plus glue to push stream events through the bus and handle its custom serialization) · sagas · outbox · idempotency/dedup · PII encryption · correlation/causation propagation · multi-tenant routing middleware. | **Per-handler failure isolation + multi-tenant topology.** A single envelope is dispatched through all handlers. No built-in outbox, dedup, idempotency, or multi-tenant queue support.                                                                                                                                |
+| **Laravel Queues / Horizon**      | Job runner with supervisors, retries, rate limiting, batches, chains. Excellent operational UI via Horizon.                                                                                                                                                                                   | Command/query/event bus · aggregates · event sourcing · sagas · outbox · dedup · PII encryption · correlation/causation propagation.                                                                                                      | **Every architectural pattern.** It's a job runner, not a message bus — every pattern becomes a separate library decision.                                                                                                                                                                                             |
+| **Ecotone**                       | PHP architecture layer. Command/query/event buses, aggregates, event sourcing, sagas, projections, outbox, distributed bus, EIP routing, per-handler isolation, and end-to-end PII encryption — all attribute-driven, on the brokers you already operate (RabbitMQ, Kafka, SQS, Redis, DBAL). | Integrates seamlessly into your existing architecture via the Symfony Bundle, the Laravel Provider, or Ecotone Lite for any other framework.                                                                                              | **Built on a messaging foundation.** Scalability, resiliency, and per-handler failure isolation are provided uniformly for every higher-level building block — asynchronous event handlers, projections, sagas, and workflows all inherit them. New capabilities are new attributes on the same code.                  |
 
 ### Composable with alternatives. Complete standalone.
 
@@ -279,7 +281,7 @@ Priority in Ecotone is a single attribute that applies uniformly across every ha
 
 One attribute, uniform semantics across Event Handlers, Projections, Sagas, and async transports. No custom middleware, no separate "VIP transport" to configure, no if-branches in handlers.
 
----
+***
 
 ## Trusted in regulated and high-stakes production
 
@@ -294,56 +296,56 @@ Ecotone runs in production at:
 
 The features on the capability matrix below are not hypothetical. They run in systems where failure is either regulated (audit, payments), expensive (double-charges, lost deliveries), or public (transit, marketplaces).
 
----
+***
 
 ## The full capability matrix
 
-| Capability | Included out of the box |
-|---|---|
-| **Command / Query / Event bus** | Yes — auto-wired from attributes |
-| **Per-handler failure isolation** | Yes — copy of the message per handler, structural not workaround |
-| **Event Sourcing** | Yes — aggregates, projections, replay, snapshotting |
-| **Partitioned projections** (parallel rebuild across workers, by aggregate / tenant / hash) | Yes |
-| **Streaming projections** (durable per-projector cursor, push-based catch-up) | Yes |
-| **Non-blocking projection rebuild** (blue-green + concurrent async backfill across workers, scales to millions of events) | Yes — `#[ProjectionDeployment]` + `#[ProjectionBackfill]` + aggregate-ID partitioning |
-| **Partition-scoped rebuild** (rebuild a single aggregate's data in milliseconds while other partitions keep serving reads) | Yes — `#[PartitionAggregateId]` in `#[ProjectionReset]`; effectively zero downtime even during full rebuilds |
-| **Self-healing projections** (trigger-based execution — projection always reads from Event Store at its last committed position; fix-deploy recovery, no manual reset or backfill script) | Yes — default behavior; events never lost after a crash |
-| **Gap detection** (sequence gaps from concurrent commits are tracked and retried; events never silently skipped) | Yes — enabled by default, non-blocking, bounded by `maxGapOffset` and `gapTimeout` |
-| **Batched projection persistence** (accumulate state across events via `#[ProjectionState]`; single `#[ProjectionFlush]` per batch; automatic Doctrine EntityManager flush + clear prevents OOM during multi-million-event catch-up) | Yes — `#[ProjectionExecution(eventLoadingBatchSize: N)]` |
-| **Projection-emitted events** (downstream eventual-consistency notifications via `EventStreamEmitter`) | Yes — emitted events fan out through the event bus to sagas, handlers, and other projections; **automatic emission suppression during rebuild** so downstream consumers aren't flooded with duplicate historical events |
-| **Sagas** (stateful long-running workflows) | Yes |
-| **Handler chaining workflows** (stateless pipe-and-filter) | Yes |
-| **Content-based routing** (route by payload or headers) | Yes |
-| **Splitters** (fan-out) | Yes |
-| **Filters, transformers, enrichers** | Yes — EIP primitives as attributes |
-| **Priority** (sync ordering + native broker priority for async) | Yes — one attribute, uniform across Event Handlers, Projections, Sagas |
-| **Custom buses per use case** | Yes — extend `CommandBus` / `EventBus` / `QueryBus`, attach `#[Deduplicated]`, `#[ErrorChannel]`, `#[InstantRetry]` directly to the interface declaration |
-| **Endpoint-ID message routing** (class-name-independent) | Yes — refactor-safe, lazy deserialization |
-| **Transactional outbox** | Yes — DBAL + per-transport |
-| **Dead letter queue + replay** | Yes |
-| **Retries with configurable backoff** | Yes |
-| **Deduplication** | Yes |
-| **Async transports** | RabbitMQ, Kafka, SQS, Redis, DBAL |
-| **Distributed Bus** (cross-service messaging) | Yes |
-| **Multi-tenancy** — tenant-isolated event streams, projections, channels | Yes |
-| **Tenant-routed message channels** | Yes — messages auto-routed to per-tenant queues |
-| **Priority routing** (VIP/standard queues by runtime context) | Yes |
-| **End-to-end PII encryption** (event store + broker messages + log output) | Yes — `#[Sensitive]` attribute; channel-level `ChannelProtectionConfiguration` for payload + named headers |
-| **Automatic correlation / causation propagation** | Yes — correlation ID and parent-message ID travel from command to every emitted event with no middleware; full OpenTelemetry spans stitch themselves |
-| **OpenTelemetry tracing** | Yes — sync and async hops |
-| **Interceptors** (cross-cutting concerns via attributes) | Yes |
-| **Framework portability** (Laravel ↔ Symfony ↔ PSR-11) | Yes |
-| **In-process async testing** (EcotoneLite) | Yes |
+| Capability                                                                                                                                                                                                                           | Included out of the box                                                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Command / Query / Event bus**                                                                                                                                                                                                      | Yes — auto-wired from attributes                                                                                                                                                                                        |
+| **Per-handler failure isolation**                                                                                                                                                                                                    | Yes — copy of the message per handler, structural not workaround                                                                                                                                                        |
+| **Event Sourcing**                                                                                                                                                                                                                   | Yes — aggregates, projections, replay, snapshotting                                                                                                                                                                     |
+| **Partitioned projections** (parallel rebuild across workers, by aggregate / tenant / hash)                                                                                                                                          | Yes                                                                                                                                                                                                                     |
+| **Streaming projections** (durable per-projector cursor, push-based catch-up)                                                                                                                                                        | Yes                                                                                                                                                                                                                     |
+| **Non-blocking projection rebuild** (blue-green + concurrent async backfill across workers, scales to millions of events)                                                                                                            | Yes — `#[ProjectionDeployment]` + `#[ProjectionBackfill]` + aggregate-ID partitioning                                                                                                                                   |
+| **Partition-scoped rebuild** (rebuild a single aggregate's data in milliseconds while other partitions keep serving reads)                                                                                                           | Yes — `#[PartitionAggregateId]` in `#[ProjectionReset]`; effectively zero downtime even during full rebuilds                                                                                                            |
+| **Self-healing projections** (trigger-based execution — projection always reads from Event Store at its last committed position; fix-deploy recovery, no manual reset or backfill script)                                            | Yes — default behavior; events never lost after a crash                                                                                                                                                                 |
+| **Gap detection** (sequence gaps from concurrent commits are tracked and retried; events never silently skipped)                                                                                                                     | Yes — enabled by default, non-blocking, bounded by `maxGapOffset` and `gapTimeout`                                                                                                                                      |
+| **Batched projection persistence** (accumulate state across events via `#[ProjectionState]`; single `#[ProjectionFlush]` per batch; automatic Doctrine EntityManager flush + clear prevents OOM during multi-million-event catch-up) | Yes — `#[ProjectionExecution(eventLoadingBatchSize: N)]`                                                                                                                                                                |
+| **Projection-emitted events** (downstream eventual-consistency notifications via `EventStreamEmitter`)                                                                                                                               | Yes — emitted events fan out through the event bus to sagas, handlers, and other projections; **automatic emission suppression during rebuild** so downstream consumers aren't flooded with duplicate historical events |
+| **Sagas** (stateful long-running workflows)                                                                                                                                                                                          | Yes                                                                                                                                                                                                                     |
+| **Handler chaining workflows** (stateless pipe-and-filter)                                                                                                                                                                           | Yes                                                                                                                                                                                                                     |
+| **Content-based routing** (route by payload or headers)                                                                                                                                                                              | Yes                                                                                                                                                                                                                     |
+| **Splitters** (fan-out)                                                                                                                                                                                                              | Yes                                                                                                                                                                                                                     |
+| **Filters, transformers, enrichers**                                                                                                                                                                                                 | Yes — EIP primitives as attributes                                                                                                                                                                                      |
+| **Priority** (sync ordering + native broker priority for async)                                                                                                                                                                      | Yes — one attribute, uniform across Event Handlers, Projections, Sagas                                                                                                                                                  |
+| **Custom buses per use case**                                                                                                                                                                                                        | Yes — extend `CommandBus` / `EventBus` / `QueryBus`, attach `#[Deduplicated]`, `#[ErrorChannel]`, `#[InstantRetry]` directly to the interface declaration                                                               |
+| **Endpoint-ID message routing** (class-name-independent)                                                                                                                                                                             | Yes — refactor-safe, lazy deserialization                                                                                                                                                                               |
+| **Transactional outbox**                                                                                                                                                                                                             | Yes — DBAL + per-transport                                                                                                                                                                                              |
+| **Dead letter queue + replay**                                                                                                                                                                                                       | Yes                                                                                                                                                                                                                     |
+| **Retries with configurable backoff**                                                                                                                                                                                                | Yes                                                                                                                                                                                                                     |
+| **Deduplication**                                                                                                                                                                                                                    | Yes                                                                                                                                                                                                                     |
+| **Async transports**                                                                                                                                                                                                                 | RabbitMQ, Kafka, SQS, Redis, DBAL                                                                                                                                                                                       |
+| **Distributed Bus** (cross-service messaging)                                                                                                                                                                                        | Yes                                                                                                                                                                                                                     |
+| **Multi-tenancy** — tenant-isolated event streams, projections, channels                                                                                                                                                             | Yes                                                                                                                                                                                                                     |
+| **Tenant-routed message channels**                                                                                                                                                                                                   | Yes — messages auto-routed to per-tenant queues                                                                                                                                                                         |
+| **Priority routing** (VIP/standard queues by runtime context)                                                                                                                                                                        | Yes                                                                                                                                                                                                                     |
+| **End-to-end PII encryption** (event store + broker messages + log output)                                                                                                                                                           | Yes — `#[Sensitive]` attribute; channel-level `ChannelProtectionConfiguration` for payload + named headers                                                                                                              |
+| **Automatic correlation / causation propagation**                                                                                                                                                                                    | Yes — correlation ID and parent-message ID travel from command to every emitted event with no middleware; full OpenTelemetry spans stitch themselves                                                                    |
+| **OpenTelemetry tracing**                                                                                                                                                                                                            | Yes — sync and async hops                                                                                                                                                                                               |
+| **Interceptors** (cross-cutting concerns via attributes)                                                                                                                                                                             | Yes                                                                                                                                                                                                                     |
+| **Framework portability** (Laravel ↔ Symfony ↔ PSR-11)                                                                                                                                                                               | Yes                                                                                                                                                                                                                     |
+| **In-process async testing** (EcotoneLite)                                                                                                                                                                                           | Yes                                                                                                                                                                                                                     |
 
 [Read more: Why Ecotone?](why-ecotone.md)
 
----
+***
 
 ## Where Ecotone fits in your stack
 
 **Your framework stays. Your ORM stays. Your queues and transports stay. Your deployment stays.** Ecotone is a Composer package that adds architecture on top of what you already run — business logic as POPOs, messaging topology as attributes, and your existing Laravel, Symfony, or PSR-11 container underneath.
 
----
+***
 
 ## AI-ready by design
 
@@ -353,13 +355,13 @@ Ecotone's declarative, attribute-based architecture is inherently friendly to AI
 
 **AI that knows Ecotone.** Your AI assistant can work with Ecotone out of the box:
 
-* **[Agentic Skills](other/ai-integration.md)** — Ready-to-use skills that teach any coding agent how to correctly write handlers, aggregates, sagas, projections, tests, and more.
-* **[MCP Server](other/ai-integration.md)** — Direct access to Ecotone documentation for any AI assistant that supports Model Context Protocol — Claude Code, Cursor, Windsurf, GitHub Copilot, and others.
-* **[llms.txt](other/ai-integration.md)** — AI-optimized documentation files that give any LLM instant context about Ecotone's API and patterns.
+* [**Agentic Skills**](other/ai-integration.md) — Ready-to-use skills that teach any coding agent how to correctly write handlers, aggregates, sagas, projections, tests, and more.
+* [**MCP Server**](other/ai-integration.md) — Direct access to Ecotone documentation for any AI assistant that supports Model Context Protocol — Claude Code, Cursor, Windsurf, GitHub Copilot, and others.
+* [**llms.txt**](other/ai-integration.md) — AI-optimized documentation files that give any LLM instant context about Ecotone's API and patterns.
 
 Declarative configuration that any coding agent can follow and reproduce. Testing support that lets it verify even the most advanced flows. Less guessing, no hallucinating — just confident iteration.
 
----
+***
 
 ## Start with your framework
 
@@ -375,7 +377,7 @@ Declarative configuration that any coding agent can follow and reproduce. Testin
 `composer require ecotone/lite-application`\
 → [Ecotone Lite docs](modules/ecotone-lite/)
 
----
+***
 
 ## Proven patterns, proven runtime
 
@@ -386,7 +388,7 @@ Declarative configuration that any coding agent can follow and reproduce. Testin
 * Built on Enterprise Integration Patterns — the same pattern language behind Spring Integration, Axon Framework, NServiceBus, MassTransit, and Apache Camel.
 * AI-ready: MCP server, ready-to-use coding-agent skills, `llms.txt` docs for any LLM.
 
----
+***
 
 ## Evaluate it in one handler
 
