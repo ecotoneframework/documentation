@@ -20,7 +20,7 @@ To make use of Dead Letter, we need to have [Ecotone's Dbal Module](../../../../
 
 If we configure default error channel to point to **"dbal\_dead\_letter"** then all Error Messages will land there directly
 
-<figure><img src="../../../../.gitbook/assets/Dead Letter (1).png" alt=""><figcaption><p>Storing Error Messages once they failed directly in Database</p></figcaption></figure>
+<figure><img src="../../../../.gitbook/assets/Dead Letter.png" alt=""><figcaption><p>Storing Error Messages once they failed directly in Database</p></figcaption></figure>
 
 {% tabs %}
 {% tab title="Symfony" %}
@@ -90,19 +90,20 @@ $ecotone = EcotoneLite::bootstrap(
 
 and then we use inbuilt Retry Strategy:
 
-<pre class="language-php"><code class="lang-php">#[ServiceContext]
+```php
+#[ServiceContext]
 public function errorConfiguration()
 {
     return ErrorHandlerConfiguration::createWithDeadLetterChannel(
         "errorChannel",
-        // <a data-footnote-ref href="#user-content-fn-1">your</a> retry strategy
+        // your retry strategy
         RetryTemplateBuilder::exponentialBackoff(1000, 10)
             ->maxRetryAttempts(3),
         // if retry strategy will not recover, then send here
         "dbal_dead_letter"
     );
 }
-</code></pre>
+```
 
 ## Dead Letter Console Commands
 
@@ -260,5 +261,3 @@ public function dbalConfiguration()
 The above solution requires running Console Line Commands. If we want however, we can manage all our Error Messages from one place using [Ecotone Pulse](../../ecotone-pulse-service-dashboard.md).
 
 This is especially useful when we've multiple Applications, so we can go to single place and see if any Application have failed to process Message.
-
-[^1]: 

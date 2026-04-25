@@ -16,11 +16,11 @@ By default, Projections run **synchronously**. When a Command Handler stores eve
 
 The Projection subscribes to those events and is executed as a result:
 
-<figure><img src="../../../.gitbook/assets/describe (1).png" alt=""><figcaption><p>Projection executes after events are published</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/describe.png" alt=""><figcaption><p>Projection executes after events are published</p></figcaption></figure>
 
 Because both the Event Store write and the Projection update happen in the same transaction, your Read Model is always consistent with the Event Stream:
 
-<figure><img src="../../../.gitbook/assets/db (1) (1).png" alt=""><figcaption><p>Command Handler and Projection wrapped in same transaction</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/db (1).png" alt=""><figcaption><p>Command Handler and Projection wrapped in same transaction</p></figcaption></figure>
 
 This is important for understanding what gets reverted on failure — when a synchronous projection fails, the entire transaction (including the Event Store write) is rolled back. For [asynchronous projections](execution-modes.md), the Event Store write and the Projection run in separate transactions.
 
@@ -38,9 +38,9 @@ This is all-or-nothing per batch. You never end up with half-processed data.
 
 With `#[ProjectionExecution(eventLoadingBatchSize: N)]`, events are loaded in batches. Each batch gets its own transaction:
 
-- **Batch 1** (events 1-100): processed successfully → **committed**
-- **Batch 2** (events 101-200): exception on event 150 → **rolled back**
-- Next run: starts from event 101 (batch 1's changes are safe)
+* **Batch 1** (events 1-100): processed successfully → **committed**
+* **Batch 2** (events 101-200): exception on event 150 → **rolled back**
+* Next run: starts from event 101 (batch 1's changes are safe)
 
 This is important: if you have 100,000 events to process, you don't end up with one massive transaction that locks your tables for minutes. Each batch commits independently.
 

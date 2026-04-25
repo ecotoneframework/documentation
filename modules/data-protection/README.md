@@ -6,7 +6,7 @@ icon: file-shield
 # Data Protection
 
 {% hint style="info" %}
-## **This module is available as part of Ecotone Enterprise.**
+### **This module is available as part of Ecotone Enterprise.**
 {% endhint %}
 
 Ecotone will help you to encrypt your messeges (Events or Commands) right before they leave and decrypt them when they are received by your domain. In other words, message will remain readable within the application but once they leave the system, secured key is required for reading.

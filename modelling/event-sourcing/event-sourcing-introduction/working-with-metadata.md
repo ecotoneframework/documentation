@@ -1,5 +1,5 @@
 ---
-description: "Working with event metadata in Event Sourcing"
+description: Working with event metadata in Event Sourcing
 ---
 
 # Working with Metadata
@@ -12,7 +12,7 @@ In Ecotone any communication happens via Messages, and **Messages** contains of 
 
 So far we've discussed only the Payload part, for example **ProductWasCreated** Event Class is actually an **Payload**.
 
-<figure><img src="../../../.gitbook/assets/image (2) (1) (1).png" alt=""><figcaption><p>Product Was Created is Payload of Message stored in Event Stream</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (2) (1).png" alt=""><figcaption><p>Product Was Created is Payload of Message stored in Event Stream</p></figcaption></figure>
 
 What we actually **store in the Event Stream is Message**, so Payload and Metadata.
 

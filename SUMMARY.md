@@ -2,6 +2,7 @@
 
 * [About](README.md)
 * [Why Ecotone?](why-ecotone.md)
+* [Composing Building Blocks](composing-building-blocks.md)
 * [Solutions](solutions/README.md)
   * [Scattered Application Logic](solutions/scattered-application-logic.md)
   * [Unreliable Async Processing](solutions/unreliable-async-processing.md)
@@ -35,7 +36,6 @@
 ## Modelling
 
 * [Introduction](modelling/message-driven-php-introduction.md)
-* [Composing Building Blocks](modelling/composing-building-blocks.md)
 * [Message Bus and CQRS](modelling/command-handling/README.md)
   * [CQRS Introduction - Commands](modelling/command-handling/external-command-handlers/README.md)
     * [Query Handling](modelling/command-handling/external-command-handlers/query-handling.md)

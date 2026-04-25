@@ -1,5 +1,7 @@
 ---
-description: How Ecotone's building blocks compose without orchestration code — one story, nine common composition problems
+description: >-
+  How Ecotone's building blocks compose without orchestration code — one story,
+  nine common composition problems
 ---
 
 # Composing Building Blocks
@@ -11,7 +13,7 @@ Ecotone's building blocks — Aggregates, Sagas, Command Handlers, Event Handler
 This page tells one story: we'll build an **Order Fulfillment** system feature by feature. Each section addresses a real composition problem, adds a new pattern to solve it, and keeps everything we built before untouched. You'll see where orchestration code would normally live, and you'll see Ecotone eliminate it.
 
 {% hint style="info" %}
-**Prerequisites**: Familiarity with [Commands](command-handling/external-command-handlers/), [Events](command-handling/external-command-handlers/event-handling.md), and [Aggregates](command-handling/state-stored-aggregate/) will make this walk-through easier to follow.
+**Prerequisites**: Familiarity with [Commands](modelling/command-handling/external-command-handlers/), [Events](modelling/command-handling/external-command-handlers/event-handling.md), and [Aggregates](modelling/command-handling/state-stored-aggregate/) will make this walk-through easier to follow.
 {% endhint %}
 
 ## Start Here If You Already Use Symfony Messenger, Laravel Queues, or Vanilla PHP
@@ -32,7 +34,6 @@ Click **Symfony Messenger**, **Laravel Queues**, or **Vanilla PHP** to see the p
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 **Problem 1 — No chaining primitive; every step is a new Command + Handler + transport route.** Messenger has no concept of "pass this message through N handlers in sequence." Each step must construct and dispatch the next command:
 
 ```php
@@ -76,7 +77,7 @@ final class CreditLoyaltyOnOrderPlaced {
 
 It looks like three independent reactions. It isn't.
 
-All three handlers run **inside the same envelope, on the same worker invocation**, in an order you cannot rely on. Pristine Messenger does track succeeded handlers via `HandledStamp` and skips them on retry — but the moment you enable `DoctrineTransactionMiddleware` (recommended in the docs, used by almost every Symfony app), it explicitly **strips all `HandledStamp`s** on failure because the rollback invalidated those handlers' DB writes. From the source: *"Remove all HandledStamp from the envelope so the retry will execute all handlers again."*
+All three handlers run **inside the same envelope, on the same worker invocation**, in an order you cannot rely on. Pristine Messenger does track succeeded handlers via `HandledStamp` and skips them on retry — but the moment you enable `DoctrineTransactionMiddleware` (recommended in the docs, used by almost every Symfony app), it explicitly **strips all `HandledStamp`s** on failure because the rollback invalidated those handlers' DB writes. From the source: _"Remove all HandledStamp from the envelope so the retry will execute all handlers again."_
 
 The consequence: handler A charged a card via Stripe, handler B failed → retry re-executes all three handlers on the same envelope, re-charging the card.
 
@@ -104,68 +105,63 @@ Each dispatch travels independently and lands in its own DLQ if it can't recover
 When you do build them, combining them means stitching your hand-rolled implementations to Messenger's primitives — every Saga is a Workflow Component + status column + process-manager-by-convention; every router is a dispatcher class wrapping the bus; every fan-out is a `foreach` + `dispatch`. Multi-tenancy is officially out of scope — Messenger, Scheduler, and Cache are designed for single-tenant setups by default. Correlation and causation IDs don't propagate either — community bundles exist solely to add this.
 
 **Ecotone's answer**: every pattern above is a composable building block — they join and combine in any shape via attributes, with each step running sync or async as the need dictates. `#[EventHandler]` methods get independent copies and retries by default — the doctrine transaction middleware trade-off goes away. Ecotone **runs on top of Messenger transports** — your existing AMQP/Redis/Doctrine config keeps working.
-
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 **Problem 1 — The message and the job are fused; there is no metadata layer for messages in flight.** A Laravel Job is a class fusing **data** (constructor args) and **behavior** (`handle()`). There is no envelope, no header layer, no notion of "a message moving through handlers and being enriched along the way."
 
 The consequences are everywhere:
 
-- **Cross-cutting metadata has nowhere to live.** Correlation IDs, causation IDs, tenant context, request context — none of these flow across jobs unless you bake them into every job's constructor.
-- **Step N+1 cannot see what step N produced.** `Bus::chain` bakes constructor args at dispatch time, before any step runs. If `PriceOrder` calculated a discount that `PlaceOrder` needs, you must persist it and re-query — there is no "pass the enriched message to the next step."
-- **You cannot enrich or modify the message in flight.** Adding a header, switching a routing key, or marking the message as belonging to a tenant mid-pipeline is impossible because there is no message — only a job whose constructor was already called.
+* **Cross-cutting metadata has nowhere to live.** Correlation IDs, causation IDs, tenant context, request context — none of these flow across jobs unless you bake them into every job's constructor.
+* **Step N+1 cannot see what step N produced.** `Bus::chain` bakes constructor args at dispatch time, before any step runs. If `PriceOrder` calculated a discount that `PlaceOrder` needs, you must persist it and re-query — there is no "pass the enriched message to the next step."
+* **You cannot enrich or modify the message in flight.** Adding a header, switching a routing key, or marking the message as belonging to a tenant mid-pipeline is impossible because there is no message — only a job whose constructor was already called.
 
 **Problem 2 — `Bus::chain` chains jobs, but doesn't build business workflows.** A workflow is a stateful, observable, testable process with branching, time, and compensation. `Bus::chain` is a fixed linked list of pre-constructed jobs.
 
 The gap shows up the moment your business actually has a flow:
 
-- **No state ownership.** No entity tracks "Order #123 fulfillment: validated ✓, priced ✓, discounts pending, place pending." You're guessing from queue inspection.
-- **No business timeouts.** "If no `PaymentReceived` arrives within 30 minutes, cancel the order" requires polling jobs that re-dispatch themselves — a known anti-pattern.
-- **No branching or looping.** "If discount > X, run an approval step." "Try three payment providers in order, fall through on failure." Both require breaking out of the chain entirely into ad-hoc dispatch logic.
-- **No compensation primitive.** When the last step permanently fails, the work done by earlier steps (Stripe charged, stock reserved) is stranded. You can write a `failed()` method that calls back to undo earlier steps, but every chain has to invent its own rollback logic — there's no orchestrator owning "what does order-fulfillment compensation look like."
-- **You cannot test the workflow as a flow.** You can unit-test each job, but "play the order-fulfillment process forward and assert on the resulting state" is not a primitive.
+* **No state ownership.** No entity tracks "Order #123 fulfillment: validated ✓, priced ✓, discounts pending, place pending." You're guessing from queue inspection.
+* **No business timeouts.** "If no `PaymentReceived` arrives within 30 minutes, cancel the order" requires polling jobs that re-dispatch themselves — a known anti-pattern.
+* **No branching or looping.** "If discount > X, run an approval step." "Try three payment providers in order, fall through on failure." Both require breaking out of the chain entirely into ad-hoc dispatch logic.
+* **No compensation primitive.** When the last step permanently fails, the work done by earlier steps (Stripe charged, stock reserved) is stranded. You can write a `failed()` method that calls back to undo earlier steps, but every chain has to invent its own rollback logic — there's no orchestrator owning "what does order-fulfillment compensation look like."
+* **You cannot test the workflow as a flow.** You can unit-test each job, but "play the order-fulfillment process forward and assert on the resulting state" is not a primitive.
 
 **Problem 3 — No composable building blocks that work the same sync or async.** Laravel ships Jobs, Listeners, and `Bus::chain`. None of them have first-class equivalents to the patterns this page builds with — **Aggregate** (domain entities with command/event handlers and identifier-based loading), **Saga** (stateful workflow with timeouts, branching, compensation), **Internal Handler + `outputChannelName`** (pipe one message through N steps with real data flow, no new DTOs per step), **Router** (declarative dispatch by payload, no `if/else` ladders), **Splitter** (fan one message into N independent messages, each with its own retry and DLQ), **Orchestrator** (routing slip composed declaratively), **per-handler isolation** + **identifier mapping** (each event subscriber loads its instance and runs in its own failure domain), **Headers** (`#[Header]`, `#[AddHeader]`, `changingHeaders` to read, enrich, and rewrite metadata as the message moves).
 
 And in Laravel, switching a step from sync to async is a different code path per primitive — a Listener has to change interface (`ShouldQueue`), a Job is dispatched differently, `Bus::chain` is its own thing — and the primitives don't combine cleanly with each other either.
 
 **Ecotone's answer**: every pattern above is a composable building block — they join and combine in any shape via attributes, with each step running sync or async as the need dictates. The chain/route/split/fan-out wiring is identical in either mode — no rewrite, no different abstraction. Ecotone runs **on top of Laravel's queue transport** — your existing driver config keeps working.
-
 {% endtab %}
 
 {% tab title="Vanilla PHP" %}
-
 **Problem — you wire together pieces that were never designed to fit.** Each capability lives in a separate package with its own configuration, its own lifecycle, and its own assumptions. Standing up a working system means:
 
-- gluing the queue, serializer, and dispatcher together with adapter code
-- writing the boilerplate each library expects — bootstrap, registration, conversion at every seam
-- repeating the same orchestration patterns (retry, dead-letter, correlation, deduplication, fan-out isolation) in your own code because no library owns the cross-cutting concern
-- accepting that some compositions are not even possible — features that should be one attribute (per-handler isolation, identifier-based routing, distributed buses) require primitives the libraries don't expose
+* gluing the queue, serializer, and dispatcher together with adapter code
+* writing the boilerplate each library expects — bootstrap, registration, conversion at every seam
+* repeating the same orchestration patterns (retry, dead-letter, correlation, deduplication, fan-out isolation) in your own code because no library owns the cross-cutting concern
+* accepting that some compositions are not even possible — features that should be one attribute (per-handler isolation, identifier-based routing, distributed buses) require primitives the libraries don't expose
 
 The integration code is where bugs hide and where every upgrade hurts. None of it is your domain.
 
 **Ecotone's answer**: one install — every pattern (Aggregate, Saga, Internal Handler, Router, Splitter, Orchestrator) is a composable building block joining via attributes, with each step running sync or async as the need dictates. Cross-cutting concerns (retry, dead-letter, correlation, deduplication, per-handler isolation) are attributes too. Start with `#[CommandHandler]` and add `#[Asynchronous]`, `#[Deduplicated]`, `#[ErrorChannel]` as the need arises.
-
 {% endtab %}
 {% endtabs %}
 
 ## The Story
 
-| Problem to solve                                                                                            | Composition pattern                      | Orchestration code saved             |
-| ----------------------------------------------------------------------------------------------------------- |------------------------------------------|--------------------------------------|
-| [Saving an aggregate and publishing its events](#saving-an-aggregate-and-publishing-its-events)             | Command → Aggregate → Event              | Event publishing service             |
-| [Reacting from one aggregate to another's events](#reacting-from-one-aggregate-to-anothers-events)          | Aggregate → Aggregate via Event          | Coordinating service, listener class |
-| [Coordinating long-running workflows with state and timeouts](#coordinating-long-running-workflows-with-state-and-timeouts) | Aggregate → Saga via Event               | State machine class, cron job        |
-| [Passing a message through a multi-step pipeline](#passing-a-message-through-a-multi-step-pipeline)         | Command Handler → Internal Handler chain | Coordinator service, command-per-step|
-| [Computing the workflow shape from data](#computing-the-workflow-shape-from-data)                           | Orchestrator → dynamic step sequence     | Branching state-machine class        |
-| [Branching a flow without if/else in domain code](#branching-a-flow-without-ifelse-in-domain-code)          | Router → Aggregate / Command Handler     | `if/else` in domain code             |
-| [Fanning out one event to per-item operations](#fanning-out-one-event-to-per-item-operations)               | Splitter → Aggregate Command per item    | Loop in a service                    |
-| [Moving a handler to async](#moving-a-handler-to-async)                                                     | `#[Asynchronous]` on a single attribute  | Job class, serialization plumbing    |
-| [Splitting bounded contexts across services](#splitting-bounded-contexts-across-services)                   | Distributed Bus between contexts         | Transport code in domain             |
+| Problem to solve                                                                                                                                        | Composition pattern                      | Orchestration code saved              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- | ------------------------------------- |
+| [Saving an aggregate and publishing its events](composing-building-blocks.md#saving-an-aggregate-and-publishing-its-events)                             | Command → Aggregate → Event              | Event publishing service              |
+| [Reacting from one aggregate to another's events](composing-building-blocks.md#reacting-from-one-aggregate-to-anothers-events)                          | Aggregate → Aggregate via Event          | Coordinating service, listener class  |
+| [Coordinating long-running workflows with state and timeouts](composing-building-blocks.md#coordinating-long-running-workflows-with-state-and-timeouts) | Aggregate → Saga via Event               | State machine class, cron job         |
+| [Passing a message through a multi-step pipeline](composing-building-blocks.md#passing-a-message-through-a-multi-step-pipeline)                         | Command Handler → Internal Handler chain | Coordinator service, command-per-step |
+| [Computing the workflow shape from data](composing-building-blocks.md#computing-the-workflow-shape-from-data)                                           | Orchestrator → dynamic step sequence     | Branching state-machine class         |
+| [Branching a flow without if/else in domain code](composing-building-blocks.md#branching-a-flow-without-ifelse-in-domain-code)                          | Router → Aggregate / Command Handler     | `if/else` in domain code              |
+| [Fanning out one event to per-item operations](composing-building-blocks.md#fanning-out-one-event-to-per-item-operations)                               | Splitter → Aggregate Command per item    | Loop in a service                     |
+| [Moving a handler to async](composing-building-blocks.md#moving-a-handler-to-async)                                                                     | `#[Asynchronous]` on a single attribute  | Job class, serialization plumbing     |
+| [Splitting bounded contexts across services](composing-building-blocks.md#splitting-bounded-contexts-across-services)                                   | Distributed Bus between contexts         | Transport code in domain              |
 
-Each section below leads with a focused mini-diagram showing only that section's composition pattern, followed by the code. Solid arrows are normal channel flows; dotted arrows cross a different kind of boundary (a `QueryBus` call, a failure rerouted through an error channel, or a distributed-bus hop between services). A [combined view](#the-finished-system) of everything we built sits at the bottom.
+Each section below leads with a focused mini-diagram showing only that section's composition pattern, followed by the code. Solid arrows are normal channel flows; dotted arrows cross a different kind of boundary (a `QueryBus` call, a failure rerouted through an error channel, or a distributed-bus hop between services). A [combined view](composing-building-blocks.md#the-finished-system) of everything we built sits at the bottom.
 
 ## Saving an aggregate and publishing its events
 
@@ -260,7 +256,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see the additional wiring �
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 **Publishing the event.** Ecotone auto-publishes every `$this->recordThat(...)` from the aggregate. Messenger doesn't know about your aggregate — you must dispatch the event yourself from whoever saves the aggregate:
 
 ```php
@@ -311,7 +306,6 @@ Plus `LoyaltyAccountRepository` with `findByCustomerId`. Plus the listener has t
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 **Publishing the event.** Ecotone auto-publishes every `$this->recordThat(...)` from the aggregate. Laravel has no aggregate model — you emit the event manually:
 
 ```php
@@ -395,7 +389,7 @@ final class PaymentProcess
 Two different events, two different sources — one is our domain event carrying `orderId` in payload, the other is a gateway callback carrying `orderId` in message headers. `identifierMapping` handles both.
 
 {% hint style="info" %}
-See [Identifier Mapping](command-handling/identifier-mapping.md) for the full set of mapping strategies: payload, headers, and expression references to DI services.
+See [Identifier Mapping](modelling/command-handling/identifier-mapping.md) for the full set of mapping strategies: payload, headers, and expression references to DI services.
 {% endhint %}
 
 {% hint style="info" %}
@@ -452,7 +446,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see the wiring required to 
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 Messenger has no `#[Delayed]` attribute and no concept of "the same event drives both the immediate path and a delayed path." You dispatch a separate message with `DelayStamp` from the place that creates the saga, write a separate handler for the timeout-check message, and have it look up the saga to decide whether to act:
 
 ```php
@@ -508,7 +501,6 @@ Plus: a transport that supports `DelayStamp` (AMQP/Doctrine/Redis/SQS/Beanstalkd
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 Laravel has `delay()` on jobs, but no concept of attaching a delayed delivery to an event handler. You schedule a separate job from the listener that creates the saga, and the job loads the model to decide whether to act:
 
 ```php
@@ -557,7 +549,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see the additional wiring �
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 **Publishing the events.** Ecotone auto-publishes the saga's own emissions (`$saga->recordThat(new PaymentRequested(...))`) and `OrderPlaced` from the Order aggregate. In Messenger, both have to be dispatched by hand — typically from the command handler that saved the aggregate, and from the gateway webhook controller that received the callback. The `orderId` that Ecotone reads from message metadata becomes a payload field, since Messenger handlers receive the message object, not the envelope's stamps:
 
 ```php
@@ -611,7 +602,6 @@ Plus `PaymentSaga` entity with `status` enum, plus `PaymentSagaRepository`, plus
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 **Publishing the events.** No automatic domain-event emission. Every state change that "recorded" something in the Ecotone aggregate must explicitly `event(...)` it here:
 
 ```php
@@ -718,7 +708,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see how the same four-step 
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 A pipeline of N steps requires N command classes and N handlers, each handler injecting `MessageBusInterface` to push the next message:
 
 ```php
@@ -779,7 +768,6 @@ Plus four message classes (`SubmitOrder`, `PriceOrder`, `ApplyDiscounts`, `Place
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 Job chaining ships in Laravel via `Bus::chain()` — the caller (controller, service) enumerates the steps:
 
 ```php
@@ -859,7 +847,7 @@ Compare with the static chain (previous section) and the Router (next section): 
 {% hint style="info" %}
 **Enterprise feature** — honest framing: Orchestrator lives in Ecotone's paid Enterprise bundle. The open-source equivalent is to combine static chains, Routers, and Sagas (covered in the surrounding sections) — that covers most workflow shapes, at the cost of not being able to return the step list as data. Reach for Orchestrator when the sequence itself is the thing that changes per message.
 
-See [Orchestrators: Declarative Workflow Automation](business-workflows/orchestrators.md) for the full reference.
+See [Orchestrators: Declarative Workflow Automation](modelling/business-workflows/orchestrators.md) for the full reference.
 {% endhint %}
 
 {% tabs %}
@@ -868,7 +856,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see why dynamic-step workfl
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 There's no built-in dynamic-workflow primitive. Reproducing the Ecotone version requires an `if/else` ladder that decides what to dispatch next, with each step being its own command class and its own handler that injects `MessageBusInterface` to push the next message:
 
 ```php
@@ -924,7 +911,6 @@ Six possible step combinations × N branches per handler = a state machine smear
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 `Bus::chain` requires the chain to be known at dispatch time — you build the array based on conditions in the caller:
 
 ```php
@@ -1076,7 +1062,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see the additional wiring �
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 **Publishing — both the incoming event and every downstream one.** Ecotone auto-publishes `OrderPlaced` from the Order aggregate and `StockReserved` from each `Stock` aggregate after `reserve()`. Messenger needs both explicitly dispatched:
 
 ```php
@@ -1134,7 +1119,6 @@ Plus a `ReserveStock` command class, plus `ReserveStockHandler` as shown, plus t
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 **Publishing — both upstream and per-item.** `event(...)` at the write site, then again per successful reservation:
 
 ```php
@@ -1248,7 +1232,6 @@ Click **Symfony Messenger** or **Laravel Queues** to see why moving one subscrib
 {% endtab %}
 
 {% tab title="Symfony Messenger" %}
-
 Asynchronous delivery in Messenger requires routing the message class to a transport. You configure `messenger.yaml`:
 
 ```yaml
@@ -1266,7 +1249,6 @@ To get per-handler async, you convert each subscriber into its own command and r
 {% endtab %}
 
 {% tab title="Laravel Queues" %}
-
 ```php
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -1426,8 +1408,8 @@ Ecotone collapses both options. The composition is the attribute — there is no
 
 Two trade-offs worth naming honestly:
 
-- **Expression-language strings for identifier mapping** (`payload.orderId`, `headers['x']`) are runtime-evaluated. Renaming a payload field doesn't trigger a static error — it triggers a runtime miss. Prefer `identifierMetadataMapping` with a constant key when your event shapes are stable; use expressions when you need to reach into nested payloads or combine multiple sources.
-- **Channel names are strings.** `outputChannelName: 'order.price'` isn't type-checked. If you rename a channel, grep-and-replace across the codebase. This is the same cost as Symfony's service-ID strings or Laravel's queue names — familiar, but real.
+* **Expression-language strings for identifier mapping** (`payload.orderId`, `headers['x']`) are runtime-evaluated. Renaming a payload field doesn't trigger a static error — it triggers a runtime miss. Prefer `identifierMetadataMapping` with a constant key when your event shapes are stable; use expressions when you need to reach into nested payloads or combine multiple sources.
+* **Channel names are strings.** `outputChannelName: 'order.price'` isn't type-checked. If you rename a channel, grep-and-replace across the codebase. This is the same cost as Symfony's service-ID strings or Laravel's queue names — familiar, but real.
 
 Everything else — retry policies, dead-letter routing, correlation/causation propagation, per-handler isolation, transport conversion — is code you no longer own.
 
@@ -1453,12 +1435,12 @@ The same property that lets a new human engineer read one handler and understand
 
 Each composition pattern is documented in depth on its own page.
 
-* [Connecting Handlers with Channels](business-workflows/connecting-handlers-with-channels.md) — output channels, InternalHandlers, Splitters, Routers
-* [Sagas: Workflows That Remember](business-workflows/sagas.md) — long-running workflows and identifier binding
-* [Identifier Mapping](command-handling/identifier-mapping.md) — payload, header, and expression-based identifier resolution
-* [Aggregate Event Handlers](command-handling/state-stored-aggregate/aggregate-event-handlers.md) — aggregate-to-aggregate subscription
-* [Asynchronous Handling](asynchronous-handling/) — making any link asynchronous
-* [Microservices PHP](microservices-php/) — Distributed Bus across bounded contexts
-* [Recovering, Tracing, Monitoring](recovering-tracing-and-monitoring/) — error channels, retries, and OpenTelemetry
+* [Connecting Handlers with Channels](modelling/business-workflows/connecting-handlers-with-channels.md) — output channels, InternalHandlers, Splitters, Routers
+* [Sagas: Workflows That Remember](modelling/business-workflows/sagas.md) — long-running workflows and identifier binding
+* [Identifier Mapping](modelling/command-handling/identifier-mapping.md) — payload, header, and expression-based identifier resolution
+* [Aggregate Event Handlers](modelling/command-handling/state-stored-aggregate/aggregate-event-handlers.md) — aggregate-to-aggregate subscription
+* [Asynchronous Handling](modelling/asynchronous-handling/) — making any link asynchronous
+* [Microservices PHP](modelling/microservices-php/) — Distributed Bus across bounded contexts
+* [Recovering, Tracing, Monitoring](modelling/recovering-tracing-and-monitoring/) — error channels, retries, and OpenTelemetry
 
 The composition model is the same at every scale. Start with a single handler on day one, and the same attributes carry you through a distributed system on year three — **without the orchestration code**.
