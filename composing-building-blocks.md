@@ -1368,7 +1368,7 @@ public function emailResiliency(): ErrorHandlerConfiguration
 One configuration block, three retries with exponential backoff, then to Dead Letter. Same policy works for RabbitMQ, SQS, Kafka, Redis, or Database channels — you don't rewrite it per broker.
 
 {% hint style="info" %}
-**At-least-once semantics and idempotency.** The dotted arrows in the Finished System diagram — failures, emissions, distributed-bus hops — all carry at-least-once guarantees. Make handlers idempotent at the handler level (or use `#[Deduplicated]` with a stable key expression) when the operation isn't naturally safe to retry. Ecotone stores deduplication state in your application database, so it survives redeployments.
+**At-least-once semantics and idempotency.** The dotted arrows throughout this page — failures, emissions, distributed-bus hops — all carry at-least-once guarantees. Make handlers idempotent at the handler level (or use `#[Deduplicated]` with a stable key expression) when the operation isn't naturally safe to retry. Ecotone stores deduplication state in your application database, so it survives redeployments.
 {% endhint %}
 
 Failures aren't a separate discipline in Ecotone. They flow through the same channel composition model as the happy path, which is why resuming from them is a one-handler operation rather than a full-chain rewind.
