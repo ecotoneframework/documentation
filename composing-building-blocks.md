@@ -161,7 +161,7 @@ The integration code is where bugs hide and where every upgrade hurts. None of i
 | [Moving a handler to async](composing-building-blocks.md#moving-a-handler-to-async)                                                                     | `#[Asynchronous]` on a single attribute  | Job class, serialization plumbing     |
 | [Splitting bounded contexts across services](composing-building-blocks.md#splitting-bounded-contexts-across-services)                                   | Distributed Bus between contexts         | Transport code in domain              |
 
-Each section below leads with a focused mini-diagram showing only that section's composition pattern, followed by the code. Solid arrows are normal channel flows; dotted arrows cross a different kind of boundary (a `QueryBus` call, a failure rerouted through an error channel, or a distributed-bus hop between services). A [combined view](composing-building-blocks.md#the-finished-system) of everything we built sits at the bottom.
+Each section below leads with a focused mini-diagram showing only that section's composition pattern, followed by the code. Solid arrows are normal channel flows; dotted arrows cross a different kind of boundary (a `QueryBus` call, a failure rerouted through an error channel, or a distributed-bus hop between services).
 
 ## Saving an aggregate and publishing its events
 
@@ -1317,29 +1317,6 @@ public function onOrderPlaced(OrderPlaced $event): void
 {% endhint %}
 
 The Saga from earlier can live on either side. Everything we built before continues to work — splitting the system is an infrastructure decision, not a code rewrite.
-
-## The Finished System
-
-Zoom out. Here's what we built — the pricing/orchestrator/router pipelines collapsed into a single "order intake" box so the overall shape is visible at a glance.
-
-```mermaid
-flowchart TB
-    Cmd[["Command: SubmitOrder"]] --> Intake["Intake pipeline<br/>(Pricing, Orchestrator, Router)"]
-    Intake --> Order{{"Aggregate: Order"}}
-    Order --> E(["Event: OrderPlaced"])
-
-    E --> Loyalty{{"Aggregate: LoyaltyAccount"}}
-    E --> PaymentSaga[/"Saga: PaymentProcess"/]
-    E --> EmailPipe["Pipeline: Confirmation email<br/>(async fetch from CRM → enrich headers → send)"]
-    E --> Splitter{"Splitter: per line item"}
-    E -.->|DistributedBus| Remote["Remote: Payment Service"]
-
-    Splitter --> Stock{{"Aggregate: Stock"}}
-
-    PaymentSaga -.->|failure path| Order
-```
-
-Five subscribers on a single event. Four building-block types on that fanout alone. Zero coordinator classes between them.
 
 ## Failures and Resume
 
