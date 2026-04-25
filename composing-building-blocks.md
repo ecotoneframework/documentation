@@ -1383,11 +1383,6 @@ The honest comparison isn't a file count. It's a cost dynamic that goes two ways
 
 Ecotone collapses both options. The composition is the attribute — there is nothing to scaffold and nothing to skip. A handler that needs to be a step in a chain gets `outputChannelName`. A handler that needs to time out gets `#[Delayed]`. A handler that needs to fan out gets `#[Splitter]`. The flow is testable as a flow with `EcotoneLite::bootstrapFlowTesting`. **The thing you read in the code is the business flow** — there is no orchestration layer underneath that you also have to read, test, and maintain.
 
-Two trade-offs worth naming honestly:
-
-* **Expression-language strings for identifier mapping** (`payload.orderId`, `headers['x']`) are runtime-evaluated. Renaming a payload field doesn't trigger a static error — it triggers a runtime miss. Prefer `identifierMetadataMapping` with a constant key when your event shapes are stable; use expressions when you need to reach into nested payloads or combine multiple sources.
-* **Channel names are strings.** `outputChannelName: 'order.price'` isn't type-checked. If you rename a channel, grep-and-replace across the codebase. This is the same cost as Symfony's service-ID strings or Laravel's queue names — familiar, but real.
-
 Everything else — retry policies, dead-letter routing, correlation/causation propagation, per-handler isolation, transport conversion — is code you no longer own.
 
 ## Works With AI-Assisted Coding
