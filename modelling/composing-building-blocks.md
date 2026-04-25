@@ -27,6 +27,10 @@ You don't trade your broker for Ecotone. You add Ecotone's composition model on 
 Before the walkthrough, here's the wedge: a concrete pattern you likely already write in given framework, and what it costs you.
 
 {% tabs %}
+{% tab title="Show differences" %}
+Click **Symfony Messenger**, **Laravel Queues**, or **Vanilla PHP** to see the patterns you likely already write in your stack — and what they cost you in boilerplate, missing primitives, and orchestration code that isn't business logic.
+{% endtab %}
+
 {% tab title="Symfony Messenger" %}
 
 **Problem 1 — No chaining primitive; every step is a new Command + Handler + transport route.** Messenger has no concept of "pass this message through N handlers in sequence." Each step must construct and dispatch the next command:
