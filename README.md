@@ -195,6 +195,8 @@ The EIP foundation is not a lineage — it is a working catalogue of composable 
 
 The problem these primitives solve is complex integration flows that usually collapse into unmaintainable conditional dispatch code. In Ecotone, each primitive is an attribute on a handler or channel. The flow is readable in one place, the failure modes are first-class, and adding a new routing rule is an attribute, not a refactor.
 
+**See it built end-to-end:** [Composing Building Blocks](composing-building-blocks.md) — a walk-through of an Order Fulfillment system that uses every primitive above, with side-by-side Symfony Messenger and Laravel Queues comparisons.
+
 ### 8. Multi-tenancy down to the message channel
 
 Multi-tenancy in Ecotone is not just isolated storage. It extends through the messaging topology:
@@ -400,6 +402,7 @@ You do not need to migrate anything to try Ecotone. You do not need architectura
 **Five-minute install. Familiar patterns from day one. No forced architectural migrations as your system grows.**
 
 * [Install](install-php-service-bus.md) — Setup guide for any framework
+* [Composing Building Blocks](composing-building-blocks.md) — Full walk-through of the composition model with Messenger / Laravel comparisons
 * [Learn by example](quick-start-php-ddd-cqrs-event-sourcing/) — Send your first command in 5 minutes
 * [Go through tutorial](tutorial-php-ddd-cqrs-event-sourcing/) — Build a complete messaging flow step by step
 * [Workshops, Support, Consultancy](other/contact-workshops-and-support.md) — Hands-on training for your team
