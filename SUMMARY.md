@@ -149,6 +149,7 @@
     * [Hooking into Tenant Switch](messaging/multi-tenancy-support/different-scenarios/hooking-into-tenant-switch.md)
     * [Shared and Multi Database Tenants](messaging/multi-tenancy-support/different-scenarios/shared-and-multi-database-tenants.md)
     * [Accessing Current Tenant in Message Handler](messaging/multi-tenancy-support/different-scenarios/accessing-current-tenant-in-message-handler.md)
+    * [Deriving Tenant from Inbound Messages](messaging/multi-tenancy-support/different-scenarios/deriving-tenant-from-inbound-messages.md)
     * [Events and Tenant Propagation](messaging/multi-tenancy-support/different-scenarios/events-and-tenant-propagation.md)
     * [Multi-Tenant aware Dead Letter](messaging/multi-tenancy-support/different-scenarios/multi-tenant-aware-dead-letter.md)
   * [Advanced Queuing Strategies](messaging/multi-tenancy-support/advanced-queuing-strategies.md)
