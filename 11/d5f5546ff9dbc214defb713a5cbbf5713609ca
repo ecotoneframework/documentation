@@ -1,0 +1,21 @@
+messaging/multi-tenancy-support/different-scenarios/deriving-tenant-from-inbound-messages.md
+  s_4ba416755315fc::t_f724159355f40f 1-100
+SUMMARY.md
+  s_4ba416755315fc::t_b0e95402ae3e6f 152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.1",
+  "base_commit_sha": "11d5f5546ff9dbc214defb713a5cbbf5713609ca",
+  "prompts": {},
+  "sessions": {
+    "s_4ba416755315fc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8a2f9f4c-b445-4141-bf4d-b881b2fe75d2",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
