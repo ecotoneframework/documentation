@@ -106,7 +106,7 @@ Repository injection boilerplate obscures business logic. Every handler follows 
 
 Database transactions are globally enabled for your message channel, but some handlers only call a 3rd party API or send emails — wrapping them in a transaction wastes connections and holds locks unnecessarily.
 
-* [**Async Endpoint Annotations**](modelling/asynchronous-handling/asynchronous-message-handlers.md#endpoint-annotations-enterprise) -- Pass `endpointAnnotations` on `#[Asynchronous]` to selectively disable transactions, message collectors, or inject custom configuration for specific handlers while keeping global defaults for the rest of the channel.
+* [**Asynchronous Execution Attributes**](modelling/asynchronous-handling/asynchronous-message-handlers.md#asynchronous-execution-attributes-enterprise) -- Pass `asynchronousExecution` attributes on `#[Asynchronous]` to selectively disable transactions, message collectors, route failures to per-handler Error Channels, or inject custom configuration for specific handlers while keeping global defaults for the rest of the channel.
 
 ### "We need production-grade RabbitMQ consumption"
 

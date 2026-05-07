@@ -229,7 +229,7 @@ You may put `Asynchronous` on the class, level so all the endpoints within a cla
 All asynchronous endpoints are marked with special attribute`Ecotone\Messaging\Attribute\AsynchronousRunningEndpoint`\
 If you want to [intercept](../extending-messaging-middlewares/interceptors/) all polling endpoints you should make use of [annotation related point cut](../extending-messaging-middlewares/interceptors/#pointcut) on this.
 
-### Endpoint Annotations (Enterprise)
+### Asynchronous Execution Attributes (Enterprise)
 
 {% hint style="success" %}
 This is Enterprise feature. To use it, **email us at** "**support@simplycodedsoftware.com**" **to receive trial key**. **Production license keys** are available at [https://ecotone.tech](https://ecotone.tech/pricing).
@@ -237,13 +237,13 @@ This is Enterprise feature. To use it, **email us at** "**support@simplycodedsof
 
 When database transactions are globally enabled for a message channel, all async handlers on that channel are wrapped in a transaction. However, some handlers may not need a transaction — for example, a handler that only calls a 3rd party API, sends an email, or triggers a webhook. Wrapping such handlers in an unnecessary database transaction wastes resources and holds connections open longer than needed.
 
-With **endpoint annotations** on the `#[Asynchronous]` attribute, you can configure interceptor behavior per-handler. Annotations must implement the `AsynchronousEndpointAttribute` interface.
+With **`asynchronousExecution`** attributes on the `#[Asynchronous]` attribute, you can configure runtime behavior per-handler — applied when the polling consumer processes the Message, not at the synchronous bus call. Attributes must implement the `AsynchronousEndpointAttribute` interface.
 
 ```php
 use Ecotone\Messaging\Attribute\Asynchronous;
 use Ecotone\Messaging\Attribute\WithoutDatabaseTransaction;
 
-#[Asynchronous("orders", endpointAnnotations: [new WithoutDatabaseTransaction()])]
+#[Asynchronous("orders", asynchronousExecution: [new WithoutDatabaseTransaction()])]
 #[CommandHandler(endpointId: "send_order_confirmation")]
 public function sendConfirmation(SendOrderConfirmation $command, EmailService $emailService): void
 {
@@ -254,31 +254,61 @@ public function sendConfirmation(SendOrderConfirmation $command, EmailService $e
 }
 ```
 
-The annotations are resolved at runtime when the message is consumed, and are available to interceptors targeting `AsynchronousRunningEndpoint`.
+The attributes are resolved at runtime when the message is consumed, and are available to interceptors targeting `AsynchronousRunningEndpoint`.
 
-#### Built-in Endpoint Annotations
+#### Built-in Asynchronous Execution Attributes
 
-| Annotation | Effect |
+| Attribute | Effect |
 |---|---|
 | `WithoutDatabaseTransaction` | Skips the global DBAL transaction interceptor for this handler |
 | `WithoutMessageCollector` | Skips message collection — events are sent directly to channels during handler execution instead of being buffered and released after completion |
+| `ErrorChannel` | Routes failures from this handler to a per-handler Error Channel — see [Per-Handler Error Channel](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#per-handler-error-channel-for-asynchronous-handlers) |
+| `DelayedRetry` | Retries the handler with the configured delay/backoff, then routes to a dead letter channel on exhaustion — see [Per-Handler Delayed Retry](../recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/#per-handler-delayed-retry-for-asynchronous-handlers). Mutually exclusive with `ErrorChannel`. |
 
-#### Custom Endpoint Annotations
+#### Combining Asynchronous Execution Attributes
 
-You can create your own endpoint annotations and inject them into interceptors:
+Multiple attributes compose on a single handler. A common combination is `WithoutDatabaseTransaction` together with `ErrorChannel`: the handler doesn't need a DB transaction because it only calls a 3rd party API, but you still want failures captured to a dedicated error channel for retry or review.
+
+```php
+use Ecotone\Messaging\Attribute\Asynchronous;
+use Ecotone\Messaging\Attribute\ErrorChannel;
+use Ecotone\Messaging\Attribute\WithoutDatabaseTransaction;
+
+#[Asynchronous(
+    "orders",
+    asynchronousExecution: [
+        new WithoutDatabaseTransaction(),
+        new ErrorChannel("emailDeliveryErrors"),
+    ]
+)]
+#[CommandHandler(endpointId: "send_order_confirmation")]
+public function sendConfirmation(SendOrderConfirmation $command, EmailService $emailService): void
+{
+    // No DB transaction is opened around this handler — the global transaction interceptor is skipped.
+    // If the email API throws, the failed Message is captured to "emailDeliveryErrors" instead of
+    // propagating up the polling consumer; other handlers on the "orders" channel keep their defaults.
+    $emailService->send($command->email, $command->orderId);
+}
+```
+
+The attributes are independent — each one is read by the interceptor it concerns (`WithoutDatabaseTransaction` by the DBAL transaction interceptor, `ErrorChannel` by the polling consumer's error interceptor). Order in the array does not matter.
+
+#### Custom Asynchronous Execution Attributes
+
+You can create your own attributes and inject them into interceptors:
 
 ```php
 use Ecotone\Messaging\Attribute\AsynchronousEndpointAttribute;
 
 #[Attribute]
-class CustomRetryPolicy implements AsynchronousEndpointAttribute
+class CustomDelayedRetry implements AsynchronousEndpointAttribute
 {
     public function __construct(public int $maxRetries = 3) {}
 }
 ```
 
 ```php
-#[Asynchronous("orders", endpointAnnotations: [new CustomRetryPolicy(maxRetries: 5)])]
+#[Asynchronous("orders", asynchronousExecution: [new CustomDelayedRetry(maxRetries: 5)])]
 #[CommandHandler(endpointId: "place_order_endpoint")]
 public function placeOrder(PlaceOrderCommand $command): void {}
 ```
@@ -289,9 +319,9 @@ Then access it in an interceptor:
 #[Around(pointcut: AsynchronousRunningEndpoint::class)]
 public function retry(
     MethodInvocation $invocation,
-    ?CustomRetryPolicy $policy = null
+    ?CustomDelayedRetry $policy = null
 ): mixed {
-    // $policy is injected from the handler's endpointAnnotations
+    // $policy is injected from the handler's asynchronousExecution attributes
     return $invocation->proceed();
 }
 ```

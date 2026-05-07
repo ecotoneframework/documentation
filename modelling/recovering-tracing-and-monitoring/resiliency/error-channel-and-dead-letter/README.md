@@ -125,6 +125,17 @@ public function errorConfiguration()
 }
 ```
 
+{% hint style="info" %}
+**Delayed Retries require an asynchronous Message Channel as the source.**
+
+The retry mechanism reschedules the failed Message back onto the originating pollable Channel with a `DELIVERY_DELAY`. That requires the Message to have come from an async [Message Channel](../../../asynchronous-handling/asynchronous-message-handlers.md) (queue/database channel).
+
+For sources that don't have a pollable channel to retry into — synchronous Command Bus invocations, or [inbound Channel Adapters](../../../../messaging/messaging-concepts/inbound-outbound-channel-adapter.md) like `#[KafkaConsumer]` — `ErrorHandlerConfiguration` will throw `MessageHandlingException` with a clear message about the missing origination channel. For those use cases prefer:
+
+* **Synchronous gateway** — combine `#[ErrorChannel]` with `#[InstantRetry]` on the gateway, or route the Error Channel to an async Message Channel.
+* **Inbound Channel Adapter (Kafka, AMQP inbound, `#[Scheduled]`)** — route the Error Channel directly to a Dead Letter (e.g. `dbal_dead_letter`) without a delayed retry template; the failed Message can be replayed from the Dead Letter once the underlying problem is fixed.
+{% endhint %}
+
 ### Discarding all Error Messages
 
 If for some cases we want to discard Error Messages, we can set up error channel to default inbuilt one called **"nullChannel"**. \
@@ -190,6 +201,28 @@ interface ResilientCommandBus extends CommandBus
 
 Now instead of using **CommandBus**, we will be using **ResilientCommandBus** for sending Commands.\
 Whenever failure will happen, instead being propagated, it will now will be redirected to our Dead Letter and stored in database for later review.&#x20;
+
+{% hint style="warning" %}
+**`#[ErrorChannel]` must be placed on the messaging entry-point — not on the Message Handler.**
+
+The attribute is read only from gateway interfaces (extensions of `CommandBus`, `EventBus`, `QueryBus`, `MessagePublisher`, `#[BusinessMethod]` interfaces) and from the consumer entry-points like `#[KafkaConsumer]`. Placing it on a `#[CommandHandler]`, `#[EventHandler]` or `#[QueryHandler]` method has no effect — the exception will simply propagate back to the bus caller.
+
+This placement is required so the gateway-level interceptor stack (e.g. `#[WithTransactional]`, `#[InstantRetry]`) wraps the handler call. On failure those interceptors fully unwind their effects — for example a database transaction is rolled back — **before** the failed Message is captured to the configured Error Channel. If the attribute were on the handler, side effects produced before the throw would be persisted alongside the error record, and the rollback boundary would be lost.
+
+```php
+// ✅ Correct — on the entry-point
+#[ErrorChannel("dbal_dead_letter")]
+interface ResilientCommandBus extends CommandBus {}
+
+// ❌ Wrong — silently ignored
+final class TicketService
+{
+    #[ErrorChannel("dbal_dead_letter")] // no effect
+    #[CommandHandler("createTicket")]
+    public function create(CreateTicket $command): void { /* ... */ }
+}
+```
+{% endhint %}
 
 ### Command Bus with Error Channel and Instant Retry
 
@@ -270,4 +303,116 @@ public function errorConfiguration()
 
 {% hint style="success" %}
 Of course we could add Dead Letter channel for our delayed retries configuration. Closing the full flow, that even if in case delayed retries failed, we will end up with Message in Dead Letter.
+{% endhint %}
+
+### Command Bus with Delayed Retry
+
+For the common case of "retry with delay, then dead-letter on exhaustion" you don't need to wire an `ErrorHandlerConfiguration` separately — declare the policy inline on your gateway with `#[DelayedRetry]`:
+
+```php
+#[DelayedRetry(
+    initialDelayMs: 1000,
+    multiplier: 2,
+    maxAttempts: 3,
+    deadLetterChannel: 'dbal_dead_letter',
+)]
+interface ResilientCommandBus extends CommandBus
+{
+}
+```
+
+Failures from any command sent through `ResilientCommandBus` are routed to a generated Error Channel, retried with the configured backoff and, on exhaustion, routed to `dbal_dead_letter`.
+
+`#[DelayedRetry]` and `#[ErrorChannel]` are mutually exclusive on the same gateway interface — choose `#[ErrorChannel]` when the failure destination is a channel you've already configured (typically via `ErrorHandlerConfiguration`) and want to share across multiple gateways; choose `#[DelayedRetry]` when the policy is specific to that gateway and you don't need to share it.
+
+{% hint style="success" %}
+`#[DelayedRetry]` on a gateway interface is available as part of **Ecotone Enterprise**. Bootstrapping an application that declares `#[DelayedRetry]` on a gateway without an Enterprise licence will throw a `LicensingException` at startup.
+{% endhint %}
+
+## Per-Handler Error Channel for Asynchronous Handlers
+
+When multiple asynchronous handlers share the same transport channel (e.g. `'orders'`), each handler can declare its own Error Channel via the `asynchronousExecution` parameter of `#[Asynchronous]`. Failures are routed per-handler, so different handlers on the same transport can have different error-handling policies.
+
+```php
+final class OrderProjectors
+{
+    #[Asynchronous('orders', asynchronousExecution: [new ErrorChannel('paymentsErrors')])]
+    #[CommandHandler('order.process_payment', 'paymentsHandler')]
+    public function processPayment(ProcessPayment $command): void
+    {
+        // ...
+    }
+
+    #[Asynchronous('orders', asynchronousExecution: [new ErrorChannel('shippingErrors')])]
+    #[CommandHandler('order.ship', 'shippingHandler')]
+    public function ship(ShipOrder $command): void
+    {
+        // ...
+    }
+}
+```
+
+Both handlers consume from the `'orders'` async transport, but a failure in `processPayment` lands in `paymentsErrors`, and a failure in `ship` lands in `shippingErrors`. The two policies can be completely different — one queue could feed a Dead Letter, the other could resend with delayed retries.
+
+{% hint style="success" %}
+Per-handler `#[ErrorChannel]` via `asynchronousExecution` is available as part of **Ecotone Enterprise.**
+{% endhint %}
+
+### Resolution Order
+
+When resolving where a failed message should go, Ecotone applies the most specific configuration first:
+
+1. **Per-handler** `#[ErrorChannel]` or `#[DelayedRetry]` declared via `#[Asynchronous(asynchronousExecution: [...])]` — wins for that specific handler.
+2. **Per-channel** error channel set explicitly on the consumer's `PollingMetadata` (e.g. `PollingMetadata::create('orders')->setErrorChannelName(...)`).
+3. **Global default** error channel from `withDefaultErrorChannel(...)`.
+
+This means a per-handler attribute overrides the global default error channel for that handler only — other handlers on the same transport continue to use the default.
+
+## Per-Handler Delayed Retry for Asynchronous Handlers
+
+Use `#[ErrorChannel]` when you want the handler to use a **predefined** error channel — typically one set up via an [`ErrorHandlerConfiguration`](#delayed-retries) extension object — so several handlers can share the same retry + dead-letter policy.
+
+Use `#[DelayedRetry]` when the policy is **specific to a single handler** and doesn't need to be reused. The retry shape and dead letter destination are declared inline on the handler — failures are retried with the configured delay/backoff and, on exhaustion, routed to the dead letter channel you specify.
+
+```php
+final class OrderHandlers
+{
+    #[Asynchronous('orders', asynchronousExecution: [
+        new DelayedRetry(
+            initialDelayMs: 1000,
+            multiplier: 2,
+            maxAttempts: 3,
+            deadLetterChannel: 'dbal_dead_letter',
+        ),
+    ])]
+    #[CommandHandler('order.charge', 'chargeHandler')]
+    public function charge(ChargeOrder $command): void
+    {
+        // On failure: retried 3 times with exponential backoff (1s, 2s, 4s),
+        // then routed to "dbal_dead_letter" if all retries are exhausted.
+    }
+}
+```
+
+### Parameters
+
+| Parameter | Required | Description |
+|---|---|---|
+| `initialDelayMs` | yes | Delay before the first retry, in milliseconds |
+| `multiplier` | no (default `1`) | Backoff multiplier between retries; `1` = constant delay, `>1` = exponential |
+| `maxDelayMs` | no | Cap on the delay between retries; `null` = no cap |
+| `maxAttempts` | no (default `3`) | Maximum number of retries before giving up; `null` = unlimited |
+| `deadLetterChannel` | no | Where to route a Message after retries are exhausted; `null` = the failure throws and is handled by the consumer's `FinalFailureStrategy` |
+
+### Mutual exclusion with `#[ErrorChannel]`
+
+`#[DelayedRetry]` and `#[ErrorChannel]` cannot both appear on the same handler — they are alternative error-handling strategies:
+
+* `#[ErrorChannel]` — point failures at an error channel you've already defined elsewhere (typically via an [`ErrorHandlerConfiguration`](#delayed-retries) extension object, which sets up retry + dead-letter behaviour once and gives it a name). Multiple handlers can share the same configured channel, so the retry/dead-letter policy lives in one place and is reused across the application.
+* `#[DelayedRetry]` — declare the retry shape and dead letter destination directly on the handler; useful when the policy is specific to that handler and you don't want to share it.
+
+If both attributes are declared on the same handler, the application fails to bootstrap with a descriptive `ConfigurationException`.
+
+{% hint style="success" %}
+`#[DelayedRetry]` is available as part of **Ecotone Enterprise.**
 {% endhint %}
