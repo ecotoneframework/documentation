@@ -1,0 +1,128 @@
+messaging/messaging-concepts/message-endpoint/service-activator.md
+  s_7077e695a77b61::t_3c9ed95106ef48 7
+modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md
+  s_7077e695a77b61::t_01d4435dfec15c 7,9-13,16
+modelling/recovering-tracing-and-monitoring/resiliency/final-failure-strategy.md
+  s_7077e695a77b61::t_a74ee4cfe66e09 7-9
+modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/dbal-dead-letter.md
+  s_7077e695a77b61::t_d331e588361799 7-8,11
+modelling/recovering-tracing-and-monitoring/message-handling-isolation.md
+  s_7077e695a77b61::t_daa6e9400f5dde 7,9
+modelling/extending-messaging-middlewares/extending-message-buses-gateways.md
+  s_7077e695a77b61::t_2f0de44eb491a8 7
+modelling/microservices-php/distributed-bus/README.md
+  s_7077e695a77b61::t_5673b25dc39277 7,9,11-15
+modelling/microservices-php/message-consumer.md
+  s_7077e695a77b61::t_bbd95f8e1f0463 7
+messaging/multi-tenancy-support/different-scenarios/README.md
+  s_7077e695a77b61::t_e0d5256507fad7 7-31
+modelling/command-handling/state-stored-aggregate/README.md
+  s_7077e695a77b61::t_6575b4fdb2757b 13-15,19-21,25,29,32,38,41,48,50,60,63,66,71,74-75,78,80-81,83,85-87,90-91,93-97,99,101,103-111,116-119,121
+modelling/recovering-tracing-and-monitoring/resiliency/error-channel-and-dead-letter/README.md
+  s_7077e695a77b61::t_d6b7d0e743a2e5 7,9
+modelling/asynchronous-handling/scheduling.md
+  s_7077e695a77b61::t_7a2ab22722301d 7
+modelling/asynchronous-handling/asynchronous-message-handlers.md
+  s_7077e695a77b61::t_1130794dd21acb 9,11
+quick-start-php-ddd-cqrs-event-sourcing/resiliency-and-error-handling.md
+  s_7077e695a77b61::t_effac3cc08660d 17
+modelling/asynchronous-handling/time-to-live.md
+  s_7077e695a77b61::t_595652e43ea79a 7
+messaging/messaging-concepts/message-channel.md
+  s_7077e695a77b61::t_2d729500d7f659 9-17
+modelling/command-handling/business-interface/introduction.md
+  s_7077e695a77b61::t_72245ef3b865a1 11
+modelling/recovering-tracing-and-monitoring/README.md
+  s_7077e695a77b61::t_747769860fdb95 7,9-13
+modelling/business-workflows/orchestrators.md
+  s_7077e695a77b61::t_ec417491c5c820 455
+README.md
+  s_7077e695a77b61::t_0355a64c71c9a0 13
+modelling/extending-messaging-middlewares/intercepting-asynchronous-endpoints.md
+  s_7077e695a77b61::t_1af19ce3ebc095 7-9,13
+modelling/microservices-php/distributed-bus/distributed-bus-interface.md
+  s_7077e695a77b61::t_3859689bf4efbb 7-8,11
+modelling/asynchronous-handling/message-priority.md
+  s_7077e695a77b61::t_38b55e8abbe240 7,9
+SUMMARY.md
+  s_7077e695a77b61::t_4cb2af8c83a0a3 83,91
+  s_7077e695a77b61::t_ace679241d4ce0 116
+messaging/messaging-concepts/message-endpoint/splitter.md
+  s_7077e695a77b61::t_5cc668ad944d70 7-9
+tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md
+  s_7077e695a77b61::t_13ed74d9b86fa6 84
+  s_7077e695a77b61::t_df6e4c5b49e60c 13,18,21
+  s_7077e695a77b61::t_a03ad011201304 329-330
+  s_7077e695a77b61::t_d062785f7291f6 379
+  s_7077e695a77b61::t_1d328ecd919a57 93
+modelling/extending-messaging-middlewares/interceptors/README.md
+  s_7077e695a77b61::t_629ab026b2f51f 7,9,11,13,16
+modules/symfony/README.md
+  s_7077e695a77b61::t_f1febe31be1835 32
+modelling/command-handling/saga.md
+  s_7077e695a77b61::t_a41c3b2b754fb9 7-51
+modelling/event-sourcing/event-sourcing-introduction/persistence-strategy.md
+  s_7077e695a77b61::t_afa404df10325e 7-39
+modelling/recovering-tracing-and-monitoring/resiliency/resilient-sending.md
+  s_7077e695a77b61::t_8e7e3435178c59 7-9
+modelling/event-sourcing/event-sourcing-introduction/event-sourcing-aggregates/README.md
+  s_7077e695a77b61::t_e3981ba7bd7254 7-17
+  s_7077e695a77b61::t_ef9456c06b581b 18-29
+modelling/asynchronous-handling/delaying-messages.md
+  s_7077e695a77b61::t_d3bb434ae38f3a 7
+messaging/conversion/README.md
+  s_7077e695a77b61::t_a018507725c060 7-15
+modelling/extending-messaging-middlewares/message-headers.md
+  s_7077e695a77b61::t_077ac1ce53bd12 7
+modelling/command-handling/repository/README.md
+  s_7077e695a77b61::t_3e1b70ca4a91d3 7,9,11-19
+modelling/microservices-php/message-publisher.md
+  s_7077e695a77b61::t_0240fbf36a7d20 7
+messaging/messaging-concepts/messaging-gateway.md
+  s_7077e695a77b61::t_004e4152f25a64 9,11,14,17
+  s_7077e695a77b61::t_7d32282a97f911 128
+messaging/multi-tenancy-support/advanced-queuing-strategies.md
+  s_7077e695a77b61::t_fcff6a23b86ec5 7,9-15
+modules/laravel/laravel-queues.md
+  s_7077e695a77b61::t_970831063f7026 83
+modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md
+  s_7077e695a77b61::t_b9cac24e357c5c 7-14,21
+messaging/multi-tenancy-support/getting-started/README.md
+  s_7077e695a77b61::t_a37b782f1b2f2f 7-19
+modelling/recovering-tracing-and-monitoring/resiliency/concurrency-handling.md
+  s_7077e695a77b61::t_eacb0e4e9588a5 7
+modules/symfony/doctrine-orm.md
+  s_7077e695a77b61::t_f42e3e87cdf533 42
+tutorial-php-ddd-cqrs-event-sourcing/php-domain-driven-design.md
+  s_7077e695a77b61::t_5790e12fcd1493 59
+modules/laravel/eloquent.md
+  s_7077e695a77b61::t_8d01135d586d2c 47
+modelling/recovering-tracing-and-monitoring/resiliency/retries.md
+  s_7077e695a77b61::t_92d557cdb89fa2 49
+  s_7077e695a77b61::t_045edcc228a782 9,11
+modelling/extending-messaging-middlewares/README.md
+  s_7077e695a77b61::t_e36de1ca10a35e 7-23
+modelling/command-handling/business-interface/README.md
+  s_7077e695a77b61::t_3542738195c9ff 7-11
+  s_7077e695a77b61::t_215e304e9b4b61 12-19
+messaging/messaging-concepts/README.md
+  s_7077e695a77b61::t_bd37ae8a1bf2ea 7-33
+messaging/messaging-concepts/message-endpoint/README.md
+  s_7077e695a77b61::t_f15e722246189d 9-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "02374a9e8ea76c466b9e5f274fd847407f2f8bc1",
+  "prompts": {},
+  "sessions": {
+    "s_7077e695a77b61": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0a02827f-f765-4d98-983b-8a1f734550a0",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
