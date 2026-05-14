@@ -18,11 +18,11 @@ Works on the Laravel or Symfony you already run.
 composer require ecotone/laravel    # or ecotone/symfony-bundle
 ```
 
-**Install today. Write a command handler in the next five minutes. Add event sourcing three years from now on the same codebase — by writing new classes, not swapping libraries.**
+**Install today. Write a command handler in the next five minutes. Add event sourcing, workflows, asynchronous processing when need — by writing new classes, not swapping libraries.**
 
 ***
 
-## The 30-second proof
+## Get Started Smoothly
 
 You start here on **day one**:
 
@@ -124,39 +124,17 @@ Every other PHP alternative forces you to re-decide architecture at each column 
 
 ## Why companies pick Ecotone
 
-### 1. No forced migrations as your domain grows
-
-Every other PHP choice commits to a ceiling on day one — beyond it lies integration work:
-
-| Alternative                       | What it is                                                                                                                                                                                                                                                                                    | Integration you'll need                                                                                                                                                                                                                   | Ceilings as you scale                                                                                                                                                                                                                                                                                                  |
-| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Spatie laravel-event-sourcing** | Laravel-only event sourcing. Aggregates, projectors, reactors — ergonomic on Eloquent and Laravel queues.                                                                                                                                                                                     | Asynchronous messaging · sagas · outbox · dedup middleware · PII encryption · parallel-rebuild strategy.                                                                                                                                  | **Single-process projection rebuild.** No per-projector cursor; **no gap detection** — events committed in concurrent transactions can be silently skipped; async retry re-runs every handler; projectors cannot emit downstream events — integration cannot fix the underlying dispatch model.                        |
-| **EventSauce**                    | Framework-agnostic event-sourcing library. Clean aggregate + event-store primitives with minimal opinion.                                                                                                                                                                                     | Asynchronous messaging · command/query bus · sagas · workflows · outbox · dedup · PII encryption.                                                                                                                                         | **Per-handler failure isolation.** The first throwing consumer aborts dispatch for siblings; retry re-runs every consumer on the same envelope. No subscription engine, no per-consumer cursor, **no gap detection** (concurrent-commit sequences can be silently skipped). Projections cannot emit downstream events. |
-| **Patchlevel event-sourcing**     | Doctrine-based event sourcing with command/query bus, subscription engine, per-subscription isolation, PostgreSQL push streaming, crypto-shredding inside the event store.                                                                                                                    | Asynchronous messaging · sagas · outbox · distributed bus · PII encryption for messages on brokers · automatic correlation/causation propagation.                                                                                         | **Intra-projection partitioning.** Rebuild supports blue-green via subscriber-id version bump, but a single projection still runs on one cursor — no parallel-worker rebuild for millions of events. Encryption stops at the event-store boundary. Subscriptions cannot emit downstream events.                        |
-| **Temporal PHP SDK**              | Durable workflows, polyglot across Go / Java / TypeScript / PHP. Workflow execution with signals, queries, activities.                                                                                                                                                                        | Event-sourcing library · CQRS bus · broker adapters inside activities (Temporal can't use your existing RabbitMQ / Kafka / SQS) · glue to push events into Temporal as workflow signals.                                                  | **Domain event stream ownership.** Workflow state lives in Temporal's internal event history — not a stream you own. You cannot add new subscribers later or build custom projections from replay history as your domain evolves. Also brings its own cluster (Frontend / History / Matching / Worker).                |
-| **Symfony Messenger alone**       | Message dispatch with pluggable transports, retry, failure transport, middleware. First-class Symfony component.                                                                                                                                                                              | Event-sourcing library (plus glue to push stream events through the bus and handle its custom serialization) · sagas · outbox · idempotency/dedup · PII encryption · correlation/causation propagation · multi-tenant routing middleware. | **Per-handler failure isolation + multi-tenant topology.** A single envelope is dispatched through all handlers. No built-in outbox, dedup, idempotency, or multi-tenant queue support.                                                                                                                                |
-| **Laravel Queues / Horizon**      | Job runner with supervisors, retries, rate limiting, batches, chains. Excellent operational UI via Horizon.                                                                                                                                                                                   | Command/query/event bus · aggregates · event sourcing · sagas · outbox · dedup · PII encryption · correlation/causation propagation.                                                                                                      | **Every architectural pattern.** It's a job runner, not a message bus — every pattern becomes a separate library decision.                                                                                                                                                                                             |
-| **Ecotone**                       | PHP architecture layer. Command/query/event buses, aggregates, event sourcing, sagas, projections, outbox, distributed bus, EIP routing, per-handler isolation, and end-to-end PII encryption — all attribute-driven, on the brokers you already operate (RabbitMQ, Kafka, SQS, Redis, DBAL). | Integrates seamlessly into your existing architecture via the Symfony Bundle, the Laravel Provider, or Ecotone Lite for any other framework.                                                                                              | **Built on a messaging foundation.** Scalability, resiliency, and per-handler failure isolation are provided uniformly for every higher-level building block — asynchronous event handlers, projections, sagas, and workflows all inherit them. New capabilities are new attributes on the same code.                  |
-
-### Composable with alternatives. Complete standalone.
+#### 1. Composable with alternatives. Complete standalone.
 
 Ecotone doesn't have to be the entire stack. It composes with the other libraries above when a team already has a preferred tool for one layer:
 
-* **Ecotone as the orchestration / saga / outbox layer, delegating long-running cross-language durable workflows to Temporal.**
-* **Ecotone as the CQRS, workflows, and asynchronous communication layer, delegating event sourcing to EventSauce, Patchlevel, Spatie laravel-event-sourcing, or your own ES library.**
-* **Ecotone as the Event Sourcing layer** — you bring message handlers on Symfony Messenger (or your bus of choice); Ecotone persists the events and provides scalable (partitioned + streaming) projections.
+* **Ecotone as the orchestration / saga / outbox layer**
+* **Ecotone as the CQRS, workflows, and asynchronous communication layer**
+* **Ecotone as the Event Sourcing layer**
 
-**Ecotone is the only toolkit on this list that runs fully standalone.** Every other option requires you to integrate something for the layers it does not cover. Ecotone covers every layer itself when you want it to, and composes with alternatives when you prefer a specific tool for one piece.
+**Ecotone is the only toolkit on this list that runs fully standalone.** Every other option requires you to integrate something for the layers it does not cover. Ecotone covers every layer itself when you want it to, and composes with alternatives when you prefer a specific tool for one piece. One package to upgrade, one model to teach.
 
-### 2. Replaces the Laravel and Symfony patchwork with one toolkit
-
-If you're on Laravel today, reaching for the full set of patterns typically means stitching Spatie laravel-event-sourcing + Durable Workflow + `Bus::chain` + a DIY outbox + listener-dedup middleware. Five libraries, five upgrade paths, five mental models, custom glue between them.
-
-If you're on Symfony, the common path is Messenger + Patchlevel or EventSauce (for the ES layer) + a community outbox package or DIY outbox + a DIY saga layer or Temporal-on-the-side.
-
-**Ecotone collapses all of it into attributes on plain PHP classes.** One package to upgrade, one model to teach.
-
-### 3. True per-handler failure isolation — a copy of the message to every handler
+#### 2. True per-handler failure isolation — a copy of the message to every handler
 
 Ecotone delivers per-handler failure isolation by dispatching a **copy of the message to every handler**. Each handler processes its own message, retries independently, and fails independently. A failure in one handler cannot affect, block, or re-trigger any sibling handler, because they are never sharing a message envelope in the first place.
 
@@ -164,7 +142,7 @@ This is the structural difference from Symfony Messenger: Messenger dispatches a
 
 Pair that with a first-class transactional outbox and deduplication, and the three patterns you would otherwise assemble from idempotency middleware + a community outbox package + a custom dedup layer become default behavior.
 
-### 4. Production resilience is the default, not assembly
+#### 3. Production resilience is the default, not assembly
 
 * **Transactional outbox** — business write and message publish in one atomic commit. No "we published but the DB rolled back" ghost events. No "we committed but the publish crashed" lost events.
 * **Dead letter queue** — failed messages captured with full context, replayable with one command.
@@ -172,19 +150,19 @@ Pair that with a first-class transactional outbox and deduplication, and the thr
 * **OpenTelemetry tracing** — every message traced across sync and async hops.
 * **Retries with configurable backoff** — per channel, no custom wiring.
 
-### 5. Framework-portable business code
+#### 4. Framework-portable business code
 
 Same aggregates, handlers, sagas, and projections run on Laravel, Symfony, or any PSR-11 container. A team that starts on Laravel and later consolidates on Symfony (or vice versa) does not rewrite business logic. For companies hiring from both PHP pools, handling acquisitions, or wanting long-term framework independence, this removes a category of strategic risk.
 
 No other option on this list offers framework portability.
 
-### 6. Battle-tested patterns, not invented ones
+#### 5. Battle-tested patterns, not invented ones
 
 Ecotone is built on Enterprise Integration Patterns — the same foundation behind Spring Integration, Axon Framework (Java), NServiceBus and MassTransit (.NET), and Apache Camel. These patterns run banking, telecom, and logistics systems in production at scale, measured in decades.
 
 Ecotone brings them to PHP as attribute-driven code on your existing Laravel or Symfony application. Your team writes POPOs; Ecotone applies the patterns.
 
-### 7. Composable messaging — pipe, route, split, filter, transform on the fly
+#### 6. Composable messaging — pipe, route, split, filter, transform on the fly
 
 The EIP foundation is not a lineage — it is a working catalogue of composable primitives you write as attributes:
 
@@ -197,7 +175,7 @@ The problem these primitives solve is complex integration flows that usually col
 
 **See it built end-to-end:** [Composing Building Blocks](composing-building-blocks.md) — a walk-through of an Order Fulfillment system that uses every primitive above, with side-by-side Symfony Messenger and Laravel Queues comparisons.
 
-### 8. Multi-tenancy down to the message channel
+#### 7. Multi-tenancy down to the message channel
 
 Multi-tenancy in Ecotone is not just isolated storage. It extends through the messaging topology:
 
@@ -208,7 +186,7 @@ Multi-tenancy in Ecotone is not just isolated storage. It extends through the me
 
 This is multi-tenancy as an architectural property of the message bus, not a WHERE clause in your queries.
 
-### 9. Endpoint-ID routing — refactor without fear, deserialize only when needed
+#### 8. Endpoint-ID routing — refactor without fear, deserialize only when needed
 
 Ecotone routes messages by **endpoint ID**, not by class name. Three direct consequences:
 
@@ -216,7 +194,7 @@ Ecotone routes messages by **endpoint ID**, not by class name. Three direct cons
 * **Deserialize only when needed.** A message passing through a router or pipe is not deserialized until it reaches its actual endpoint. Messages that do not need processing at a given node stay serialized — meaningful throughput gains on high-fanout and pass-through workloads.
 * **Protocol-stable integration between services.** Published messages stay compatible with consumers as your internal code structure evolves. The fully-qualified class name is not part of the wire contract; the endpoint ID is.
 
-### 10. Compose patterns without glue code — the attribute is the wiring
+#### 9. Compose patterns without glue code — the attribute is the wiring
 
 The reason CQRS, event sourcing, sagas, and projections compose seamlessly is that **they are all handlers on the same messaging foundation**. There is no wiring layer, no event-to-handler mapping configuration, no container registration, no factory class.
 
@@ -254,35 +232,6 @@ Four different building blocks — Aggregate, Saga, Projection, async event hand
 
 This is what "one toolkit, every pattern, no glue" means in practice.
 
-### 11. Resilience as a per-bus policy — extend the CommandBus for your use case
-
-Resilience in Ecotone is not a global setting. You define **custom buses per use case** by extending `CommandBus`, `EventBus`, or `QueryBus` into a use-case-specific interface, then attach the policy as attributes directly on the interface declaration.
-
-```php
-use Ecotone\Messaging\Attribute\Deduplicated;
-use Ecotone\Messaging\Attribute\ErrorChannel;
-use Ecotone\Modelling\Attribute\InstantRetry;
-use Ecotone\Modelling\CommandBus;
-
-#[InstantRetry(retryTimes: 2)]           // retry transient failures
-#[ErrorChannel('webhook_errors')]         // unrecoverable failures → DLQ channel
-#[Deduplicated('paymentId')]              // skip if this paymentId was already processed
-interface WebhookCommandBus extends CommandBus
-{
-}
-```
-
-Three attributes, three orthogonal guarantees — retry, dead-letter routing, and deduplication — applied to every command dispatched through this bus. The default `CommandBus` stays synchronous and fail-fast; a separate `InternalApiCommandBus` can have its own tighter retry budget. All of them dispatch to the **same command handlers** — the policy is the bus, not the handler.
-
-### 12. `#[Priority]` works everywhere — one attribute, uniform semantics
-
-Priority in Ecotone is a single attribute that applies uniformly across every handler type and across synchronous and asynchronous dispatch:
-
-* **Synchronous dispatch** — when multiple handlers subscribe to the same event (Event Handlers, Projections, Sagas), `#[Priority]` orders their invocation.
-* **Asynchronous dispatch** — where the broker supports priority, Ecotone maps the attribute directly to the broker's mechanism: RabbitMQ's native priority queues (`x-max-priority`) for broker-native priority, or prioritized-queue routing for transports that consume per-queue.
-
-One attribute, uniform semantics across Event Handlers, Projections, Sagas, and async transports. No custom middleware, no separate "VIP transport" to configure, no if-branches in handlers.
-
 ***
 
 ## Trusted in regulated and high-stakes production
@@ -300,7 +249,7 @@ The features on the capability matrix below are not hypothetical. They run in sy
 
 ***
 
-## The full capability matrix
+## The Capability Matrix
 
 | Capability                                                                                                                                                                                                                           | Included out of the box                                                                                                                                                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
