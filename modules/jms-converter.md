@@ -24,14 +24,14 @@ Suppose we have JSON like below:
 ```javascript
 {
     "personName": "Johny",
-    "address": ["street": "A Good One", "houseNumber": 123
+    "address": {"street": "A Good One", "houseNumber": 123}
 }
 ```
 
 ```php
 $this->commandBus->sendWithRouting(
    "settings.change", 
-   '{"personName": "Johny","address":["street":"A Good One","houseNumber":123}',
+   '{"personName": "Johny","address":{"street":"A Good One","houseNumber":123}',
    "application/json"
 )
 
