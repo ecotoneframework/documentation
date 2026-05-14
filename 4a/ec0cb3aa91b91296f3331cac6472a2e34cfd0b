@@ -1,0 +1,41 @@
+modelling/event-sourcing/setting-up-projections/scaling-and-advanced.md
+  s_c213df9b4249dd::t_308374beffbc1a 180-187
+  s_c213df9b4249dd::t_b100bf4a75bb09 190-193
+modelling/event-sourcing/setting-up-projections/emitting-events.md
+  s_c213df9b4249dd::t_5ba15911e17845 9,11-34,36-38,44-50
+  s_c213df9b4249dd::t_d3f1d7a5bd4b4d 99-153
+  s_c213df9b4249dd::t_1191c98cc549d9 187-307
+modelling/event-sourcing/setting-up-projections/backfill-and-rebuild.md
+  s_c213df9b4249dd::t_73ab55e7d31e6d 11-50
+  s_c213df9b4249dd::t_26068f23f3b658 251-256
+  s_c213df9b4249dd::t_f423fb1e71d2a3 129,142-144
+modelling/event-sourcing/setting-up-projections/blue-green-deployments.md
+  s_c213df9b4249dd::t_4dc4b643070dc6 15-20
+  s_c213df9b4249dd::t_b628d2fcfe1729 123-128
+  s_c213df9b4249dd::t_827b8e3da994c2 175-184
+modelling/event-sourcing/setting-up-projections/gap-detection-and-consistency.md
+  s_c213df9b4249dd::t_1e778f68953add 11-16
+  s_c213df9b4249dd::t_5632b4c3751b7f 80-81
+  s_c213df9b4249dd::t_270d6307203b68 41-56,62-71,73,75
+modelling/event-sourcing/setting-up-projections/README.md
+  s_c213df9b4249dd::t_97196a91735d02 23-37
+modelling/event-sourcing/setting-up-projections/failure-handling.md
+  s_c213df9b4249dd::t_96e9a2930541a7 51-61,63-65,67
+  s_c213df9b4249dd::t_3c9339e39b183e 11-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.8",
+  "base_commit_sha": "4aec0cb3aa91b91296f3331cac6472a2e34cfd0b",
+  "prompts": {},
+  "sessions": {
+    "s_c213df9b4249dd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1f575096-aeeb-4a89-9017-92871dcde19c",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
