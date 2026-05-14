@@ -4,13 +4,15 @@ description: Distributed Bus for cross-service messaging in PHP
 
 # Distributed Bus
 
-## Distribution
+## The Problem
 
-Distribution Bus is [Message Gateway](../../../messaging/messaging-concepts/messaging-gateway.md) just like **CommandBus** or **EventBus**. \
-It creates smooth and elegant way for explicit communication between Applications (Services) without introducing any hassle and requirements for doing configurations, bindings and mappings. \
-It make it easy for Developers to build integrations and maintain them in the long-term.&#x20;
+Service A publishes `OrderWasPlaced`. Service B needs to react to it. Today you POST it over HTTP — and when B is down, A times out too. You've already written serialization glue, custom retry middleware, and routing tables for three service pairs, and adding a fourth feels like another week of plumbing.
 
-Read more in given Module section.
+## How Ecotone Solves It
+
+A **Distributed Bus** is a [Message Gateway](../../../messaging/messaging-concepts/messaging-gateway.md) like CommandBus or EventBus, but the destination is *another service* instead of a local handler. You publish or send the same way you do locally; Ecotone routes the message across your existing broker (RabbitMQ, Kafka, SQS, Redis, Symfony Messenger, Laravel Queues) without per-pair configuration.
+
+Read more in the relevant module section.
 
 ## Support
 

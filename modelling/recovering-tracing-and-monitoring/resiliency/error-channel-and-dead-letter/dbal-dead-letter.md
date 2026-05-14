@@ -4,9 +4,11 @@ description: DBAL-based dead letter queue for storing and replaying failed messa
 
 # Dbal Dead Letter
 
+You want failed messages stored next to your application data so they survive a broker restart, can be queried with SQL, and replayed via a console command without writing custom tooling. The **Dbal Dead Letter** is a table in the same database your aggregates live in, holding every error message with its exception, headers, and payload — ready to be reviewed, replayed, or deleted.
+
 ## Dbal Dead Letter
 
-Ecotone comes with full support for managing full life cycle of a error message by using [Dbal Module](../../../../modules/dbal-support.md#dead-letter).
+Ecotone provides full lifecycle management of error messages via the [Dbal Module](../../../../modules/dbal-support.md#dead-letter):
 
 * Store failed Message with all details about the exception
 * Allow for reviewing error Messages

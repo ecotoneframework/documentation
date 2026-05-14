@@ -4,8 +4,7 @@ description: Message Publisher for publishing to external message brokers
 
 # Message Publisher
 
-Message Publisher provide abstraction to send Message to other Services.\
-This way you can send message with simple interface without exposing Message Broker implementation and keeping possibility to easily switch implementation when needed.
+You're integrating with a third-party service that listens on RabbitMQ — they don't run Ecotone, they have their own wire format. You don't want your business code to know about the AMQP client, the topic name, or the serialization format. **Message Publisher** is a typed interface that publishes raw messages to an external broker; if you swap brokers later, the call sites don't change.
 
 ### Modules Providing Support
 

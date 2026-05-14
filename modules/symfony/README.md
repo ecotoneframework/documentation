@@ -29,4 +29,4 @@ If your code is kept inside other catalog, provide [namespaces](./#namespaces) c
 
 ### Links
 
-* [Building Symfony and Doctrine ORM Applications with Ecotone](../../modelling/event-sourcing/setting-up-projections/choosing-event-streams-for-projection.md)
+* [Building Symfony and Doctrine ORM Applications with Ecotone](../../modelling/event-sourcing/setting-up-projections/event-streams-and-handlers.md)

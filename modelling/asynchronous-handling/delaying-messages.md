@@ -4,8 +4,7 @@ description: Delaying message delivery for scheduled processing
 
 # Delaying Messages
 
-In case of Ecotone we don't delay whole Message, but specific Message Handler. \
-This helps in scenarios when we have multiple Event Handler and we would like to configure the delay differently. For example may we have a case, where as a result of Order being placed, we would want to delay notification, yet to call Payment Service right away.&#x20;
+You publish `OrderWasPlaced`. Two handlers subscribe: `chargeCard` (must run now) and `sendReminder` (run in 24 hours if the card hasn't been charged). With a single delay on the message, both fire together. Ecotone delays *per handler*, not per message — so one subscriber can run immediately while another waits 24 hours.&#x20;
 
 {% hint style="info" %}
 [Asynchronous Message Channel ](./)need to support delays, in order to make use of this feature.

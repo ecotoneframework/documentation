@@ -4,13 +4,9 @@ description: Message handling isolation for safe retries without side effects
 
 # Message Handling Isolation
 
-It's good to know how Ecotone solves the problem of **Message Handling Isolation**, which is one of the key features that allows us to build Resilient Messaging Systems.
+`OrderWasPlaced` has three subscribers: `sendConfirmation`, `debitAccount`, `scheduleShipping`. `sendConfirmation` succeeds. `debitAccount` fails. The retry runs all three handlers again — and now the customer gets two confirmation emails and shipping is scheduled twice. **Message Handling Isolation** gives each subscriber its own envelope, so a retry only re-runs the one that failed.
 
-## Sending an Event Message
-
-In Message-Based Systems we will have situation that as a result of given Event, we will want to trigger some actions. This can sending notification, but also calling an external Service or starting fully new separate flow etc.
-
-However those actions may actually fail for various of reasons and depending on how Messaging is implemented, it may help us to recover from this safely, or trigger unexpected side effects that may harm the business.
+This is one of Ecotone's foundational design choices, not a feature you opt into. Below we walk through what goes wrong without it, and how Ecotone routes events differently to make retries safe by default.
 
 ## Common Event Bus Implementation
 

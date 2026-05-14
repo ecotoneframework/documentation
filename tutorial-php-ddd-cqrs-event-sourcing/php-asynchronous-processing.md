@@ -10,15 +10,15 @@ Not having code for _Lesson 6?_ \
 `git checkout lesson-6`
 {% endhint %}
 
-`Ecotone` provides abstractions for asynchronous execution.
+Placing an order triggers four side-effects: charge the card, reserve stock, send the confirmation email, notify the warehouse. Doing them all synchronously means the customer waits four seconds — and one slow third-party times out the whole request. In this lesson we'll push that work onto a queue with one attribute.
 
 ### Asynchronous
 
 \
-We got new requirement:\
+We got a new requirement:\
 `User should be able to place order for different products.`&#x20;
 
-We will need to build `Order` aggregate.
+We will need to build an `Order` aggregate.
 
 Let's start by creating `PlaceOrderCommand` with ordered product Ids
 
@@ -81,7 +81,7 @@ namespace App\Domain\Order;
 use App\Infrastructure\AddUserId\AddUserId;
 use Ecotone\Messaging\Attribute\Asynchronous;
 use Ecotone\Modelling\Attribute\Aggregate;
-use Ecotone\Modelling\Attribute\AggregateIdentifier;
+use Ecotone\Modelling\Attribute\Identifier;
 use Ecotone\Modelling\Attribute\CommandHandler;
 use Ecotone\Modelling\Attribute\QueryHandler;
 use Ecotone\Modelling\QueryBus;
@@ -90,7 +90,7 @@ use Ecotone\Modelling\QueryBus;
 #[AddUserId]
 class Order
 {
-    #[AggregateIdentifier]
+    #[Identifier]
     private int $orderId;
 
     private int $buyerId;
@@ -326,8 +326,8 @@ public function __construct()
 We register our `AmqpConnectionFactory` under the class name `Enqueue\AmqpLib\AmqpConnectionFactory.` This will help Ecotone resolve it automatically, without any additional configuration.
 {% endhint %}
 
-Let's add our first `AMQP Backed Channel` (RabbitMQ Channel), in order to do it, we need to create our first `Application Context.` \
-Application Context is a non-constructor class, responsible for extending `Ecotone` with extra configurations, that will help the framework act in a specific way. In here we want to tell `Ecotone` about `AMQP Channel` with specific name. \
+Let's add our first `AMQP Backed Channel` (RabbitMQ Channel), in order to do it, we need to create our first `Service Context.` \
+A Service Context is a non-constructor class, responsible for extending `Ecotone` with extra configurations, that will help the framework act in a specific way. In here we want to tell `Ecotone` about `AMQP Channel` with specific name. \
 Let's create new class `App\Infrastructure\MessagingConfiguration.`
 
 ```php
@@ -376,7 +376,7 @@ Endpoints using `Asynchronous` are required to have `endpointId` defined, the na
 ```
 
 {% hint style="info" %}
-You may mark [`Event Handler`](broken-reference) as asynchronous the same way.
+You may mark [`Event Handler`](../modelling/command-handling/external-command-handlers/event-handling.md) as asynchronous the same way.
 {% endhint %}
 
 {% hint style="success" %}

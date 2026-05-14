@@ -4,7 +4,7 @@ description: Message Consumer for consuming from external message brokers
 
 # Message Consumer
 
-Message Consumers allows you to connect your Service (application) with other Services, that can be written in different language or not using Ecotone's [Distributed Bus](distributed-bus/).
+A Java team publishes events on RabbitMQ. Your PHP service needs to consume them — but they don't follow Ecotone's wire format. **Message Consumer** is the inbound adapter for arbitrary external messages, letting you connect to services written in any language or framework that share a broker with you. It's the counterpart to [Message Publisher](message-publisher.md), and the right tool when you can't (or don't want to) put both ends on Ecotone's [Distributed Bus](distributed-bus/).
 
 ### Modules Providing Support
 

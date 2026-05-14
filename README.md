@@ -10,7 +10,7 @@ description: >-
 
 ## The PHP architecture layer that grows with your system — without rewrites
 
-From `#[CommandHandler]` on day one, to event sourcing, sagas, outbox, and distributed messaging at scale — **one package, same codebase, no forced migrations between growth stages.**
+You started clean — controllers, services, jobs. Eighteen months later, business logic is scattered across listeners, the queue retries handlers that already succeeded, the Stripe webhook double-charges customers because nothing dedupes it, and adding event sourcing means swapping libraries. Ecotone is built around a different growth path: **one package** that takes you from `#[CommandHandler]` on day one to event sourcing, sagas, outbox, and distributed messaging at scale — same codebase, no forced migrations between growth stages.
 
 Works on the Laravel or Symfony you already run.
 

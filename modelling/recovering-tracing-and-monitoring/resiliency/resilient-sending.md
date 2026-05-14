@@ -4,10 +4,9 @@ description: Resilient sending for guaranteed message delivery to async channels
 
 # Resilient Sending
 
-Whenever we use more than one storage during single action, storing to first storage may end up with success, yet the second may not.\
-This can happen when we store data in database and then send Messages to Message Broker.\
-If failure happen it can be that we will send some Message to Broker, yet fail to store related data or vice versa. \
-Ecotone provide you with tools to help solve this problem in order to make sending Messages to Message Broker resilient.
+During order processing you publish `OrderWasPlaced`, then fail to insert the order row. Now downstream services act on an order that doesn't exist. Or you publish first, the consumer fires immediately, and queries for an order whose row hasn't been committed yet. Either failure mode silently corrupts your data and is invisible until production breaks.
+
+**Resilient Sending** defers the publish until your transaction commits — so consumers never see ghost messages (published but never persisted) or premature messages (published before the data is visible).
 
 ## Message Collector
 

@@ -4,18 +4,16 @@ description: PHP Interceptors Middlewares
 
 # Interceptors (Middlewares)
 
-`Ecotone` provide possibility to handle [cross cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) via `Interceptors`. \
-`Interceptor` intercepts the process of handling the message, this means we can do actions like:&#x20;
+## The Problem
 
-* Enriching the [message](../../../messaging/messaging-concepts/message.md)
-* Stopping or modify usual processing cycle
-* Calling some shared functionality or adding additional behavior\
+You added an admin-only check to one Command Handler. Then to a second. By the fifth, the check has drifted in three places — one uses `executorId === 1`, another `$user->isAdmin()`, the third forgot to check at all. The same drift hits transaction wrappers, audit logging, authorization, and tracing. You want one place to declare these cross-cutting rules and target which handlers they apply to.
 
+## How Ecotone Solves It
 
-This all can be done without modifying the code itself, as we hook into the existing flows.
+If you've used Symfony Messenger middleware or Laravel's pipeline, **Interceptors** are the same idea — code that wraps a handler — with one extra capability: a **pointcut** that picks exactly which handlers the interceptor applies to. You declare the rule once, attach it to a class, namespace, or attribute, and Ecotone runs it for every matching message.
 
 {% hint style="info" %}
-If you are familiar with [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming) you will find a lot of similarities.
+The mechanism comes from [Aspect Oriented Programming](https://en.wikipedia.org/wiki/Aspect-oriented_programming); Interceptors handle [cross-cutting concerns](https://en.wikipedia.org/wiki/Cross-cutting_concern) like authorization, logging, transactions, and metrics — without modifying the handler code.
 {% endhint %}
 
 ## Interceptor

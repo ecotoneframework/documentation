@@ -4,12 +4,13 @@ description: Recovering, tracing, and monitoring message-driven applications
 
 # Recovering, Tracing and Monitoring
 
-To keep the system reliable and resilient it's important to handle errors with grace.\
-Ecotone provides solutions to handle failures within the system that helps in:
+A consumer crashes mid-handler. The Stripe webhook arrives twice. A `notify-customer` job fails forever and you can't tell why. Two workers race on the same aggregate and one's update gets silently overwritten. This section is the toolbox for everything that goes wrong after a message is dispatched.
 
-* Self-healing the application ([Instant and Delayed Message Handling Retries](resiliency/retries.md), [Locking](resiliency/concurrency-handling.md), [Isolation of failures](message-handling-isolation.md))
-* Ensuring Data Consistency ([Resilient Message Sending](resiliency/resilient-sending.md), [Outbox pattern](resiliency/outbox-pattern.md), [Message Deduplication](resiliency/idempotent-consumer-deduplication.md))
-* Recovering ([Dead Letter](resiliency/error-channel-and-dead-letter/), [Tracing](../../modules/opentelemetry-tracing-and-metrics/), [Monitoring](ecotone-pulse-service-dashboard.md))
+Ecotone provides solutions across three concerns:
+
+* **Self-healing** ([Instant and Delayed Retries](resiliency/retries.md), [Concurrency / Locking](resiliency/concurrency-handling.md), [Isolation of failures](message-handling-isolation.md))
+* **Data Consistency** ([Resilient Message Sending](resiliency/resilient-sending.md), [Outbox pattern](resiliency/outbox-pattern.md), [Message Deduplication](resiliency/idempotent-consumer-deduplication.md))
+* **Recovery & Visibility** ([Dead Letter](resiliency/error-channel-and-dead-letter/), [Tracing](../../modules/opentelemetry-tracing-and-metrics/), [Monitoring](ecotone-pulse-service-dashboard.md))
 
 {% hint style="success" %}
 To find out more about different use-cases, read related section about [Handling Failures in Workflows](../business-workflows/handling-failures.md).

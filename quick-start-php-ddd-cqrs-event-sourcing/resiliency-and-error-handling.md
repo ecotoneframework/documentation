@@ -14,6 +14,6 @@ Automatic retries, dead letter queues, and message replay — production resilie
 
 ## Read Blog Post
 
-[Building Reactive Message-Driven Systems in PHP](broken-reference)
+[Building Reactive Message-Driven Systems in PHP](https://blog.ecotone.tech/building-reactive-message-driven-systems-in-php/)
 
 [Ensuring data consistency with outbox pattern](https://blog.ecotone.tech/implementing-outbox-pattern-in-php-symfony-laravel-ecotone/)

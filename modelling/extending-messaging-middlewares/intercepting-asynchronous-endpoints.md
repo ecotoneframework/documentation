@@ -4,11 +4,13 @@ description: Intercepting asynchronous message endpoints in Ecotone PHP
 
 # Intercepting Asynchronous Endpoints
 
-Read [previous section](interceptors/) to find out more about Interceptors.
+You want a transaction wrapper, but only for handlers running asynchronously — synchronous Command handlers already get one from your Command Bus. Or you want to log async-only metrics, swap connections per-tenant, or apply rate-limiting to background work without touching synchronous flows. Pointing the interceptor at the `AsynchronousRunningEndpoint` class targets only the async path.
+
+Read [previous section](interceptors/) for an introduction to Interceptors.
 
 ## Intercepting Asynchronous Endpoints
 
-We may aswell intercept Asynchronous Endpoints pretty easily. We do it by using pointing to **AsynchronousRunningEndpoint** class.
+You target asynchronous endpoints by using **AsynchronousRunningEndpoint** as the pointcut.
 
 ```php
 class TransactionInterceptor

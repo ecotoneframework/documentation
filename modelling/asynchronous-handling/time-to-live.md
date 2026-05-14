@@ -4,8 +4,7 @@ description: Time to live for automatic message expiration
 
 # Time to Live
 
-We may define Time to Live for Messages. This way if Message will not be handled within specific amount of time, it will be automatically discarded. \
-This is useful in scenarios like sending notifications, where given notification like One Time Password may actually have meaning only for 5 minutes.&#x20;
+User requests an OTP. Your queue is backed up; the SMS worker is 8 minutes behind. By the time the message is handled, the code is invalid and you spam the user with a useless code. **Time to Live** drops the message if it sits in the queue longer than its lifetime — useful for OTPs, real-time notifications, cache-warm requests, and any message whose value expires before delivery.&#x20;
 
 ## Message Handler Time to Live
 

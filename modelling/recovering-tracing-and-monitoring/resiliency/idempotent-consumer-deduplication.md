@@ -4,14 +4,21 @@ description: Idempotent consumer pattern for message deduplication in PHP
 
 # Idempotency (Deduplication)
 
+## The Problem
+
+Stripe sends the same `payment.succeeded` webhook twice. Your handler charges the customer twice. You add a unique key on `paymentId` — except the second insert silently no-ops, so you can't tell the duplicate apart from a re-delivery. Brokers don't guarantee exactly-once delivery, so any message that has a side effect (charge, send email, increment counter) needs deduplication built in.
+
+## How Ecotone Solves It
+
+Ecotone stamps every Message with a unique Message Id. When Dbal Module is installed, asynchronous handlers automatically dedupe on that id — a re-delivered message is detected and skipped before your handler runs. For external messages (webhooks, third-party events), you can dedupe on a domain key — `#[Deduplicated('paymentId')]` — so your handler is invoked at most once per `paymentId` regardless of how many times the webhook fires.
+
 ## Installation
 
 In order to use Deduplication, install [Ecotone's Dbal Module](../../../modules/dbal-support.md).
 
 ## Default Idempotent Message Consumer
 
-The role of deduplication is to safely receive same message multiple times, as there is no guarantee from Message Brokers that we will receive the same Message once.\
-In Ecotone all Messages are identifiable and contains of Message Id. Message Id is used for deduplication by default, when Dbal Module is installed. If message was already handled, it will be skipped.&#x20;
+In Ecotone all Messages are identifiable and contain a Message Id. The Message Id is used for deduplication by default when Dbal Module is installed. If a message was already handled, it will be skipped.&#x20;
 
 {% hint style="success" %}
 **Deduplication** is enabled by default and works whenever message is consumed in [asynchronous way](../../asynchronous-handling/).

@@ -452,7 +452,7 @@ class ConditionalProcessingOrchestrator
             "finalize.process"
         ];
     }
-therefore void return type and workflow is finalized here.
+
     #[InternalHandler(inputChannelName: "check.eligibility")]
     public function checkEligibility(Application $application): ?Application
     {

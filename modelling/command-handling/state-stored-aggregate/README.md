@@ -10,46 +10,44 @@ Works with: **Laravel**, **Symfony**, and **Standalone PHP**
 
 ## The Problem
 
-Business rules are enforced in multiple places — a validation here, a check there. When rules change, you update three files and miss a fourth. There's no single source of truth for what an Order or User can do, and no guarantee that business invariants are always protected.
+You have an `Order` model. The rule "an order can only be paid once" lives in the `OrderController::pay()` action. There's another check in the Stripe webhook listener. There's a third in the admin override controller. A new developer adds a fourth code path — a console command that updates the row directly — and skips the check. Production ships double-paid orders.
+
+The root cause: anyone in the codebase can write `$order->status = 'paid'` or `$order->setStatus('paid')`. There's no enforcement boundary. The invariant is whatever the most-careful caller remembered to check.
 
 ## How Ecotone Solves It
 
-Ecotone's **Aggregates** encapsulate business rules in a single place. Commands are routed directly to the aggregate, which protects its own invariants. Ecotone handles loading and saving — you write business logic, not infrastructure code.
+An **Aggregate** is a class where the only way to mutate state is through `#[CommandHandler]` methods. Those methods are the rules. There's no `setStatus()` because the rule is: "to mark an order as paid, send a `MarkOrderAsPaid` command, and the aggregate decides whether that's allowed." The webhook, the controller, the console command — they all go through the same path. The invariant lives in one method and cannot be bypassed.
+
+Ecotone handles loading the aggregate from your repository, routing the command to the right method, and saving the result. You write the business logic; the framework handles the plumbing.
 
 ---
 
-This chapter will cover the basics on how to implement an [Aggregate](../../message-driven-php-introduction.md#aggregates). \
-We will be using Command Handlers in this section, so ensure reading [External Command Handler](../external-command-handlers/) section first, to understand how Command are sent and handled.
+This chapter covers the basics of implementing an [Aggregate](../../message-driven-php-introduction.md#aggregates). We will use Command Handlers, so first read the [External Command Handler](../external-command-handlers/) section to understand how Commands are sent and handled.
 
 ## Aggregate Command Handlers
 
-Working with Aggregate Command Handlers is the same as with [External Command Handlers](../external-command-handlers/).\
-We mark given method with `Command Handler` attribute and Ecotone will register it as Command Handler.
-
-In most common scenarios, Command Handlers are used as boilerplate code, which fetch the aggregate, execute it and then save it.
+Working with Aggregate Command Handlers is the same as with [External Command Handlers](../external-command-handlers/) — mark a method with `#[CommandHandler]` and Ecotone registers it. The difference is that Aggregate handlers are *instance* methods (or static factory methods), and Ecotone takes care of fetching the aggregate, calling the method, and saving the result:
 
 ```php
+// Without Ecotone — the same three lines repeated in every handler:
 $product = $this->repository->getById($command->id());
 $product->changePrice($command->getPriceAmount());
 $this->repository->save($product);
 ```
 
-This is non-business code that is often duplicated wit each of the Command Handler we introduce. \
-Ecotone wants to shift the developer focus on the business part of the system, this is why this is abstracted away in form of Aggregate.
+With Ecotone, you write only the middle line — declared as a method on the aggregate itself.
 
 ```php
- #[Aggregate]
+#[Aggregate]
 class Product
 {
     #[Identifier]
     private string $productId;
 ```
 
-By providing `Identifier` attribute on top of property in your Aggregate, we state that this is identifier of this Aggregate (Entity in Symfony/Doctrine world, Model in Laravel world). \
-This is then used by Ecotone to fetch your aggregate automatically.
+By providing the `#[Identifier]` attribute, you tell Ecotone which property identifies this Aggregate (an Entity in Symfony/Doctrine, a Model in Laravel). Ecotone uses it to fetch the aggregate before each command.
 
-However Aggregates need to be [fetched from repository](../repository/) in order to be executed. \
-When we will send an Command, Ecotone will use property with same name from the Command instance to fetch the Aggregate.
+When you send a Command, Ecotone reads the property with the matching name from the Command and uses it to load the Aggregate.
 
 ```php
 class ChangePriceCommand
@@ -59,61 +57,65 @@ class ChangePriceCommand
 ```
 
 {% hint style="success" %}
-You may read more about Identifier Mapping and more advanced scenarios  in [related section](../identifier-mapping.md).
+For more advanced scenarios — mapping by expression, multiple identifiers, or computed identifiers — see [Identifier Mapping](../identifier-mapping.md).
 {% endhint %}
 
-When identifier is resolved, Ecotone use `repository` to fetch the aggregate and then call the method and then save it. So basically do all the boilerplate for you.
+Once the identifier resolves, Ecotone uses the configured Repository to fetch the aggregate, call the method, and save the result.
 
 {% hint style="success" %}
-To implement repository reference to [this section](../repository/).\
-You may use inbuilt repositories, so you don't need to implement your own.\
-Ecotone provides [`Event Sourcing Repository`](../../event-sourcing/), [`Document Store Repository`](../../../messaging/document-store.md#storing-aggregates-in-your-document-store), integration with [Doctrine ORM](../../../modules/symfony/doctrine-orm.md) or [Eloquent](../../../modules/laravel/eloquent.md).
+You don't need to implement a Repository yourself. Ecotone provides built-in [Event Sourcing Repositories](../../event-sourcing/), [Document Store Repositories](../../../messaging/document-store.md#storing-aggregates-in-your-document-store), and integrations with [Doctrine ORM](../../../modules/symfony/doctrine-orm.md) and [Eloquent](../../../modules/laravel/eloquent.md). See the [Repository section](../repository/) for details.
 {% endhint %}
 
 ## State-Stored Aggregate
 
-An Aggregate is a regular object, which contains state and methods to alter that state. It can be described as Entity, which carry set of behaviours. \
-When creating the Aggregate object, you are creating the _Aggregate Root_.&#x20;
+An Aggregate is a regular object that owns state and the methods that change it. Instead of public setters, it exposes `#[CommandHandler]` methods — each one is a business operation that enforces its own invariants:
 
 ```php
- #[Aggregate] // 1
-class Product
+#[Aggregate] // 1
+class Order
 {
     #[Identifier] // 2
-    private string $productId;
+    private string $orderId;
 
-    private string $name;
+    private OrderStatus $status;
+    private Money $amount;
 
-    private integer $priceAmount;
-    
-    private function __construct(string $orderId, string $name, int $priceAmount)
+    private function __construct(string $orderId, Money $amount)
     {
-        $this->productId = $orderId;
-        $this->name = $name;
-        $this->priceAmount = $priceAmount;
+        $this->orderId = $orderId;
+        $this->amount = $amount;
+        $this->status = OrderStatus::PLACED;
     }
 
-    #[CommandHandler]  //3
-    public static function register(RegisterProductCommand $command) : self
+    #[CommandHandler] // 3
+    public static function place(PlaceOrder $command): self
     {
-        return new self(
-            $command->getProductId(),
-            $command->getName(),
-            $command->getPriceAmount()
-        );
+        if ($command->amount->isNegativeOrZero()) {
+            throw new InvalidOrderAmount();
+        }
+
+        return new self($command->orderId, $command->amount);
     }
-    
+
     #[CommandHandler] // 4
-    public function changePrice(ChangePriceCommand $command) : void
+    public function pay(MarkOrderAsPaid $command, PaymentGateway $gateway): void
     {
-        $this->priceAmount = $command->getPriceAmount();
+        if ($this->status === OrderStatus::PAID) {
+            throw new OrderAlreadyPaid($this->orderId);
+        }
+        if ($this->status === OrderStatus::CANCELLED) {
+            throw new CannotPayCancelledOrder();
+        }
+
+        $gateway->charge($this->amount, $command->paymentMethod);
+        $this->status = OrderStatus::PAID;
     }
 }
 ```
 
-1. `Aggregate` tells Ecotone, that this class should be registered as Aggregate Root.
-2.  `Identifier` is the external reference point to Aggregate.&#x20;
+1. `#[Aggregate]` tells Ecotone this class is an Aggregate Root.
+2. `#[Identifier]` marks the external reference point. Ecotone uses it to load the aggregate when a command arrives.
+3. A `#[CommandHandler]` on a *static* method is a **factory** — it must return a new aggregate instance. The constructor stays private; the factory is the only way to create the aggregate.
+4. A `#[CommandHandler]` on an *instance* method is a **business operation**. The aggregate is fetched, the method runs, and the result is saved. Note there's no `setStatus()` — the only path from `PLACED` to `PAID` is through `pay()`, which enforces the rule that an order cannot be paid twice.
 
-    This field tells Ecotone to which Aggregate a given Command is targeted.
-3. `CommandHandler` defined on static method acts as _factory method_. Given command it should return _new instance_ of specific aggregate, in that case new Product.
-4. `CommandHandler` defined on non static class method is place where you would make changes to existing aggregate, fetched from repository.
+The webhook listener, the admin controller, the retry job — they all do the same thing: send a `MarkOrderAsPaid` command. The rule lives once, in `Order::pay()`, and the rest of the codebase cannot work around it.

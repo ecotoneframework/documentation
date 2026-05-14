@@ -4,7 +4,7 @@ description: Service Activator PHP
 
 # Internal Message Handler
 
-The Internal Handler connecting any service available in Depedency Container to an input channel so that it may play the role of a [Endpoint](./). If the service produces output, it may also be connected to an output channel.&#x20;
+You're building a workflow step that processes a message but shouldn't be invokable from the Command Bus — for example, a "validate eligibility" step inside an Orchestrator, or a stage in an `outputChannelName` chain. An **Internal Handler** connects any service in your Dependency Container to a named input channel so it can play the role of an [Endpoint](./), without exposing it as a Command Handler. If the service produces output, it can be connected to an output channel.&#x20;
 
 ### How to register
 

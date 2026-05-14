@@ -4,10 +4,9 @@ description: Message priority for controlling processing order
 
 # Message Priority
 
-In case of Ecotone we don't prioritize whole Message, but specific Message Handler. \
-This helps in scenarios when we have multiple Event Handlers, and we would like to configure each of them differently. For example may we have a case, where we want to prioritized one notification over another.
+`OrderWasPlaced` triggers `updateInventory` (must run before any read-side projection sees the order) and `sendReceiptEmail` (can wait). Without ordering, the projection may run first and serve stale inventory to the next customer. **Priority** runs `updateInventory` first; the email follows.
 
-In Ecotone the higher the priority, the quicker given Event Handler will be called.&#x20;
+Ecotone prioritizes *per handler*, not per message — so one subscriber can be marked higher-priority than its siblings on the same event. The higher the priority, the sooner the handler is called.&#x20;
 
 ## Synchronous Prioritization
 

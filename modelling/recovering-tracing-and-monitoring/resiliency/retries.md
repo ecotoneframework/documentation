@@ -6,11 +6,9 @@ description: Configuring automatic message retry strategies in Ecotone PHP
 
 ## Instant Retries
 
-Instant Retries are powerful self-healing mechanism, which helps Application to automatically recover from failures.&#x20;
+Your handler hits a transient DB connection drop, an optimistic-lock collision, or a 503 from Stripe. Retrying once usually fixes it. Retrying ten times in a busy loop hammers your DB. **Instant Retry** is the bounded, exception-filtered retry — same call stack, no broker round-trip — that handles 90% of transient failures in production without bothering the user.
 
-The are especially useful to handle temporary issues, like optimistic locking, momentary unavailability of the external service which we want to call or database connection failures. This way we can recover without affecting our end users without any effort on the Developer side.
-
-Instant retries can be enabled for CommandBus and for Asynchronous Processing.
+It is especially useful for optimistic locking, momentary unavailability of an external service, and database connection failures, where the right answer is "try again immediately." Instant retries can be enabled for the CommandBus and for Asynchronous Processing.
 
 ## Global Instant Retries
 
@@ -48,7 +46,7 @@ public function registerRetries()
 }
 ```
 
-This will retry instantly when your message is handled asynchronously. This applies to Command and Events. Take under consideration that Ecotone [isolates handling asynchronous events](broken-reference), so it's safe to retry them.
+This will retry instantly when your message is handled asynchronously. This applies to Command and Events. Take under consideration that Ecotone [isolates handling asynchronous events](../message-handling-isolation.md), so it's safe to retry them.
 
 {% hint style="success" %}
 By using instant retries for asynchronous endpoints we keep message ordering.&#x20;

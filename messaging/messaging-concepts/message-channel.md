@@ -6,10 +6,15 @@ description: Message Channel PHP
 
 ![](../../.gitbook/assets/message-channel-connection.svg)
 
-_`Message channel`_&#x61;bstracts communication between components. It does allow for sending and receiving messages.\
-A message channel may follow either point-to-point or publish-subscribe semantics. \
-With a point-to-point channel, only one consumer can receive each message sent to the channel. \
-Publish-subscribe channels, broadcast each message to all subscribers on the channel.&#x20;
+In Symfony Messenger, you `dispatch()` and the framework chooses a transport. In Laravel, you `dispatch()` to a queue. A **Message Channel** is the same idea: it's the pipe. The point of giving channels first-class names ("orders", "notifications", "tenant_a_orders") is that **everything else in Ecotone — async processing, retries, dead letter, scaling — configures per channel**.
+
+You'll declare a Message Channel explicitly when:
+
+- You want a specific async handler to use a specific transport (one handler on RabbitMQ, another on a database queue).
+- You want one handler to retry differently than another — different channels = different policies.
+- You're going multi-tenant and want to isolate noisy tenants (see [Dynamic Channels](../../modelling/asynchronous-handling/dynamic-message-channels.md)).
+
+A message channel may follow either point-to-point or publish-subscribe semantics. With a **point-to-point** channel, only one consumer can receive each message. **Publish-subscribe** channels broadcast each message to all subscribers.&#x20;
 
 ```php
 interface MessageChannel

@@ -4,11 +4,11 @@ description: Distributed Bus Interface for sending commands and events across se
 
 # Distributed Bus Interface
 
+You want to send a command to another service the same way you send it locally — `$bus->send(new ReserveSeat(...))`. The **DistributedBus** is the typed interface that does that, hiding the broker plumbing. Inject it where you would inject `CommandBus` or `EventBus`, and your business code stops caring whether the receiver is in this service or another.
+
 ## Distribution Bus
 
-Ecotone does use given Provider abstractions to create topology which can be used to route Messages from one Service to another.\
-\
-When given Provider is enabled as a Publisher, then **DistributedBus** interface is registered in our Dependency Container. DistributedBus is an interface entrypoint for sending Messages between Services. It does provides way to send Commands, Events and generic Messages (the intention behind the last one will be reveal soon).
+Ecotone uses your Provider abstractions to create the topology that routes Messages from one Service to another. When a Provider is enabled as a Publisher, the **DistributedBus** interface is registered in your Dependency Container. It exposes ways to send Commands, Events, and generic Messages (the last one is for non-Ecotone consumers — covered later).
 
 ```php
 interface DistributedBus

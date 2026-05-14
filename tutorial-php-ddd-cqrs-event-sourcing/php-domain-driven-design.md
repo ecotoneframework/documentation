@@ -56,7 +56,7 @@ class Product
 1. **Aggregate** attribute marks class to be known as Aggregate
 2. **Identifier** marks properties as identifiers of specific Aggregate instance. Each _Aggregate_ must contains at least one identifier.
 3. **CommandHandler** enables command handling on specific method just as we did in [Lesson 1](php-messaging-architecture.md).\
-   If method is static, it's treated as a [factory method](https://en.wikipedia.org/wiki/Factory_method_pattern) and must return a new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](broken-reference/).
+   If method is static, it's treated as a [factory method](https://en.wikipedia.org/wiki/Factory_method_pattern) and must return a new aggregate instance. Rule applies as long as we use [State-Stored Aggregate](../modelling/command-handling/state-stored-aggregate/#state-stored-aggregate) instead of [Event Sourcing Aggregate](../modelling/event-sourcing/event-sourcing-introduction/event-sourcing-aggregates/README.md).
 4. **QueryHandler** enables query handling on specific method just as we did in Lesson 1.
 
 {% hint style="info" %}

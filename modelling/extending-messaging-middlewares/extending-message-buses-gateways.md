@@ -4,7 +4,7 @@ description: Extending Command, Event, and Query Buses with custom Gateways
 
 # Extending Message Buses (Gateways)
 
-Ecotone provides ability to extend any Messaging Gateway using Interceptors. We can hook into the flow and add additional behavior.
+You want webhook commands to retry 3 times and dedup on `paymentId`, but internal admin commands to fail fast with no retry. Both go through your `CommandBus`. Extending the bus interface lets you declare a `WebhookCommandBus` extends `CommandBus`, attach `#[InstantRetry]` and `#[Deduplicated]` directly to it, and inject the typed bus where you want those policies — same handlers, different policies, no runtime branching.
 
 For better understanding, please read [Interceptors section](interceptors/) before going through this chapter.
 

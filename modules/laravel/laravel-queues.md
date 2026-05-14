@@ -80,7 +80,7 @@ In case of failures Ecotone's [retry strategy](../../modelling/recovering-tracin
 
 ## Sending messages via routing
 
-When sending command and events [via routing](broken-reference), it's possible to use non-class types.&#x20;
+When sending command and events [via routing](../../messaging/messaging-concepts/message-endpoint/message-routing.md), it's possible to use non-class types.&#x20;
 
 * Command Handler with command having `array payload`
 

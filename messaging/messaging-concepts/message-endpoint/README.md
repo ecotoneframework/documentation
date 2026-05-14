@@ -6,8 +6,17 @@ description: Message Endpoint PHP
 
 ![](<../../../.gitbook/assets/endpoint (1).jpg>)
 
-Message Endpoints/Handlers are consumers and producers of messages. Consumer are not necessary asynchronous, as you may build synchronous flow, compound of multiple endpoints. \
-You will not have to implement them directly, as you should not even have to build messages and invoke or receive message directly from the [Message channel](../message-channel.md). Instead you will be able to focus on your specific domain model with with an implementation based on plain PHP objects. By providing declarative configuration, you can "connect” your domain-specific code to the messaging infrastructure provided by _Ecotone_.&#x20;
+Every piece of code that processes a message in Ecotone is an **Endpoint**. `Command Handlers`, `Event Handlers`, `Query Handlers` are the bus-facing flavors — wired to the Command/Event/Query buses. **Internal Handlers**, **Splitters**, and **Routers** are the lower-level flavors — they sit on a named channel and aren't reachable from a bus.
+
+Reach for the lower-level family when:
+
+- You're building a step inside an Orchestrator that shouldn't be invokable as a Command from outside.
+- You're processing the result of an `outputChannelName` chain.
+- You need a router or splitter inside a workflow.
+
+If your code is the entry point for an HTTP request or a public domain action, use a Command/Event/Query Handler. If it's a step in a pipeline, use an Internal Handler.
+
+You don't implement endpoints directly or build messages by hand — you write plain PHP objects, and Ecotone connects your domain code to the messaging infrastructure through declarative configuration.&#x20;
 
 
 

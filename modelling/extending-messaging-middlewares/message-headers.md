@@ -4,8 +4,7 @@ description: Working with Message Headers and metadata in Ecotone PHP
 
 # Message Headers
 
-Ecotone provides easy way to pass Message Headers (Metadata) with your Message and use it in your Message Handlers or [Interceptors](interceptors/).\
-In case of asynchronous scenarios, Message Headers will be automatically mapped and passed to through your Message Broker.
+Your audit interceptor needs `currentUserId`. The handler doesn't take it as an argument — and you don't want to thread it through every Command DTO just to satisfy an audit concern. **Headers** are the side-channel: pass `currentUserId` as a header at dispatch time and read it from any interceptor or handler downstream. They flow with the message through synchronous and asynchronous channels alike, automatically mapped through your Message Broker on the wire.
 
 ## Passing headers to Bus:
 

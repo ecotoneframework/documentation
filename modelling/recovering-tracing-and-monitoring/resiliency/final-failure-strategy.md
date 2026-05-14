@@ -4,7 +4,9 @@ description: Final failure strategy when all message retries are exhausted
 
 # Final Failure Strategy
 
-Defines how to handle failures when processing messages. This is final failure strategy as it's used in case, when there is no other way to handle the failure. For example, when there is no [retry policy](retries.md), or when the retry policy has reached its maximum number of attempts. Also, when the destination of Error Channel is not defined, or sending to [Error Channel](error-channel-and-dead-letter/) fails.
+A poison message fails 3 retries and the error channel is also unreachable (DB down, dead-letter table full). What does the consumer do — block? skip? crash? **Final Failure Strategy** is that last decision. Pick wrong and you either lose messages silently or stop processing for everyone.
+
+It is used as the last resort when there is no [retry policy](retries.md) (or retries are exhausted), and when the [Error Channel](error-channel-and-dead-letter/) is not defined or itself fails.
 
 ## Available Strategies
 

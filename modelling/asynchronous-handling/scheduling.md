@@ -4,7 +4,7 @@ description: Scheduling PHP
 
 # Scheduling
 
-`Ecotone` comes with support for running `period tasks` or `cron jobs.`
+You have the Ecotone async worker running already and you want a once-a-minute job (clean expired carts, refresh stale projections, poll a third-party API) without registering yet another supervisor or wiring up Symfony's Scheduler / Laravel's task scheduler. The `#[Scheduled]` attribute runs that job in the same worker process — same retries, same error channel, same metrics as the rest of your async handlers.
 
 ## Scheduled Method
 

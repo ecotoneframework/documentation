@@ -8,7 +8,7 @@ Be sure to read [CQRS Introduction](../) before diving in this chapter.
 
 ## Execute your Business Actions via Interface
 
-Business Interface aims to reduce boierplate code and make your domain actions explicit. \
+Business Interface aims to reduce boilerplate code and make your domain actions explicit. \
 In Application we describe an Interface, which executes Business methods. Ecotone will deliver implementation for this interface, which will bind the interface with specific actions. \
 This way we can get rid of delegation level code and focus on the things we want to achieve. \
 \

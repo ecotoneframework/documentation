@@ -4,12 +4,19 @@ description: Repository PHP
 
 # Repositories Introduction
 
-Read [Aggregate Introduction](../state-stored-aggregate/) sections first to get more details about Aggregates.
+Read [Aggregate Introduction](../state-stored-aggregate/) first for more details about Aggregates.
 
-## Typicial Aggregate Flow
+## The Problem
 
-Repositories are used for retrieving and saving the aggregate to persistent storage. \
-Typical flow for calling aggregate method would looks like below:
+Every Command Handler does the same three lines: `findById`, `do something`, `save`. After ten handlers, that's thirty lines of identical glue. And the moment your aggregate becomes a Doctrine entity (or an Eloquent model), persistence concerns start leaking into the domain — fields exist to please the ORM, tests need a real database, and migrating to a different storage means rewriting every aggregate.
+
+## How Ecotone Solves It
+
+A **Repository** is the seam between your domain (which only knows aggregates) and your storage (Doctrine, Eloquent, Document Store, Event Store). Ecotone provides built-in repositories for each — pick one, point Ecotone at it, and your aggregates stay free of `@ORM\Entity` and `extends Model`. The fetch/save boilerplate disappears entirely; Ecotone wraps every command in load → call → save automatically.
+
+## Typical Aggregate Flow
+
+Repositories retrieve and save the aggregate to persistent storage. The typical flow for calling an aggregate method looks like:
 
 ```php
 class AssignWorkerHandler

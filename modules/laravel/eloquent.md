@@ -44,7 +44,7 @@ final class Issue extends Model
        $this->recordThat(new IssueWasClosed($this->id));
     }
 
-    #[AggregateIdentifierMethod("id")]
+    #[IdentifierMethod("id")]
     public function getId(): ?int
     {
         return $this->id;

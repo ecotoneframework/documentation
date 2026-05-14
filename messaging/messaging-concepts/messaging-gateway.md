@@ -6,17 +6,15 @@ description: Message Gateway PHP
 
 ![](../../.gitbook/assets/gateway_execution.svg)
 
-The Messaging Gateway encapsulates messaging-specific code (The code required to send or receive a [Message](message.md)) and separates it from the rest of the application code.
+In a typical Symfony controller, calling a command is `$bus->send(new CreateTicketCommand(...))`. The bus signature is `mixed → mixed` — no IDE help, no return type, and adding a header means an extra positional argument every caller has to remember. A **Messaging Gateway** is a typed interface — `interface TicketApi { public function create(CreateTicket $cmd): TicketId; }` — that Ecotone implements at runtime. Your controller depends on `TicketApi`, not on `CommandBus` plus magic strings.
 
-It takes Application specific data and convert it [Message](message.md) which then is sent via [Message channel.](message-channel.md) \
-This hide Messaging specific code, from user's code.&#x20;
+It takes application-specific data and converts it to a [Message](message.md), then sends it via a [Message Channel](message-channel.md), hiding the messaging-specific code from your application code.&#x20;
 
 {% hint style="info" %}
-Command/Query/Event Buses are implementations of Messaging Gateways.
+Command/Query/Event Buses are themselves implementations of Messaging Gateways.
 {% endhint %}
 
-Ecotone aims for eliminating Framework related code from Business related code, that's why Gateway can defined as interface in user's code base. \
-Ecotone is responsible for generating implementation for any interface.&#x20;
+Ecotone aims to eliminate framework-related code from business code, so a Gateway is defined as a plain interface in your codebase. Ecotone generates the implementation.&#x20;
 
 ### Implementing custom Gateway
 
@@ -127,7 +125,7 @@ class Order {
 ```php
 interface OrderGateway {
     #[MessageGateway("cancelOrder")] 
-    public function placeOrder(#[AggregateIdentifier] string $orderId, #[Payload] CancelOrder $command)): void;
+    public function placeOrder(#[Identifier] string $orderId, #[Payload] CancelOrder $command)): void;
 }
 ```
 

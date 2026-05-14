@@ -4,11 +4,9 @@ description: Error channels and dead letter queues for failed message handling
 
 # Error Channel
 
-Error Channel
+A handler throws after three retries. Without somewhere to put the failed message, you have two options: lose it or stop the consumer. The **Error Channel** is the third option — a holding place for failed messages so you can fix the bug, replay them, and keep processing the rest.
 
-`Ecotone` comes with solution called Error Channel. \
-Error Channel is a place where unrecoverable Errors can go, this way we can preserve Error Messages even if we can't handle them anyhow at given moment. \
-Error Channel may log those Messages, store them in database, push them to some Asynchronous Channel, it all depends on what Handler we will connect to the Error Channel.
+The Error Channel is just another channel; what happens to messages depends on the handler you connect to it: log them, store them in a database table, push them to another async channel for later replay, or send them to an alerting system.
 
 ## Error Channel Flow
 

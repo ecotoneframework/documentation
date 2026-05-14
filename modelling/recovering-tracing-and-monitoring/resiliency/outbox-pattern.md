@@ -4,13 +4,16 @@ description: Outbox pattern for atomic message publishing with database transact
 
 # Outbox Pattern
 
-## Outbox Pattern
+## The Problem
 
-To ensure full level of data consistency, we may decide to store messages along side with data changes. This way we work only with single data storage, avoiding completely problem with persisting Message in two sources at once. \
-To make it happen Ecotone implements so called **Outbox pattern**.
+You commit an order to the database, then publish `OrderWasPlaced` to RabbitMQ. The DB commit succeeds; the broker publish fails — and downstream services never learn the order exists. Or vice versa: the publish succeeds but the DB transaction rolls back, and you've published an event for an order that doesn't exist. Either way, your data and your messages are out of sync, and the bug is invisible until a customer calls support.
+
+## How Ecotone Solves It
+
+The **Outbox pattern** writes the message to the *same* database transaction as the data change. If the transaction commits, the message is durable — Ecotone publishes it asynchronously after commit. If it rolls back, the message vanishes with the rest of the change. There is no two-storage atomicity problem because there is only one storage.
 
 {% hint style="success" %}
-For critical parts of the systems we may decide to commit Messages to the same database as data changes using Outbox pattern.
+For critical parts of the system — payments, payouts, audit trails — commit messages to the same database as the data changes using Outbox. Lower-stakes notifications can publish directly to the broker.
 {% endhint %}
 
 ## Installation

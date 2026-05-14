@@ -39,7 +39,7 @@ class User
 {
     use WithEvents;
 
-    #[AggregateIdentifier]
+    #[Identifier]
     private string $userId;
     private string $name;
     private bool $isActive;

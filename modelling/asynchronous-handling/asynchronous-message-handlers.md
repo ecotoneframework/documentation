@@ -6,9 +6,9 @@ description: Making message handlers asynchronous with a single attribute
 
 ## Running Asynchronously
 
-**Ecotone** does allow for easy change from synchronous to asynchronous execution of given **Message Handler**.
+You have a synchronous `SendWelcomeEmail` handler that's slowing your signup endpoint to 800ms. You want to push it onto a queue without rewriting the handler, the controller, or the test. The `#[Asynchronous]` attribute does exactly that — same handler code, async execution.
 
-In order to run Command Handler asynchronously we need to mark it as **Asynchronous**.
+In order to run a Command Handler asynchronously, mark it as **Asynchronous**.
 
 ```php
 #[Asynchronous("orders")]
