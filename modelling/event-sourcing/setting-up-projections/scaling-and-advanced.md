@@ -177,7 +177,19 @@ A globally tracked projection must scan the entire event stream — even events 
 
 A partitioned projection tracks position **per aggregate**. Because event ordering within a single aggregate is guaranteed by the Event Store's optimistic locking (no [gaps possible](gap-detection-and-consistency.md#why-partitioned-projections-dont-need-gap-detection)), Ecotone can **skip directly to the events the projection is interested in** — filtering by aggregate type at the database level using indexes. There is no need to read irrelevant events. On a high-volume event stream with millions of events across many aggregate types, this makes a massive difference in loading speed.
 
+{% hint style="success" %}
+**Filtering power is a partitioned-only feature.** Global projections cannot push filters down to the database — a filtered-out event looks identical to a missing event, and the projection loses the ability to tell a gap apart from "I deliberately didn't want this one." So global projections fetch the firehose and discard irrelevant events at runtime. Partitioned projections push the filter into the query and only load what they actually handle.
+{% endhint %}
+
+### Event-Driven Dispatch
+
+Partitioned projections also wake up only when there is work to do. Async execution combined with `#[Partitioned]` triggers a worker for a given partition only when an event arrives for *that aggregate*. There is no periodic poll wondering whether anything happened; idle partitions consume no cycles. Compared to a timer-based "every N seconds, check everything" loop, this scales to many partitions without scaling cost — only the partitions with real activity ever run.
+
 ## Streaming Projections
+
+{% hint style="info" %}
+**Most systems will never need streaming projections.** Partitioned projections backed by the Event Store handle the vast majority of production workloads — they already give you parallelism, failure isolation, and indexed event loading. Streaming projections exist for the cases where the events themselves come from somewhere other than your database: a Kafka topic produced by another service, an external feed, a cross-system integration. The value of having streaming available is not that you reach for it tomorrow — it is that the foundation you build today does not have to be torn down when that boundary appears.
+{% endhint %}
 
 Streaming projections consume events from a message channel (such as Kafka or RabbitMQ Streams) instead of reading from the database event store directly:
 

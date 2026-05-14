@@ -12,6 +12,12 @@ You need to add a column to your projection's table and change how events are pr
 The features described on this page are available as part of Ecotone Enterprise.
 {% endhint %}
 
+## Why This Matters: Rebuild Cost Shapes Team Behavior
+
+If a rebuild takes hours or days, people stop running them. They batch projection changes into rare "rebuild windows." They modify projection tables directly instead of running their changes through a rebuild. They manually patch rows to fix individual bugs. Once enough manual patches accumulate, nobody trusts a rebuild anymore — running one would erase fixes that exist only in production.
+
+The promise of event sourcing — that the read model is just a function of the event log — only holds if replay is cheap enough to actually run. Blue-green deployments preserve that promise by making the most disruptive part of a rebuild (the period where the table is empty or inconsistent) invisible to users: v1 keeps serving while v2 catches up.
+
 ## The Blue-Green Strategy
 
 Instead of rebuilding the existing projection in-place (which clears the data), deploy a **new version** alongside the old one:
@@ -114,6 +120,12 @@ Two settings control the deployment:
 - **`manualKickOff: true`** — the projection won't auto-initialize. You control when it starts.
 - **`live: false`** — events [emitted via EventStreamEmitter](emitting-events.md) are suppressed during the catch-up phase. This prevents duplicate notifications to downstream consumers.
 
+### Why `manualKickOff` Matters
+
+Without it, deploying `tickets_v2` would let *any other action* in the system kick the projection into life. The moment a new event for `Ticket` arrives — or any trigger touches the projection's channel — v2 would auto-initialize and start trying to catch up.
+
+For a globally tracked projection that has to chew through millions of historical events, that is exactly what you do not want happening during deploy. The async channel can be monopolised for half an hour while v2 races to catch up; other projections sharing the channel stall; the rest of the system feels the deploy. `manualKickOff: true` keeps v2 dormant until you explicitly run `ecotone:projection:init` — at the moment that suits your ops schedule, not whenever the next event happens to arrive.
+
 ## Step-by-Step Deployment Flow
 
 ### 1. Deploy v2
@@ -160,7 +172,16 @@ During this phase, v1 continues serving traffic normally. v2 processes historica
 
 ### 4. Verify v2
 
-Check that v2's data looks correct — query the `tickets_v2` table and compare with `tickets_v1`.
+This step is what makes blue-green safer than rebuild — but only if you actually do it. Skip it and you discover v2 is wrong only after users complain.
+
+What to check, in order of effort:
+
+- **Structural diff** — row counts, distinct values per column, null distribution. Anything wildly off is a sign that the v2 handler missed an event type or wrote the wrong type.
+- **Spot checks** — pick a handful of known-good and known-tricky aggregates, query both tables, compare row-by-row. Tickets near edge cases (closed-then-reopened, type-changed mid-life, etc.) catch most handler bugs.
+- **Edge-case sampling** — query for rows where the new logic should differ from v1 (the whole reason you're deploying v2). Confirm v2 actually produces the new values.
+- **Shadow reads** — if you can afford it, run live queries against both tables and log discrepancies. Catches anything the static comparison missed.
+
+If anything looks wrong, you have not lost anything: v1 is untouched, delete v2 and try again.
 
 ### 5. Switch Traffic
 

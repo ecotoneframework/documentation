@@ -8,6 +8,46 @@ description: PHP Event Sourcing Projection Backfill and Rebuild
 
 You deployed a new "order analytics" projection to production, but it only processes events from now on. You have 2 years of order history sitting in the event store. How do you populate the projection with historical data? And later, when you fix a bug in the projection logic, how do you replay everything?
 
+## Choosing the Right Strategy
+
+Before reaching for rebuild, consider the lighter alternatives. The cheapest fix is the one that doesn't require replaying any history at all.
+
+| Situation | Strategy | Cost |
+|---|---|---|
+| Adding a column where historical rows can use a default value | **Default value migration** (no replay) | Five-minute deploy |
+| Adding a brand-new projection that has no data yet | **Backfill** | One pass over history |
+| Fixing a bug in a small projection where downtime during rebuild is acceptable | **Rebuild** (in-place) | Read model empty during rebuild |
+| Fixing a bug in a large or user-facing projection | **[Blue-green deployment](blue-green-deployments.md)** | v1 keeps serving while v2 catches up |
+
+### The No-Rebuild Tactic: Default Values
+
+If you are adding a new column to a projection, the first conversation to have is with Product, not with ops: **can historical rows use a default value?**
+
+Often yes. "We're adding a `priority` column — historical tickets without explicit priority can show as `normal`" is a five-minute deploy: extend `#[ProjectionInitialization]` with an idempotent migration, and the new handler computes the real value for events from now on.
+
+```php
+#[ProjectionInitialization]
+public function init(): void
+{
+    $this->connection->executeStatement(<<<SQL
+        CREATE TABLE IF NOT EXISTS ticket_list (
+            ticket_id VARCHAR(36) PRIMARY KEY,
+            ticket_type VARCHAR(25),
+            status VARCHAR(25)
+        )
+    SQL);
+
+    $this->connection->executeStatement(<<<SQL
+        ALTER TABLE ticket_list
+        ADD COLUMN IF NOT EXISTS priority VARCHAR(25) NOT NULL DEFAULT 'normal'
+    SQL);
+}
+```
+
+`#[ProjectionInitialization]` re-runs on every deploy, and `IF NOT EXISTS` keeps both statements idempotent. Historical rows get `'normal'`; new tickets get their real priority from the updated handler. No rebuild, no backfill, no downtime.
+
+This will not always work — sometimes you genuinely need to recompute historical rows. But when it does, it skips the entire backfill/rebuild discussion.
+
 ## Backfill — Populating a New Projection
 
 **Backfill** processes all historical events from position 0 to the current position. It's used when you deploy a fresh projection and need to populate it with past data.
@@ -86,7 +126,7 @@ Run the backfill command (dispatches messages instantly), then start workers to 
 # Dispatches backfill messages to the channel
 bin/console ecotone:projection:backfill order_analytics
 
-# Start workers to process (run multiple for parallel processing)
+# Start the worker (only ONE for a global projection — see note below)
 bin/console ecotone:run backfill_channel -vvv
 ```
 {% endtab %}
@@ -98,6 +138,10 @@ artisan ecotone:run backfill_channel -vvv
 ```
 {% endtab %}
 {% endtabs %}
+
+{% hint style="warning" %}
+**Run only one worker for a global projection.** The position tracker is a single value: two workers consuming the same backfill channel would race to advance it, and one would overwrite the other's commit. Multiple workers only help once you can describe each unit of work as "one aggregate's events" — which is what partitioning gives you (next section).
+{% endhint %}
 
 ### Scaling Async Backfill with Partitioned Projections
 
@@ -203,6 +247,12 @@ class TicketDetailsProjection
 ```
 
 Notice the key difference: `#[ProjectionReset]` receives `#[PartitionAggregateId]` — it only deletes the data for the specific aggregate being rebuilt, not the entire table.
+
+{% hint style="success" %}
+**Partitioned rebuilds also isolate failures.** If a handler bug only triggers on one aggregate's specific event sequence, only *that* partition gets stuck. The rest of the rebuild keeps progressing across the other aggregates. You can investigate the failing partition without an entire rebuild stalling for hours waiting for someone to wake up — and once you ship the fix, the stuck partition retries from where it stopped.
+
+A global rebuild has the opposite property: one bad partition blocks the whole queue.
+{% endhint %}
 
 ### Controlling Rebuild Batch Size
 

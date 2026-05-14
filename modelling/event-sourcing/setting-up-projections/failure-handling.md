@@ -8,6 +8,18 @@ description: PHP Event Sourcing Projection Failure Handling and Recovery
 
 Your projection handler throws an exception halfway through processing a batch of 100 events. Are the first 50 events committed or rolled back? Does the failure block all other projections, or just this one? And when the bug is fixed, does the projection automatically recover?
 
+## Trigger-Based Architecture
+
+Most of the resilience properties on this page — self-healing recovery, failure isolation, safe batch retries — come from one design decision:
+
+**The incoming event is a trigger, not the data being processed.** When Ecotone runs a projection, it does not feed the trigger event into your handler. It uses the trigger as a signal to read events **from the Event Store** starting at the projection's last committed position. The handler always processes events fetched from the source of truth, not events that happened to ride along in a message.
+
+This is what lets crashed projections pick up exactly where they stopped after a fix is deployed: the Event Store still has every event, and the projection's stored position still points to the last successful commit. Restart the worker and it reads forward from that position — no manual reset, no backfill.
+
+It is also what makes failure isolation work: each async projection receives its own copy of the trigger and tracks its own position. One projection's stuck position doesn't affect another's.
+
+Keep this mental model in mind through the rest of this page. "Trigger arrives → projection reads from Event Store at last position → projection commits new position" is the whole loop.
+
 ## How Projections Are Triggered
 
 By default, Projections run **synchronously**. When a Command Handler stores events in the Event Stream, the Projection is triggered immediately — in the same process and the same database transaction.
@@ -36,13 +48,23 @@ This is all-or-nothing per batch. You never end up with half-processed data.
 
 ## Batch Commits — Not One Giant Transaction
 
-With `#[ProjectionExecution(eventLoadingBatchSize: N)]`, events are loaded in batches. Each batch gets its own transaction:
+With `#[ProjectionExecution(eventLoadingBatchSize: N)]`, events are loaded in batches. Each batch gets its own transaction. Concretely, with `eventLoadingBatchSize: 500`:
 
-* **Batch 1** (events 1-100): processed successfully → **committed**
-* **Batch 2** (events 101-200): exception on event 150 → **rolled back**
-* Next run: starts from event 101 (batch 1's changes are safe)
+* **Batch 1** (events 1–500): processed successfully → **committed**, position advanced to 500
+* **Batch 2** (events 501–1000): exception thrown at event 750 → **entire batch rolled back**, position stays at 500
+* Next run: resumes from event 501. Batch 1's work is safe — only the failing batch is replayed.
 
-This is important: if you have 100,000 events to process, you don't end up with one massive transaction that locks your tables for minutes. Each batch commits independently.
+You never get partial writes from a failing batch, and you never lose committed work from earlier batches.
+
+### Why Batching Matters Beyond Failure Recovery
+
+For a backfill or rebuild that has to chew through millions of events, batching is not just about safe rollback — it is what keeps the worker alive. Without batches:
+
+- **Memory grows unboundedly.** Doctrine's `EntityManager` keeps references to every entity it has seen until you flush and clear it. Process a million events in one transaction and the heap fills until the OS kills the worker.
+- **Locks stay held.** A single 100,000-event transaction locks the projection table for the entire run.
+- **Recovery cost is enormous.** A crash at event 999,000 means replaying all 999,000 events on restart.
+
+Batched commits put a ceiling on all three. Ecotone manages transactions at batch boundaries automatically and, if you use Doctrine ORM, also flushes and clears the EntityManager at each batch boundary so memory stays flat across long runs.
 
 ```php
 #[ProjectionV2('ticket_list')]

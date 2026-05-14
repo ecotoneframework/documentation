@@ -8,6 +8,12 @@ description: PHP Event Sourcing Projection Gap Detection
 
 Two users place orders at the exact same time. Both transactions write to the event store, but one commits a split-second before the other. Your projection processes event #11 but event #10 isn't visible yet — and silently gets skipped forever. How do you guarantee no events are lost?
 
+{% hint style="danger" %}
+**This is silent data loss.** No error. No log entry. No exception. The read model is permanently wrong, and you will not find out until someone reports the problem.
+
+The projection logic looks correct in development — because your dev environment runs one request at a time. It is only under production concurrency that events start silently disappearing.
+{% endhint %}
+
 ## Where the Problem Comes From
 
 Gap detection matters specifically for **globally tracked projections**. A global stream combines events from many different aggregates into a single ordered sequence. When multiple transactions write events for different aggregates in parallel, they each get a position number — but they may commit in any order.
@@ -32,23 +38,47 @@ sequenceDiagram
     Note over Projection: GAP DETECTED at position 10
 ```
 
-## The Common (Flawed) Approach: Time-Based Waiting
+## Four Ways to Handle Gaps
+
+Globally tracked projections all face the same race condition. The strategies for dealing with it form a spectrum trading throughput, complexity, and safety. Ecotone chose the last one — but understanding why the others fall short is what makes that choice motivated rather than arbitrary.
+
+| Strategy | Safety | Throughput | Cost |
+|---|---|---|---|
+| No detection | ❌ Silently loses events | ✅ Maximum | Nothing — until production breaks |
+| Time-based blocking | ✅ Eventually consistent | ❌ Cascading stalls | Latency, deadlocks under load |
+| DB-level write locking | ✅ No gaps possible | ❌ Single global lock | Every write serializes; cannot scale |
+| Track-based non-blocking | ✅ Eventually consistent | ✅ Never blocks | A compact gap list per projection |
+
+### No Gap Detection
+
+The naive approach: read events in order, advance the position, trust the database. In a single-threaded test it works perfectly. In production, the moment two transactions write concurrently and commit out of order, events disappear from the read model with no signal at all.
+
+### Time-Based Blocking
 
 Many event sourcing systems solve this by making the projection **wait** — "if I see position 11 but not 10, pause and wait for 10 to appear."
 
 The problem with waiting:
 - If TX1 takes 5 seconds to commit, the **entire projection halts** for 5 seconds
-- All events after position 10 are blocked — even though they're from completely unrelated aggregates
-- In high-throughput systems, this waiting cascades and can bring down the whole projection pipeline
+- All events after position 10 are blocked — even when they're from completely unrelated aggregates. A projection that only cares about Tickets can stall waiting on a slow Order transaction it never wanted to read.
+- In high-throughput systems, this waiting cascades and can bring down the whole projection pipeline.
 
-Time-based gap detection trades **throughput for safety** and yet is not solving this problem at the root cause.    
+Time-based gap detection trades **throughput for safety** and still doesn't solve the problem at the root cause — it just defers the same race into a wait loop.
 
-## Ecotone's Approach: Track-Based Gap Detection
+### Database-Level Write Locking
+
+A more aggressive variant: serialize every event-store write through a single advisory lock (`SELECT pg_advisory_xact_lock(N)`). With only one writer in flight at a time, events can never commit out of order, so gaps cannot occur.
+
+The cost is that a typical system has dozens of unrelated writes happening concurrently — order placement, payment processing, inventory adjustments, user registrations. None of them logically need to coordinate. With write locking, none of them can proceed in parallel either. Adding more workers does not help: extra workers just queue up on the lock and create contention, not throughput.
+
+Write locking eliminates the gap problem by eliminating concurrency — which is rarely what you want.
+
+## Ecotone's Approach: Track-Based Non-Blocking
 
 Instead of waiting, Ecotone **records** the gap and moves on. The position is stored as a compact format that tracks both where the projection is and which positions are missing:
 
 ```
-"11:10"  →  "I'm at position 11, but position 10 is a known gap"
+"11:10"          →  "I'm at position 11, but position 10 is a known gap"
+"15:10,12,14"    →  "I'm at position 15, with known gaps at 10, 12, and 14"
 ```
 
 On the next run:

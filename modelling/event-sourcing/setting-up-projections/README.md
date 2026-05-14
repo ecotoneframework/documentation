@@ -18,9 +18,23 @@ But your users don't want to replay history every time they load a page. They ne
 
 A **Projection** reads events from an **Event Stream** (the append-only log) and builds a read-optimized view from them — a database table, a document, a cache entry. Think of it as a **materialized view** built from events.
 
-Another analogy: the Event Stream is like your **Git history** — every commit ever made. The Projection is like your **working directory** — the current state of the files, derived from that history.
-
 The views built by Projections are called **Read Models**. They exist only for reading and can be rebuilt at any time from the Event Stream.
+
+### The Git Mental Model
+
+If you are new to projections, this analogy carries you a long way:
+
+| Git | Event Sourcing |
+|---|---|
+| Commit history | Event Stream |
+| Working directory | Read Model |
+| `git checkout` | Projection running |
+| A second clone of the same repo | A second Read Model from the same events |
+| `git reset --hard` | `#[ProjectionReset]` |
+
+The Event Stream is the authoritative history. Read Models are *views* of that history — you can have many of them, each one optimized for a different question (a ticket list, a counter, a search index). Throwing one away never destroys data, because the history is still there. Building a second one from scratch is just replaying the commits into a new working directory.
+
+This is also why projections are safe to evolve aggressively. When you fix a bug in a Read Model, you have not corrupted any "truth" — only a view of it. Rebuild the view from the events and it is correct again.
 
 <figure><img src="../../../.gitbook/assets/ticket_event_stream_2.png" alt=""><figcaption><p>Events stored in the Event Stream</p></figcaption></figure>
 
