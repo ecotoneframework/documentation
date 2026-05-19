@@ -1,0 +1,45 @@
+solutions/durable-execution.md
+  s_416326164bf2dc::t_c7003dced263fb 313
+  s_416326164bf2dc::t_e20248760d6199 33
+  s_416326164bf2dc::t_122ad8dedd9856 180
+  s_416326164bf2dc::t_1b35c43cf6ff3e 184-187,189-201,203-223,226-228,230-289,291,300
+  s_416326164bf2dc::t_15ad4a3c27d697 15
+  s_416326164bf2dc::t_dba66e640c9576 310
+  s_416326164bf2dc::t_3b9136ced8c534 84-116
+  s_416326164bf2dc::t_ff90fda1a6e39e 117,119,128-135,137,139-140
+  s_416326164bf2dc::t_2b06aa4ab813d7 13-14,17
+  s_416326164bf2dc::t_6d99951106b769 305-307,311-312
+  s_416326164bf2dc::t_98f621ce2c05fb 1-12,16,18-32,34-83,118,120-127,136,141-155,157,301-304,308,314,335-347
+  s_416326164bf2dc::t_b7076f4d6f3641 138
+  s_416326164bf2dc::t_23a9d5af09186c 156
+  s_416326164bf2dc::t_1e00eaae9d07f9 290,294-299
+  s_416326164bf2dc::t_703080b0a546ad 188,202,224-225
+  s_416326164bf2dc::t_46f41b096b3cb5 316,318-321
+  s_416326164bf2dc::t_8c364c7698f430 158-179,181-183
+  s_416326164bf2dc::t_0705108b96d6c5 315,322-334
+  s_416326164bf2dc::t_1d4fab9f8daf68 309
+SUMMARY.md
+  s_416326164bf2dc::t_82fd09e2bf4fa4 10
+modelling/business-workflows/sagas.md
+  s_416326164bf2dc::t_4e932b79ddbac4 29-32
+modelling/business-workflows/orchestrators.md
+  s_416326164bf2dc::t_47a0408067b377 27-30
+modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md
+  s_416326164bf2dc::t_ad8525423f8a0a 19-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.9",
+  "base_commit_sha": "94d3e65ada05cd6fb97ee2ca1f57f84a5798c1fa",
+  "prompts": {},
+  "sessions": {
+    "s_416326164bf2dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd0e7cfe-55a2-43eb-9b05-982d76a8fa3e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
