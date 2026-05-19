@@ -7,6 +7,7 @@
   * [Scattered Application Logic](solutions/scattered-application-logic.md)
   * [Unreliable Async Processing](solutions/unreliable-async-processing.md)
   * [Complex Business Processes](solutions/complex-business-processes.md)
+  * [Durable Execution](solutions/durable-execution.md)
   * [Audit Trail & State Rebuild](solutions/audit-trail-and-state-rebuild.md)
   * [Microservice Communication](solutions/microservice-communication.md)
   * [PHP for Enterprise Architecture](solutions/php-for-enterprise-architecture.md)

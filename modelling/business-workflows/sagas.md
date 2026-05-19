@@ -26,6 +26,10 @@ Use Sagas when your workflow needs to:
 **Prerequisites**: Familiarity with [connecting handlers](connecting-handlers-with-channels.md) and [aggregates](../command-handling/state-stored-aggregate/) will help you understand Sagas better.
 {% endhint %}
 
+{% hint style="success" %}
+**Bigger picture**: Sagas are one of Ecotone's [Durable Execution](../../solutions/durable-execution.md) primitives — long-running processes that survive crashes on the database and broker you already run, without a separate workflow service or Temporal cluster.
+{% endhint %}
+
 ## Creating Your First Saga
 
 A Saga is like a persistent coordinator that remembers its state between events. Let's build an order processing saga step by step.

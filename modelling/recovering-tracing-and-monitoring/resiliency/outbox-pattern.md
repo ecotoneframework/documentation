@@ -16,6 +16,10 @@ The **Outbox pattern** writes the message to the *same* database transaction as 
 For critical parts of the system — payments, payouts, audit trails — commit messages to the same database as the data changes using Outbox. Lower-stakes notifications can publish directly to the broker.
 {% endhint %}
 
+{% hint style="success" %}
+**Bigger picture**: The Outbox pattern is one of Ecotone's [Durable Execution](../../../solutions/durable-execution.md) primitives — together with sagas, retries, and channel redelivery, it gives crash-resistant processes on the database and broker you already run, with no separate workflow service or Temporal cluster.
+{% endhint %}
+
 ## Installation
 
 In order to use Outbox pattern we need to set up [Dbal Module](../../../modules/dbal-support.md#using-existing-connection).

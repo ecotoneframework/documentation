@@ -24,6 +24,10 @@ While [connecting handlers with channels](connecting-handlers-with-channels.md) 
 **Enterprise Feature**: Orchestrator is part of Ecotone's Enterprise features.
 {% endhint %}
 
+{% hint style="success" %}
+**Bigger picture**: Orchestrators are one of Ecotone's [Durable Execution](../../solutions/durable-execution.md) primitives — declarative multi-step workflows that survive crashes on the database and broker you already run, without a separate workflow service or Temporal cluster.
+{% endhint %}
+
 ## Creating Your First Orchestrator
 
 An Orchestrator defines a workflow as a sequence of steps (channel names) and implements those steps as internal handlers.
