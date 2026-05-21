@@ -1,0 +1,64 @@
+solutions/orchestration-layer.md
+  s_416326164bf2dc::t_0f3e9f37e34bdc 1-6,8-22,24-112,114-129
+  s_416326164bf2dc::t_ad6af0c489a102 7
+  s_416326164bf2dc::t_32baa606df3ba6 113
+  s_416326164bf2dc::t_ab336b509b3793 23
+solutions/domain-driven-design.md
+  s_416326164bf2dc::t_51e621f20bb38b 129
+  s_416326164bf2dc::t_a44386e44fe344 1-4,6,8-16,18-119,122-128,130-144
+  s_416326164bf2dc::t_5c975ed3f3eb77 7
+  s_416326164bf2dc::t_7c85baa6c42972 17
+  s_416326164bf2dc::t_b62170c711aace 5
+  s_416326164bf2dc::t_af53569979b07c 120
+  s_416326164bf2dc::t_c2f39ba4d02d4c 121
+solutions/event-sourcing.md
+  s_416326164bf2dc::t_775f3a2158b4fa 1-4,6,8,10-122,124-125,128,131,133-146
+  s_416326164bf2dc::t_36a3415a51a255 126
+  s_416326164bf2dc::t_158cbc6cd0bab0 127,129-130
+  s_416326164bf2dc::t_a29e113be4d257 123
+  s_416326164bf2dc::t_17e44af12158ac 7,9
+  s_416326164bf2dc::t_eed13b266e95c2 5
+  s_416326164bf2dc::t_dc0f15da8e486b 132
+SUMMARY.md
+  s_416326164bf2dc::t_732c85976b14f0 8-10,14
+solutions/durable-execution.md
+  s_416326164bf2dc::t_9ffd3b2cf76b52 327
+  s_416326164bf2dc::t_a68cef2ad50c53 322
+  s_416326164bf2dc::t_4ec9122cfee1d2 340,342
+  s_416326164bf2dc::t_aed24fc40bf7f5 186
+  s_416326164bf2dc::t_91afa23ecfd8d1 2,8,15
+  s_416326164bf2dc::t_13368959db0c30 317
+  s_416326164bf2dc::t_79bba356d55a05 5
+  s_416326164bf2dc::t_12029b385bb354 320,324,326,329
+  s_416326164bf2dc::t_0aa45a8664b92c 316
+  s_416326164bf2dc::t_46c1429257781b 7
+  s_416326164bf2dc::t_09904b6574db85 9
+solutions/asynchronous-communication.md
+  s_416326164bf2dc::t_842b30d99d8156 11
+  s_416326164bf2dc::t_cbe35223102188 35
+  s_416326164bf2dc::t_c3c2c59f205d3c 141
+  s_416326164bf2dc::t_2b285c80442cc6 8
+  s_416326164bf2dc::t_5ddf3fe51eb975 5
+  s_416326164bf2dc::t_cc250a30c9acf5 1-4,6,10,12-34,36-133,135-139,142-144,146-161
+  s_416326164bf2dc::t_28f22716968748 134
+  s_416326164bf2dc::t_b205e45c813495 7
+  s_416326164bf2dc::t_0af11ceed45e39 145
+  s_416326164bf2dc::t_a9bd208f94d6e4 140
+  s_416326164bf2dc::t_bbc5c98ab8149f 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.11",
+  "base_commit_sha": "6a69f4daded60f30798897b0b561332dd2242975",
+  "prompts": {},
+  "sessions": {
+    "s_416326164bf2dc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dd0e7cfe-55a2-43eb-9b05-982d76a8fa3e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
