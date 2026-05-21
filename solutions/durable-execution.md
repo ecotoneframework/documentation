@@ -1,14 +1,18 @@
 ---
-description: Durable execution in PHP — sagas, workflows, outbox, and retries on the database and broker you already run, with no separate cluster
+description: Durable workflows in PHP — sagas, orchestrators, outbox, and retries on the database and broker you already run, no separate workflow runtime
 ---
 
-# Durable Execution
+# Durable Workflows in PHP
+
+For a PHP team building durable workflows — order fulfillment, subscription provisioning, payouts, KYC, multi-step onboarding — Ecotone delivers sagas, orchestrators, chained workflows, outbox, retries, and `#[Delayed]` saga timeouts on the database and broker you already operate, as plain PHP classes with attributes. No separate workflow service, no constrained DSL, no engine-specific event history.
+
+The market alternative is Temporal. This page walks the trade-offs, the code, and the two specific situations where keeping Temporal alongside Ecotone still makes sense.
 
 ## The Problem You Recognize
 
 A multi-step business process — order fulfillment, subscription provisioning, payment + payout — spans minutes to days. You need it to **survive crashes**: if the worker dies mid-step, the process picks up where it left off. If a downstream system is briefly unavailable, the step retries. If business state changes, every consumer sees a consistent timeline.
 
-You've looked at Temporal. It's a real answer — but the answer comes with:
+If you've evaluated Temporal, the answer comes with:
 
 - **A separate runtime to operate.** Temporal runs as its own service (Frontend / History / Matching / internal Worker components) with a dedicated workflow database and a separate visibility store — two stateful systems alongside your application's own database. That's a design decision, not a version-specific quirk.
 - **Debugging happens on someone else's runtime.** Because workflow code executes inside the Temporal worker runtime (RoadRunner + ext-grpc on PHP), the workflow doesn't run where your application runs — different process, different debugger surface, different mental model.
@@ -179,7 +183,7 @@ What this buys you:
 - **Same model sync and async.** A test runs through the outbox, the broker channel, the saga, the projection — the same code path production hits. There's no separate "test mode" that diverges from runtime behaviour.
 - **Local equals production, and the runtime is yours.** Drop a `var_dump`, set a breakpoint, step through the saga line by line — everything runs in one PHP process, in your existing debugger. There's no separate workflow runtime sitting between you and your code; the saga executes where your application executes.
 - **Time-travel a timeout in seconds.** Async channels can be driven manually (`->run('async')`) and clock-based delays can be advanced explicitly, so a 24-hour saga timeout becomes a one-line test, not an integration suite that waits.
-- **Confidence that ships with the code.** You build it, you test it end-to-end against the real Ecotone runtime — so when an incident lands at 3 a.m., the production behaviour is the behaviour you've already debugged on your laptop.
+- **End-to-end testing of the runtime behaviour.** You test against the actual Ecotone runtime, not a stub of it — same buses, sagas, projections, async channels, outbox path in the test as in production.
 
 ## What the Code Actually Looks Like
 
@@ -309,16 +313,20 @@ The difference isn't scaffolding count — it's what the programming model lets 
 | Versioning long-running flows | `getVersion()` / `patched()` branches in workflow code that survive until the last in-flight execution finishes | Plain code change with schema discipline — add fields with defaults; drain in-flight sagas before breaking changes to persisted state |
 | Durability primitive | Per-workflow Event History (engine-specific format) | Your own database rows / event store you can query |
 | Outbox (atomic business write + message) | Design idempotent Activities + manual DB-write-then-publish in a dedicated Activity | Declarative `CombinedMessageChannel` in one DBAL transaction |
-| Multi-tenancy | One namespace per tenant; cluster topology grows with tenant count | Header-routed channels in one deployment |
+| Multi-tenancy | Namespace-per-tenant — logical isolation on one cluster; sharding decisions arrive at high tenant counts | Header-routed channels in one deployment |
+| Operator surface | Temporal Web UI — visual workflow timeline tied to the Temporal cluster. Durable Workflow ships Waterline (Horizon-style UI for workflow runs) on the PHP side. | Event-sourced sagas record every state change as a queryable event in your own database (full forensic timeline; no information loss). OpenTelemetry spans on every handler (Grafana / Jaeger / Datadog / Honeycomb — pick your existing stack), DBAL dead-letter rows queryable from any SQL tool, MCP server for AI-assisted introspection. Packaged visual timeline not shipped yet — the data is open. |
 | Migration cost off-platform | Rewrite — engine-specific Event History; in-flight workflows can't be exported | Handlers and channel config are Ecotone-shaped, but saga state and event stream stay in your own schema, queryable from any tool during a transition |
 
-## Already Running Temporal? Ecotone Composes With It
+## Replace Temporal, or Compose With It
 
-Durable workflows are one capability inside a wider system. Temporal handles them with replay-based state restore and a forensic UI over the workflow's history. Those are genuine strengths. If your team has already invested in Temporal, you don't have to choose.
+For most PHP teams, Ecotone *replaces* Temporal. Durable workflows run on the PostgreSQL or MySQL you already use plus the broker you've already chosen (RabbitMQ, Kafka, SQS, Redis) — no separate runtime, no constrained DSL, no engine-specific event history. The comparison above is the evidence.
 
-### What Ecotone handles around Temporal
+There are two specific situations where keeping Temporal alongside Ecotone still makes sense:
 
-Ecotone is designed to fit *around* a workflow engine and handle everything Temporal doesn't:
+- **Genuinely polyglot workflows** — a Go or Java service must call a PHP activity inside the same workflow execution. Ecotone is PHP-on-PHP and doesn't compete on this axis.
+- **Compliance-grade forensic UI requirements** — auditors who need a *visual* timeline of every workflow internal and your team is willing to operate the cluster to get the Web UI today. The underlying data is not the gap: event-sourced sagas in Ecotone record every state change as a queryable event in your own database, OpenTelemetry traces capture every handler invocation, and the dead-letter table is queryable from any SQL tool. Ecotone has the forensic *data*; it doesn't yet ship a packaged visual timeline. If the auditor wants a UI today, that's a reason to keep Temporal alongside.
+
+If neither applies, replace Temporal. If either does, Ecotone is designed to compose around the workflow engine and handle everything Temporal doesn't:
 
 - **CQRS and message buses.** Command, Event, and Query buses on Laravel or Symfony, registered through PHP attributes — used inside HTTP controllers, console commands, scheduled jobs, *and* inside Temporal Activities to dispatch work into the rest of the application.
 - **Domain event publication.** Temporal's Event History is internal to the workflow. Ecotone publishes domain events from your aggregates onto your own broker (RabbitMQ / Kafka / SQS / Redis) so other services and other read models can subscribe — including projections you only realise you need months after the workflow shipped.
@@ -329,9 +337,9 @@ Ecotone is designed to fit *around* a workflow engine and handle everything Temp
 - **Multi-tenant routing.** Header-routed channels in one deployment, instead of a namespace-per-tenant model that compounds with Temporal's cluster sizing.
 - **Resilience on everything that *isn't* a workflow.** Retry, error channels, DBAL dead-letter, idempotency, per-handler failure isolation — applied uniformly to every async event handler in the system, workflow-bound or not.
 
-A reasonable composition: Temporal runs the workflows that genuinely need its replay semantics; Ecotone runs the rest of the message-driven system around them. Activities call into Ecotone's command bus to keep the workflow body small; aggregates and projections live in Ecotone's event store; the broker is shared.
+A reasonable composition: Temporal runs the polyglot or audit-mandated workflows that genuinely need its replay UI; Ecotone runs the rest of the message-driven system around them. Activities call into Ecotone's command bus to keep the workflow body small; aggregates and projections live in Ecotone's event store; the broker is shared.
 
-For PHP teams that haven't yet committed to Temporal — already on Laravel or Symfony with a database and broker they own — Ecotone is usually enough on its own: sagas, orchestrators, outbox, retries, and event sourcing reach the same durability without adding a cluster.
+But the more common path — and the right default for a Laravel or Symfony team on a database and broker they already own — is to replace Temporal entirely. Sagas, orchestrators, chained workflows, outbox, retries, dead-letter, and event sourcing reach durable execution without the separate runtime, the DSL, or the lock-in.
 
 ## Next Steps
 
