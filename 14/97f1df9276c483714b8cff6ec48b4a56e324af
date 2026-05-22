@@ -1,0 +1,37 @@
+modelling/business-workflows/orchestrators.md
+  s_c5e33dc9a822e2::t_1f4bd28a27b552 59-60
+modelling/event-sourcing/README.md
+  s_c5e33dc9a822e2::t_abcba2ca112d00 19-22
+modelling/business-workflows/README.md
+  s_c5e33dc9a822e2::t_c5dfd5cfdfd11b 12
+  s_c5e33dc9a822e2::t_7563cd6823fefd 2,11,13,15,17,19-23,27-33,35-37,39-46,48,50,52-57,59-107,115
+modelling/event-sourcing/event-sourcing-introduction/README.md
+  s_c5e33dc9a822e2::t_23e8aebca0ac6d 19-22
+modelling/business-workflows/sagas.md
+  s_c5e33dc9a822e2::t_d14caa7355e830 22
+  s_c5e33dc9a822e2::t_6f527788ee5387 86-90,92
+  s_c5e33dc9a822e2::t_a50589e463bb89 23-24
+solutions/durable-execution.md
+  s_c5e33dc9a822e2::t_49ef0ee99ff8d7 88-129
+  s_c5e33dc9a822e2::t_c8bfd6c5a1bab2 355-356
+  s_c5e33dc9a822e2::t_d536e412878556 275
+  s_c5e33dc9a822e2::t_4766fff63dd904 371
+SUMMARY.md
+  s_c5e33dc9a822e2::t_93a5e9d57f584e 64-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.0",
+  "base_commit_sha": "1497f1df9276c483714b8cff6ec48b4a56e324af",
+  "prompts": {},
+  "sessions": {
+    "s_c5e33dc9a822e2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f0da6c36-3ad4-43ab-99be-7a51200e20b1",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
