@@ -19,15 +19,15 @@ Use Sagas when your workflow needs to:
 * User onboarding (signup → verification → welcome)
 
 {% hint style="success" %}
+**Sagas are durable workflows.** A saga's state lives in your own database, persisted per `#[Identifier]`. When the saga's process crashes, when you deploy mid-flow, when a worker restarts — the saga survives, because its state is a database row, not process memory. On the next event arrival, Ecotone rehydrates the saga and the workflow continues. This is one of Ecotone's [Durable Execution](../../solutions/durable-execution.md) primitives — durable workflows on the database and broker you already run.
+{% endhint %}
+
+{% hint style="success" %}
 **Think of Sagas as**: A workflow coordinator that remembers what happened and decides what to do next based on that history.
 {% endhint %}
 
 {% hint style="info" %}
 **Prerequisites**: Familiarity with [connecting handlers](connecting-handlers-with-channels.md) and [aggregates](../command-handling/state-stored-aggregate/) will help you understand Sagas better.
-{% endhint %}
-
-{% hint style="success" %}
-**Bigger picture**: Sagas are one of Ecotone's [Durable Execution](../../solutions/durable-execution.md) primitives — long-running processes that survive crashes on the database and broker you already run, without a separate workflow service or Temporal cluster.
 {% endhint %}
 
 ## Creating Your First Saga
@@ -83,9 +83,13 @@ final class OrderProcess
 3. The saga is saved to storage (database, etc.)
 4. Now it can react to future events for this order
 
-### Storage
+### Storage and Surviving Crashes
 
-Sagas are automatically stored using [Repositories](../command-handling/repository/repository.md). You can use Doctrine ORM, Eloquent, or Ecotone's Document Store - no extra configuration needed!
+Sagas are automatically stored using [Repositories](../command-handling/repository/repository.md). You can use Doctrine ORM, Eloquent, or Ecotone's Document Store — no extra configuration needed.
+
+**The saga survives anything that doesn't destroy your database.** Every time a saga handles an event, its updated state is committed to the database in the same transaction as the events it published. If the process dies mid-handler, the channel redelivers the message; the saga is reloaded from storage and the handler runs again. Deploys, restarts, OOM kills — none of them lose work, because the work isn't in memory.
+
+For full replay semantics — every state transition recorded as an event in your own database, queryable and projectable — use `#[EventSourcingSaga]` (with `WithAggregateVersioning` + `#[EventSourcingHandler]` methods that rebuild state from events). The events are in your schema; build any view you need over them. See [Durable Execution in PHP](../../solutions/durable-execution.md#event-sourced-sagas-the-same-replay-model-in-your-own-database) for the side-by-side with Temporal.
 
 {% hint style="success" %}
 **Saga vs Aggregate**: Both can handle events and commands, but use Sagas for **business processes** (workflows) and Aggregates for **business rules** (data consistency).

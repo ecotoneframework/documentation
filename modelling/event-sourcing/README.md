@@ -16,6 +16,10 @@ You store the current state of your entities, but not how they got there. When a
 
 Ecotone provides **Event Sourcing** as a first-class feature. Instead of storing current state, you store the sequence of events that led to it. Rebuild any view of the data by replaying events. Get a complete, immutable audit trail automatically. Works with **Postgres**, **MySQL**, and **MariaDB** for event storage, with projections that can write to any storage you choose.
 
+{% hint style="success" %}
+**Building durable workflows on top of event sourcing?** Event-sourced sagas (`#[EventSourcingSaga]`) record every state transition of a long-running process — order fulfillment, payouts, KYC, multi-step onboarding — as queryable events in your own database. Crashes, deploys, and restarts: the saga rehydrates by replaying its events and continues from exactly where it left off. See [Durable Execution in PHP](../../solutions/durable-execution.md) for the three workflow shapes Ecotone supports.
+{% endhint %}
+
 ---
 
 Read more in the following chapters.

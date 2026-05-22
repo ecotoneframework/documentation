@@ -16,6 +16,10 @@ You store the current state but not how you got there. When a customer disputes 
 
 Ecotone's **Event Sourced Aggregates** store events instead of current state. Every state change is an immutable event in a stream. Projections rebuild read models from event history — change the schema, replay the events, get a correct read model.
 
+{% hint style="success" %}
+**Event-sourced sagas are durable workflows.** When a long-running process — order fulfillment, payouts, multi-step onboarding — *is* its history, model it as an `#[EventSourcingSaga]`: every state transition is an event in your own database, the saga rebuilds itself by replaying those events, and you can project the same events into any view, audit log, or dashboard your application needs. See [Durable Execution in PHP](../../../solutions/durable-execution.md) for the full story.
+{% endhint %}
+
 ---
 
 Before diving into this section be sure to understand how Aggregates works in Ecotone based on [previous sections](../../command-handling/state-stored-aggregate/).

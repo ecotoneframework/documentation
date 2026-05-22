@@ -85,6 +85,48 @@ final class OrderFulfillment
 }
 ```
 
+### Event-Sourced Sagas — the same replay model, in your own database
+
+A saga can be event-sourced: every state transition is recorded as an event in your own database, and the saga rebuilds itself by replaying those events. This is the same durability model Temporal uses internally — a recorded history that the runtime replays to reach the current state — with one decisive difference: **the events live in your schema**. Queryable by SQL, joinable with the rest of your domain, projectable into any view you decide to build later.
+
+```php
+#[EventSourcingSaga]
+final class OrderFulfillment
+{
+    use WithAggregateVersioning;
+
+    #[Identifier] private string $orderId;
+    private string $status;
+
+    #[EventHandler]
+    public static function start(OrderWasPlaced $event): array
+    {
+        return [new OrderFulfillmentStarted($event->orderId)];
+    }
+
+    #[EventHandler]
+    public function onPaymentCompleted(PaymentCompleted $event): array
+    {
+        return [new OrderFulfillmentPaid($this->orderId, $event->paymentId)];
+    }
+
+    #[EventSourcingHandler]
+    public function whenStarted(OrderFulfillmentStarted $event): void
+    {
+        $this->orderId = $event->orderId;
+        $this->status = 'placed';
+    }
+
+    #[EventSourcingHandler]
+    public function whenPaid(OrderFulfillmentPaid $event): void
+    {
+        $this->status = 'paid';
+    }
+}
+```
+
+Crash mid-process, deploy mid-process, restart mid-process: on the next event arrival, the saga rehydrates from its event stream and continues from exactly where it left off. Add a new projection a month later — order-throughput-by-region, customer-support timeline, compliance audit log — and it's just another `#[ProjectionV2]` over the events you already own. No export from a workflow engine, no engine-specific format to decode, no separate visibility store to keep in sync.
+
 ### Saga timeouts — `#[Delayed]` on a saga event handler
 
 Long-running processes need to time out: verify a phone number within 24 hours or block the user; complete checkout within 15 minutes or release the cart. With Ecotone, a timeout is one extra event handler on the saga, delayed by an attribute. No cron, no scheduled job, no separate timer service.
@@ -230,7 +272,7 @@ class OrderFulfillmentWorkflow
 }
 ```
 
-Things to notice: the workflow method is a `Generator` that `yield`s through activity proxies; you can't any direct service inside it; every external call must go through an activity stub configured up front; signals, queries, and the workflow method are three separate APIs.
+Things to notice: the workflow method is a `Generator` that `yield`s through activity proxies; you can't call any direct service inside it; every external call must go through an activity stub configured up front; signals, queries, and the workflow method are three separate APIs.
 
 ### Ecotone — plain PHP saga, no proxies, no DSL
 
@@ -310,6 +352,8 @@ The difference isn't scaffolding count — it's what the programming model lets 
 | How your existing broker fits in | Reached *through Activities*; the workflow runtime is Temporal's own routing fabric, not RabbitMQ / Kafka / SQS | First-class as the workflow runtime itself — RabbitMQ, Kafka, Redis, SQS, Enqueue, Symfony Messenger, Laravel Queue |
 | Worker runtime | RoadRunner + ext-grpc — workflows execute inside Temporal's worker process | `php bin/console ecotone:run` / `php artisan ecotone:run` — handlers execute inside your application process |
 | Workflow code | Replay-deterministic — no Date::now, no random, no direct I/O outside Activities | Plain PHP classes with attributes |
+| Replay from recorded history | Yes — Temporal Event History, inside the Temporal cluster | Yes — `#[EventSourcingSaga]` rebuilds state by replaying its events, in your own database |
+| Data ownership | Workflow state is owned by the Temporal cluster — queried through Temporal's API / Web UI; exporting it for application use is a separate concern | Workflow state lives in your application's schema — joinable with the rest of your domain, projectable into any read model, queryable from any SQL tool |
 | Versioning long-running flows | `getVersion()` / `patched()` branches in workflow code that survive until the last in-flight execution finishes | Plain code change with schema discipline — add fields with defaults; drain in-flight sagas before breaking changes to persisted state |
 | Durability primitive | Per-workflow Event History (engine-specific format) | Your own database rows / event store you can query |
 | Outbox (atomic business write + message) | Design idempotent Activities + manual DB-write-then-publish in a dedicated Activity | Declarative `CombinedMessageChannel` in one DBAL transaction |
@@ -324,7 +368,7 @@ For most PHP teams, Ecotone *replaces* Temporal. Durable workflows run on the Po
 There are two specific situations where keeping Temporal alongside Ecotone still makes sense:
 
 - **Genuinely polyglot workflows** — a Go or Java service must call a PHP activity inside the same workflow execution. Ecotone is PHP-on-PHP and doesn't compete on this axis.
-- **Compliance-grade forensic UI requirements** — auditors who need a *visual* timeline of every workflow internal and your team is willing to operate the cluster to get the Web UI today. The underlying data is not the gap: event-sourced sagas in Ecotone record every state change as a queryable event in your own database, OpenTelemetry traces capture every handler invocation, and the dead-letter table is queryable from any SQL tool. Ecotone has the forensic *data*; it doesn't yet ship a packaged visual timeline. If the auditor wants a UI today, that's a reason to keep Temporal alongside.
+- **Auditor-mandated visual workflow timeline today** — the auditors require Temporal's Web UI specifically, not the underlying data. The data isn't the gap: event-sourced sagas store every state change as a queryable event in your own database, OpenTelemetry traces capture every handler invocation, and the dead-letter table is queryable from any SQL tool. Ecotone doesn't yet ship a packaged visual timeline. If the UI itself is the requirement, that's a reason to keep Temporal alongside.
 
 If neither applies, replace Temporal. If either does, Ecotone is designed to compose around the workflow engine and handle everything Temporal doesn't:
 

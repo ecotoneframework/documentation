@@ -56,6 +56,8 @@ class ImageProcessingOrchestrator
 * `inputChannelName` - Channel that triggers this workflow
 * Return array - List of steps (channel names) to execute in order
 
+**Durability comes from the routing slip.** Each step is an `#[InternalHandler]` running on its own channel, and the remaining step list travels with the message as a routing slip header. If the worker crashes at step N, the broker redelivers the message; the next consumer reads the remaining steps from the slip and resumes at step N — no replay of completed steps, no orchestrator state to restore. The orchestrator method is a *plan*, executed step-by-step through your channels.
+
 ### Step 2: Implement the Steps
 
 ```php
