@@ -1,0 +1,37 @@
+solutions/php-workflow-engine.md
+  s_a61f9321578f51::t_9e794b8f380896 1-178
+messaging/console-commands.md
+  s_0c0db2c3b7bdf8::t_b8723bb0e1fbe1 242,247,252-253,260-262
+why-ecotone.md
+  s_a61f9321578f51::t_8827144134921a 7
+  s_a61f9321578f51::t_73f8e6539a2625 9
+  s_a61f9321578f51::t_71c260c55f54d8 22
+  s_a61f9321578f51::t_f63aa4bea2cd6a 14,18
+  s_a61f9321578f51::t_e0562b81a5f84f 11,17,19-21,23
+SUMMARY.md
+  s_a61f9321578f51::t_b5037ecc28f89a 14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "170b104a0f767837f2e94982a2329bd95b403ffe",
+  "prompts": {},
+  "sessions": {
+    "s_0c0db2c3b7bdf8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e01844d6-a301-4dbb-8889-424203237ecf",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    },
+    "s_a61f9321578f51": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "864079be-32a0-4e59-9d20-87988ed808c9",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
