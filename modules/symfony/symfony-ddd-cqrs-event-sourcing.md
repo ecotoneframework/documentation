@@ -74,3 +74,57 @@ Should test mode be enabled, so `MessagingTestSupport` can be used.
 ### licenceKey
 
 Provides access to Enterprise Feature of Ecotone.
+
+## Using Environment Variables in Attributes
+
+Ecotone attributes are compiled into the Symfony container, so you can reference Symfony's `%env(...)%` placeholders directly inside attribute arguments. Ecotone keeps the value as a regular container argument, and Symfony resolves it from the environment — just like any other service argument.
+
+This is useful when a value such as a Kafka topic or an error channel name should differ per environment.
+
+```php
+use Ecotone\Kafka\Attribute\KafkaConsumer;
+
+final class OrderConsumer
+{
+    #[KafkaConsumer(
+        endpointId: 'orderConsumer',
+        topics: ['orders.%env(KAFKA_TOPIC_SUFFIX)%']
+    )]
+    public function handle(string $payload): void
+    {
+        // KAFKA_TOPIC_SUFFIX=production -> consumes from "orders.production"
+    }
+}
+```
+
+The same applies to any other attribute argument, for example the error channel name:
+
+```php
+use Ecotone\Kafka\Attribute\KafkaConsumer;
+use Ecotone\Messaging\Attribute\ErrorChannel;
+
+final class OrderConsumer
+{
+    #[ErrorChannel('errors.%env(ORDER_ERROR_CHANNEL)%')]
+    #[KafkaConsumer(
+        endpointId: 'orderConsumer',
+        topics: ['orders']
+    )]
+    public function handle(string $payload): void
+    {
+        // ORDER_ERROR_CHANNEL=high_priority -> failures routed to "errors.high_priority"
+    }
+}
+```
+
+Declare the variables as you would any other Symfony environment variable:
+
+```bash
+# .env
+KAFKA_TOPIC_SUFFIX=production
+ORDER_ERROR_CHANNEL=high_priority
+```
+
+{% hint style="info" %}
+The `%env(...)%` placeholder needs to be present when the container is compiled; its value is read from the environment at runtime, so changing the value does not require clearing the cache.
+{% endhint %}
