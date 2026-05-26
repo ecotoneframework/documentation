@@ -239,22 +239,27 @@ bin/console sendEmail "test@example.com" --type=normal --header="token:123"
 
 {% tab title="Laravel" %}
 ```bash
-php artisan sendEmail "test@example.com" --type=normal --type=test
+php artisan sendEmail "test@example.com" --type=normal --header="token:123"
 ```
 {% endtab %}
 
 {% tab title="Lite" %}
-```bash
+```php
 $messagingSystem->runConsoleCommand(
    'sendEmail',
    [
       "email" => "test@example.com",
-      "type" => ["normal", "test"],
+      "type" => "normal",
+      "header" => ["token:123"],
    ]
 )
 ```
 {% endtab %}
 {% endtabs %}
+
+{% hint style="success" %}
+Headers passed this way are propagated for the whole execution, so they also reach infrastructure that resolves context from Message Headers - for example the [Multi-Tenant connection](multi-tenancy-support/), which picks the active tenant from the configured tenant header. This makes it possible to run tenant-aware Console Commands, e.g. `--header="tenant:tenant_a"`.
+{% endhint %}
 
 ## Database Transaction
 

@@ -4,20 +4,23 @@ description: Why Ecotone — the PHP architecture layer that grows with your sys
 
 # Why Ecotone?
 
-## What Ecotone Is (and Isn't)
+## Focus on business logic — Ecotone handles the wiring
 
-Ecotone is **not** a framework replacement. You don't rewrite your Laravel or Symfony application to use Ecotone — you add it.
+Ecotone gives you a set of building blocks that speed up everyday development behind one clear, understandable model. Because every building block rests on the same messaging foundation, Ecotone becomes the wiring: you write the business logic, and Ecotone connects it in a decoupled way — whether steps run synchronously or asynchronously, within a single application or across many. Your core business logic stays the first-class citizen while the wiring and infrastructure are abstracted away — which is what keeps even the most complex applications simple to build.
 
-Ecotone is a Composer package that adds architecture on top of your framework: command, query, and event buses wired from attributes; aggregates as plain PHP classes; sagas and projections as first-class patterns; event sourcing, transactional outbox, and distributed messaging all on the same messaging foundation.
-
-You keep your ORM (Eloquent or Doctrine), your routing, your templates, your deployment. Ecotone provides the architecture layer — the part that keeps your system maintainable as complexity grows.
+It runs on the Laravel or Symfony you already use. You keep your ORM (Eloquent or Doctrine), your routing, your templates, your deployment. What Ecotone adds is the architecture layer — the discipline that keeps a system maintainable as complexity grows.
 
 ```bash
-# Your framework stays. Ecotone adds the architecture on top.
-composer require ecotone/laravel
-# or
-composer require ecotone/symfony-bundle
+composer require ecotone/laravel    # or ecotone/symfony-bundle
 ```
+
+## What developers get from the approach
+
+- **Clean domain code.** Business logic lives in plain PHP classes — no base classes to extend, no marker interfaces, no framework types leaking into the domain. Attributes declare intent; Ecotone wires the behaviour.
+- **One model instead of a library zoo.** Buses, aggregates, sagas, event sourcing, outbox, and distributed messaging sit on the same messaging foundation, so retry, deduplication, transactions, PII handling, and observability are configured once and apply everywhere — not reconciled across separate libraries with separate conventions.
+- **No forced rewrites as you grow.** New capability is a new attribute next to the existing code, not a migration from one library to another. The same classes, the same codebase, the same team.
+- **Patterns proven in other ecosystems.** The same Enterprise Integration Patterns that underpin mature Java and .NET architecture layers — brought to PHP as attribute-driven code on plain classes.
+- **Testable by default.** The EcotoneLite harness exercises handlers, aggregates, sagas, projections, and whole flows — synchronous or asynchronous — without booting infrastructure.
 
 ## One Package That Grows With Your System
 

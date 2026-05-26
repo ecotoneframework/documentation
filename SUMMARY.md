@@ -11,6 +11,7 @@
   * [Unreliable Async Processing](solutions/unreliable-async-processing.md)
   * [Complex Business Processes](solutions/complex-business-processes.md)
   * [Durable Execution](solutions/durable-execution.md)
+  * [The PHP Workflow Engine](solutions/php-workflow-engine.md)
   * [Orchestration Layer](solutions/orchestration-layer.md)
   * [Audit Trail & State Rebuild](solutions/audit-trail-and-state-rebuild.md)
   * [Microservice Communication](solutions/microservice-communication.md)
