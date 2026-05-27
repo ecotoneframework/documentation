@@ -63,7 +63,7 @@ That's the whole setup — no bus configuration, no handler registration, no ret
 * **Compose patterns without glue** — the attribute is the wiring; no event-to-handler mapping, no registration, no factory classes.
 * **Multi-tenancy down to the channel** — tenant-isolated streams, tenant-routed queues, priority routing.
 * **Framework-portable business code** — same classes on Laravel, Symfony, or any PSR-11 container.
-* **Testable in-process** — [EcotoneLite](modelling/testing-support/) runs full sync *and* async flows in your test suite, no broker.
+* **Testable in-process** — [EcotoneLite](modelling/testing-support/) runs full sync *and* async flows in your test suite, in-memory or against a real broker — the same test either way.
 
 [See every capability, side by side: Why Ecotone?](why-ecotone.md)
 
@@ -73,7 +73,7 @@ That's the whole setup — no bus configuration, no handler registration, no ret
 
 Because every feature reuses the same building blocks, an AI assistant already knows the shape of the code to generate — less context to feed in, less code to produce, fewer ways to get it wrong. Ecotone ships an [MCP server, agent skills, and `llms.txt`](other/ai-integration.md) so Claude Code, Cursor, and Copilot read and write Ecotone code accurately.
 
-And because [EcotoneLite](modelling/testing-support/) exercises whole scenarios in isolation — sync and async alike, no broker — the loop closes: developers *and* AI agents can write and verify even the most sophisticated flows. The agent runs a full red-green development loop instead of stalling on hallucinations or scenarios that are hard to test.
+And because [EcotoneLite](modelling/testing-support/) exercises whole scenarios in isolation — sync and async alike, in-memory or against a real broker — the loop closes: developers *and* AI agents can write and verify even the most sophisticated flows. The agent runs a full red-green development loop instead of stalling on hallucinations or scenarios that are hard to test.
 
 ***
 
