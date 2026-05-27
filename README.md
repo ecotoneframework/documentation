@@ -1,14 +1,14 @@
 ---
 description: >-
-  Ecotone — the PHP architecture layer that grows with your system, without
-  rewrites
+  Ecotone — the PHP architecture layer that wires your system together, so you
+  build features, not infrastructure
 ---
 
 # About
 
 <figure><img src=".gitbook/assets/ecotone_logo_no_background.png" alt="" width="563"><figcaption></figcaption></figure>
 
-## The PHP architecture layer — composable building blocks on one messaging foundation
+## The PHP architecture layer that wires your system together — so you build features, not infrastructure
 
 Ecotone gives you a set of composable building blocks on a single messaging foundation. You write the business logic; Ecotone is the wiring — connecting it in a decoupled way whether steps run synchronously or asynchronously, within one application or across many. Your business logic stays the first-class citizen while the infrastructure is abstracted away — which is what keeps even the most complex systems simple to build.
 
