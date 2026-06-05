@@ -64,7 +64,7 @@ class NotificationService
 }
 ```
 
-Let's `Ecotone` that we want to run this Event Handler Asynchronously using [RabbitMQ](https://www.rabbitmq.com/)
+Let's tell `Ecotone` that we want to run this Event Handler Asynchronously using [RabbitMQ](https://www.rabbitmq.com/)
 
 ```php
 class Configuration

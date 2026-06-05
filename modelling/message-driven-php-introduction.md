@@ -39,7 +39,7 @@ class UserService
         // store user
         
         $eventBus->publish(new UserWasRegistered($userId));
-    |
+    }
 }
 ```
 

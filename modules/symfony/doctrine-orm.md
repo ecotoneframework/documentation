@@ -50,7 +50,7 @@ class User
         $this->name = $name;
         $this->isActive = false;
         
-        $this-recordThat(new UserRegistered($userId)); // 3. Event Publishing
+        $this->recordThat(new UserRegistered($userId)); // 3. Event Publishing
     }
 
     #[CommandHandler] // 1. Factory method register

@@ -220,7 +220,7 @@ Ecotone make use [Attributes](https://wiki.php.net/rfc/attributes_v2) to provide
 If **ProductService** would be registered in **Dependency Container** as "**productService"**, we would use the Attribute this way:
 
 ```php
-#[ClassReference("productService")
+#[ClassReference("productService")]
 class ProductService
 ```
 {% endhint %}

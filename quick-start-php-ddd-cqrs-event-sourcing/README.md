@@ -21,3 +21,7 @@ Some demos and quick-start examples are done using specific framework integratio
 \
 Therefore feel encouraged to test out examples, even if they are not in framework of your choice.
 {% endhint %}
+
+{% hint style="info" %}
+**Where do `$commandBus`, `$queryBus`, `$eventBus` and `$messagingSystem` come from?** They are provided by the bootstrapped Ecotone Messaging System — autowired from the container in Symfony and Laravel, or obtained from `EcotoneLite::bootstrap(...)` / `EcotoneLiteApplication::bootstrap()` in any other application (see [Installation](../install-php-service-bus.md)). The code blocks on the following pages focus on the handlers; the runnable version of each example, with the bootstrap wired up, lives in the [quickstart-examples repository](https://github.com/ecotoneframework/quickstart-examples).
+{% endhint %}

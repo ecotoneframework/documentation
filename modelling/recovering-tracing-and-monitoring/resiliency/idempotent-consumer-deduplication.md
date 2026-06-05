@@ -10,7 +10,7 @@ Stripe sends the same `payment.succeeded` webhook twice. Your handler charges th
 
 ## How Ecotone Solves It
 
-Ecotone stamps every Message with a unique Message Id. When Dbal Module is installed, asynchronous handlers automatically dedupe on that id — a re-delivered message is detected and skipped before your handler runs. For external messages (webhooks, third-party events), you can dedupe on a domain key — `#[Deduplicated('paymentId')]` — so your handler is invoked at most once per `paymentId` regardless of how many times the webhook fires.
+Ecotone stamps every Message with a unique Message Id. When Dbal Module is installed, asynchronous handlers automatically dedupe on that id — a re-delivered message is detected and skipped before your handler runs. For external messages (webhooks, third-party events), you can dedupe on a domain key — `#[Deduplicated('paymentId')]` — so your handler is invoked at most once per `paymentId` within the deduplication retention window (7 days by default), regardless of how many times the webhook fires.
 
 ## Installation
 
@@ -140,7 +140,7 @@ This feature is available as part of **Ecotone Enterprise.**
 By default using same deduplication key between Command Buses, will mean that Message will be discarded. If we want to ensure isolation that each Command Bus is tracking his deduplication separately, we can add tracking name:
 
 ```php
-#[Deduplicated("paymentId", trackingName: 'payment_tracker']]
+#[Deduplicated("paymentId", trackingName: 'payment_tracker')]
 interface PaymentCommandBus extends CommandBus
 {
 }

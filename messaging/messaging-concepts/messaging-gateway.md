@@ -177,13 +177,13 @@ You enable them by marking attribute _#\[Repository]_.
 interface OrderRepository
 {
     #[Repository]
-    public function getOrder(string $twitId): Order;
+    public function getOrder(string $orderId): Order;
 
     #[Repository]
-    public function findOrder(string $twitId): ?Order;
+    public function findOrder(string $orderId): ?Order;
 
     #[Repository]
-    public function save(Twitter $twitter): void;
+    public function save(Order $order): void;
 }
 ```
 

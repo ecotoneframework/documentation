@@ -30,7 +30,7 @@ The Projection subscribes to those events and is executed as a result:
 
 <figure><img src="../../../.gitbook/assets/describe.png" alt=""><figcaption><p>Projection executes after events are published</p></figcaption></figure>
 
-Because both the Event Store write and the Projection update happen in the same transaction, your Read Model is always consistent with the Event Stream:
+Because both the Event Store write and the Projection update happen in the same transaction — provided the projection writes through the same database connection as the Event Store — your Read Model is always consistent with the Event Stream:
 
 <figure><img src="../../../.gitbook/assets/db (1).png" alt=""><figcaption><p>Command Handler and Projection wrapped in same transaction</p></figcaption></figure>
 

@@ -79,7 +79,7 @@ And because [EcotoneLite](modelling/testing-support/) exercises whole scenarios 
 
 ## Trusted in production
 
-Runs in regulated production since 2017 — payment gateways, certification authorities, nationwide transit, and two-sided marketplaces. Core team of three, no breaking changes across major versions. → [Why Ecotone?](why-ecotone.md)
+Runs in regulated production since 2017 — payment gateways, certification authorities, nationwide transit, and two-sided marketplaces. Maintained by SimplyCodedSoftware and its open-source contributors, no breaking changes across major versions. → [Why Ecotone?](why-ecotone.md)
 
 ***
 
@@ -94,7 +94,7 @@ Runs in regulated production since 2017 — payment gateways, certification auth
 → [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) · [Symfony Module docs](modules/symfony/)
 
 **Any PHP framework** — Ecotone Lite runs on any PSR-11 container.\
-`composer require ecotone/lite-application`\
+`composer require ecotone/ecotone`\
 → [Ecotone Lite docs](modules/ecotone-lite/)
 
 You don't need to migrate anything to try Ecotone: add `#[CommandHandler]` to one method, run your tests, and decide. If it fits, add more attributes alongside your existing code; if it doesn't, remove the package before you've invested.

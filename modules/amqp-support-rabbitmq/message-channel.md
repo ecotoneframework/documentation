@@ -61,7 +61,7 @@ Then Message Channels can be used as follows to make [Message Handler asynchrono
 
 ```php
 #[Asynchronous("orders")]
-#[EventHandler(endpointId: "order_was_placed")
+#[EventHandler(endpointId: "order_was_placed")]
 public function when(OrderWasPlaced $event) : void
 {
    // do something with $event

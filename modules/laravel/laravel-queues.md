@@ -9,7 +9,7 @@ This means we can use our Queues as [Message Channels](../../messaging/messaging
 
 ### Asynchronous Message Handler
 
-When your [Queue for given Connection is set up,](https://laravel.com/docs/10.x/queues#connections-vs-queues) you may register it in Ecotone as Asynchronous Message Channel.
+When your [Queue for given Connection is set up,](https://laravel.com/docs/queues#connections-vs-queues) you may register it in Ecotone as Asynchronous Message Channel.
 
 We register it using Service Context in Ecotone:
 
@@ -26,6 +26,10 @@ final class MessagingConfiguration
     }
 }
 ```
+
+{% hint style="info" %}
+Place this `#[ServiceContext]` class anywhere under `app/` (or a namespace you configured) — Ecotone auto-discovers it; there is nothing to register manually.
+{% endhint %}
 
 After that we can start using it as any other [asynchronous channel](../../modelling/asynchronous-handling/).
 
@@ -76,6 +80,10 @@ php artisan ecotone:run orders -vvv
 
 {% hint style="success" %}
 In case of failures Ecotone's [retry strategy](../../modelling/recovering-tracing-and-monitoring/resiliency/retries.md#delayed-retries) will kick in.
+{% endhint %}
+
+{% hint style="warning" %}
+**Ecotone consumers run separately from Horizon.** `ecotone:run` is a long-running worker, like `queue:work` — supervise it with Supervisor, systemd, or your container orchestrator, and restart it on each deploy. Because Ecotone consumes the queue through its own consumer rather than `queue:work`, these channels are processed by `ecotone:run` and do not appear in the Horizon dashboard.
 {% endhint %}
 
 ## Sending messages via routing

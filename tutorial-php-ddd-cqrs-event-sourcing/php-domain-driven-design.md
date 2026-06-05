@@ -177,7 +177,7 @@ Have you noticed what we are missing here? Our `Event Handler` was not called, a
 
 ### Event Publishing
 
-In order to automatically publish events recorded within Aggregate, we need to add method annotated with `AggregateEvents.` This will tell `Ecotone` where to get the events from.\
+In order to automatically publish events recorded within Aggregate, we need a method annotated with `#[AggregateEvents]`. This tells `Ecotone` where to get the events from.\
 \
 `Ecotone` comes with default implementation, that can be used as trait **WithEvents**.
 

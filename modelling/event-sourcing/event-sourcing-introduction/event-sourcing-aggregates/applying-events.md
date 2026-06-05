@@ -56,7 +56,7 @@ class Ticket
     #[CommandHandler]
     public function assign(AssignPerson $command) : array
     {
-        if ($this-isAssigned) {
+        if ($this->isAssigned) {
            throw new \InvalidArgumentException("Ticket already assigned");
         }
     
@@ -74,7 +74,7 @@ class Ticket
 Then this state, can be used in the Command Handler to decide whatever we can trigger an action or not:
 
 ```php
-if ($this-isAssigned) {
+if ($this->isAssigned) {
   throw new \InvalidArgumentException("Ticket already assigned");
 }
 ```

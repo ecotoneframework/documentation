@@ -21,13 +21,13 @@ To make use of this Business Interface, we need our [Aggregate Repository](./) b
 interface OrderRepository
 {
     #[Repository]
-    public function getOrder(string $twitId): Order;
+    public function getOrder(string $orderId): Order;
 
     #[Repository]
-    public function findOrder(string $twitId): ?Order;
+    public function findOrder(string $orderId): ?Order;
 
     #[Repository]
-    public function save(Twitter $twitter): void;
+    public function save(Order $order): void;
 }
 ```
 
@@ -46,10 +46,10 @@ For Pure Event Sourced Aggregates, we can use direct event passing to the reposi
 interface OrderRepository
 {
     #[Repository]
-    public function getOrder(string $twitId): Order;
+    public function getOrder(string $orderId): Order;
 
     #[Repository]
-    public function findOrder(string $twitId): ?Order;
+    public function findOrder(string $orderId): ?Order;
 
     #[Repository]
     #[RelatedAggregate(Order::class)]

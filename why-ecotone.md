@@ -150,9 +150,9 @@ The capabilities above are not hypothetical. They run in systems where failure i
 ## Proven Patterns, Proven Runtime
 
 * In continuous development since 2017 — nine years of production.
-* Maintained by a core team of three (Dariusz Gafka, Jean de La Bédoyère, Piotr Zając) and an open-source contributor community.
+* Maintained by SimplyCodedSoftware and an open-source contributor community.
 * **No breaking changes across major versions.** Ecotone follows a stability commitment — your business code keeps working across releases, so upgrades are safe to apply. See the [changelog](https://github.com/ecotoneframework/ecotone-dev/blob/main/CHANGELOG.md).
-* **Commercial support, SLA, consulting, and workshops** available for teams running Ecotone in production — [contact us](other/contact-workshops-and-support.md) to arrange a support agreement.
+* **Commercial support, Support Agreements, consulting, and workshops** available for teams running Ecotone in production — [contact us](other/contact-workshops-and-support.md) to arrange a support agreement.
 
 ## Start Today, Grow Into Every Pattern
 

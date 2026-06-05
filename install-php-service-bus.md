@@ -11,7 +11,7 @@ Pick your stack below. Symfony and Laravel get dedicated integration packages wi
 ## Prerequisites
 
 Before installing Ecotone, ensure you have:
-- PHP 8.1 or higher
+- PHP 8.2 or higher
 - Composer installed
 - A properly configured PHP project with PSR-4 autoloading
 
@@ -43,6 +43,10 @@ php bin/console ecotone:list
 {% hint style="warning" %}
 By default Ecotone will look for Attributes in default Symfony catalog **"src"**. \
 If you do follow different structure, you can use [**"namespaces"**](modules/symfony/symfony-ddd-cqrs-event-sourcing.md#namespaces) configuration to tell Ecotone, where to look for.&#x20;
+{% endhint %}
+
+{% hint style="info" %}
+**Next steps for Symfony:** reuse a Connection already defined in your application ([Doctrine DBAL connection](modules/symfony/symfony-database-connection-dbal-module.md)), turn an existing Doctrine entity into an [Aggregate](modules/symfony/doctrine-orm.md), or run handlers asynchronously on an existing [Messenger transport](modules/symfony/symfony-messenger-transport.md).
 {% endhint %}
 
 ***
@@ -77,6 +81,18 @@ php artisan ecotone:list
 {% hint style="warning" %}
 By default Ecotone will look for Attributes in default Laravel catalog **"app"**. \
 If you do follow different structure, you can use [**"namespaces"**](modules/laravel/laravel-ddd-cqrs-event-sourcing.md#namespaces) configuration to tell Ecotone, where to look for.&#x20;
+{% endhint %}
+
+**Step 4 (optional):** Publish the configuration file
+
+```bash
+php artisan vendor:publish --tag=ecotone-config
+```
+
+This creates `config/ecotone.php`, where you can configure namespaces, cache, serialization, the error channel, and your Enterprise licence key.
+
+{% hint style="info" %}
+**Next steps for Laravel:** reuse a connection from `config/database.php` ([Doctrine DBAL connection](modules/laravel/database-connection-dbal-module.md)), use an [Eloquent model as an Aggregate](modules/laravel/eloquent.md), or run handlers asynchronously on your existing [Laravel queues](modules/laravel/laravel-queues.md).
 {% endhint %}
 
 ***
@@ -148,6 +164,29 @@ $queryBus = $ecotoneLite->getQueryBus();
 {% hint style="info" %}
 With default configuration, Ecotone will look for classes inside **"src"** catalog.
 {% endhint %}
+
+## Database tables
+
+Ecotone creates tables only for the features you actually use, and they live in **your** database — your backups, your retention, your access control:
+
+| Feature | Default table |
+| --- | --- |
+| Transactional outbox / DBAL message channel | `enqueue` |
+| Dead letter (stored failed messages) | `ecotone_error_messages` |
+| Deduplication | `ecotone_deduplication` |
+| Document store | `ecotone_document_store` |
+| Event store (Event Sourcing) | per-stream tables |
+
+By default these are created automatically on first use. To create them explicitly — or to ship them through your own migration tooling — use the console command:
+
+```bash
+# Symfony
+php bin/console ecotone:migration:database:setup --initialize
+# Laravel
+php artisan ecotone:migration:database:setup --initialize
+```
+
+Pass `--sql` instead of `--initialize` to print the `CREATE TABLE` statements, so you can paste them into your own Doctrine Migrations or Laravel migration.
 
 ## Common Installation Issues
 

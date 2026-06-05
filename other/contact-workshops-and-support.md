@@ -7,7 +7,7 @@ description: Get private workshops, sessions from Ecotone and Message Driven Arc
 <figure><img src="../.gitbook/assets/ecotone_logo_no_background.png" alt="" width="375"><figcaption><p>Ecotone — the PHP architecture layer that grows with your system, without rewrites</p></figcaption></figure>
 
 {% hint style="success" %}
-Workshops and consulting are delivered remotely by Ecotone's author, [Dariusz Gafka](https://medium.com/@dariuszgafka). They combine presentation, hands-on coding, and Q\&A — customized to your stack (Laravel, Symfony, or Ecotone Lite) and the scenarios your team is actually facing.
+Workshops and consulting from SimplyCodedSoftware, the company behind Ecotone, are delivered remotely by [Dariusz Gafka](https://medium.com/@dariuszgafka). They combine presentation, hands-on coding, and Q\&A — customized to your stack (Laravel, Symfony, or Ecotone Lite) and the scenarios your team is actually facing.
 {% endhint %}
 
 ## Sponsorship
@@ -18,7 +18,7 @@ Become sponsor of Ecotone's author - [Dariusz Gafka](https://medium.com/@dariusz
 
 ## Workshops
 
-In order to get you and your team, up and running with Ecotone quickly and to build understanding around topics like **Resilient Message Driven Architecture**, **DDD**, **Event Sourcing,** you may schedule workshop with Ecotone's founder [**Dariusz Gafka**](https://medium.com/@dariuszgafka).
+In order to get you and your team, up and running with Ecotone quickly and to build understanding around topics like **Resilient Message Driven Architecture**, **DDD**, **Event Sourcing,** you may schedule a workshop from SimplyCodedSoftware, led by [**Dariusz Gafka**](https://medium.com/@dariuszgafka).
 
 ## Ecotone Basics - Workshop
 
@@ -40,7 +40,7 @@ An Event Sourcing workshop is also available — see [ecotone.tech/workshops](ht
 
 ## **Consulting**
 
-In case of specific questions or problems, Ecotone's founder is **available for consulting sessions**. A consulting session allows for **pair programming**, **discussing your business or technical problems**, or even a mini-workshop on topics you're interested in.\
+In case of specific questions or problems, SimplyCodedSoftware offers **consulting sessions**, delivered by Dariusz Gafka. A consulting session allows for **pair programming**, **discussing your business or technical problems**, or even a mini-workshop on topics you're interested in.\
 Consulting sessions happen online at a previously scheduled day for up to 5 hours.\
 \
 **Price: 1500 EUR**\

@@ -113,7 +113,7 @@ class Order
         $orderedProducts = [];
         foreach ($command->getProductIds() as $productId) {
             $productCost = $queryBus->sendWithRouting("product.getCost", ["productId" => $productId]);
-            $orderedProducts[] = new OrderedProduct($productId, $productCost->getAmount());
+            $orderedProducts[] = new OrderedProduct($productId, $productCost);
         }
 
         return new self($command->getOrderId(), $metadata["userId"], $orderedProducts);
@@ -174,7 +174,7 @@ class EcotoneQuickstart
             ["orderId" => $orderId, "productIds" => [1,2]]
         );
 
-        echo $this->queryBus->convertAndSend("order.getTotalPrice", MediaType::APPLICATION_X_PHP_ARRAY, ["orderId" => $orderId]);
+        echo $this->queryBus->sendWithRouting("order.getTotalPrice", ["orderId" => $orderId]);
     }
 }
 ```
@@ -350,7 +350,7 @@ class MessagingConfiguration
 Now we need to tell our `order.place` Command Handler, that it should run asynchronously using our new`orders` channel.&#x20;
 
 ```php
-use Ecotone\Messaging\Annotation\Asynchronous;
+use Ecotone\Messaging\Attribute\Asynchronous;
 
 (...)
 
@@ -361,7 +361,7 @@ public static function placeOrder(PlaceOrderCommand $command, array $metadata, Q
     $orderedProducts = [];
     foreach ($command->getProductIds() as $productId) {
         $productCost = $queryBus->sendWithRouting("product.getCost", ["productId" => $productId]);
-        $orderedProducts[] = new OrderedProduct($productId, $productCost->getAmount());
+        $orderedProducts[] = new OrderedProduct($productId, $productCost);
     }
 
     return new self($command->getOrderId(), $metadata["userId"], $orderedProducts);
@@ -478,7 +478,7 @@ namespace App\Infrastructure\AddUserId;
 
 class AddUserIdService
 {
-   #[Presend(0, AddUserId::class, true)]
+   #[Presend(precedence: 0, pointcut: AddUserId::class, changeHeaders: true)]
     public function add() : array
     {
         return ["userId" => 1];

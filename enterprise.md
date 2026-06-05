@@ -39,7 +39,7 @@ Ecotone comes with two plans:
 * **Ecotone Free** comes with [Apache License Version 2.0](https://github.com/ecotoneframework/ecotone-dev/blob/main/LICENSE). It provides everything you need to build message-driven systems in PHP -- CQRS, aggregates, event sourcing, sagas, async messaging, interceptors, and full testing support. This covers all features not marked as Enterprise.
 * **Ecotone Enterprise** adds production-grade capabilities for teams whose systems have grown into multi-tenant, multi-service, or high-throughput environments. It brings advanced workflow orchestration, cross-service communication, resilient command handling, and resource optimization.
 
-Every Enterprise licence directly funds continued development of Ecotone's open-source core. When Enterprise succeeds, the entire ecosystem benefits.
+Behind Ecotone stands SimplyCodedSoftware and its open-source contributors. Every Enterprise licence directly supports continued development of the open-source core and enterprise features.
 
 {% hint style="success" %}
 Each Enterprise feature is marked with hint on the documentation page. Enterprise features can only be run with licence key.\

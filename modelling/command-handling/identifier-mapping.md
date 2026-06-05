@@ -90,9 +90,9 @@ We may provide Identifier dynamically using Command Bus. This way we can state e
 In some scenario we won't be in deal to create an Command class at all. For example we may provide block user action, which changes the status:
 
 ```php
-$this->commandBus->sendWithRouting('user.block', metadata:
+$this->commandBus->sendWithRouting('user.block', metadata: [
     'aggregate.id' => $userId // This way we provide dynamic identifier
-])
+]);
 ```
 
 ```php

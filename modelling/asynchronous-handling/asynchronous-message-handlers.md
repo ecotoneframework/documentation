@@ -12,7 +12,7 @@ In order to run a Command Handler asynchronously, mark it as **Asynchronous**.
 
 ```php
 #[Asynchronous("orders")]
-#[CommandHandler(endpointId: "place_order_endpoint")
+#[CommandHandler(endpointId: "place_order_endpoint")]
 public function placeOrder(PlaceOrderCommand $command) : void
 {
    // do something with $command
@@ -23,7 +23,7 @@ The same way we define for Event Handlers:
 
 ```php
 #[Asynchronous("orders")]
-#[EventHandler(endpointId: "order_was_placed")
+#[EventHandler(endpointId: "order_was_placed")]
 public function when(OrderWasPlaced $event) : void
 {
    // do something with $event
@@ -332,7 +332,7 @@ Each Asynchronous Message Handler requires us to define **"endpointId"**. It's u
 
 ```php
 #[Asynchronous("orders")]
-#[EventHandler(endpointId: "order_was_placed") // Your important endpoint Id
+#[EventHandler(endpointId: "order_was_placed")] // Your important endpoint Id
 public function when(OrderWasPlaced $event) : void {}
 ```
 

@@ -6,7 +6,7 @@ description: Quick start with Aggregates and Sagas in Ecotone PHP
 
 ## Demo
 
-{% @github-files/github-code-block %}
+{% embed url="https://github.com/ecotoneframework/quickstart-examples" %}
 
 ## Read Blog Post
 
