@@ -1,0 +1,93 @@
+tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md
+  s_ba9a00e7f7a659::t_7b736f9ff18d0b 177
+  s_ba9a00e7f7a659::t_aa81c11fec61d4 481
+  s_ba9a00e7f7a659::t_261f6c10a350de 116
+  s_ba9a00e7f7a659::t_a06dea8fff21ca 353
+  s_ba9a00e7f7a659::t_5fc7b95cf46395 364
+modelling/recovering-tracing-and-monitoring/delivery-semantics-and-guarantees.md
+  s_ba9a00e7f7a659::t_2e2a3bbc69addf 1-35
+why-ecotone.md
+  s_ba9a00e7f7a659::t_ee117281f897b9 153
+  s_0c6cb07c1d0c03::t_f7bb66fc4d1c2c 155
+tutorial-php-ddd-cqrs-event-sourcing/php-messaging-architecture.md
+  s_ba9a00e7f7a659::t_7c817ba766ddb9 223
+README.md
+  s_ba9a00e7f7a659::t_41b283feae8c6e 97
+  s_ba9a00e7f7a659::t_6b26fd0852bf50 82
+modules/laravel/laravel-queues.md
+  s_ba9a00e7f7a659::t_af247d028817ef 12
+  s_ba9a00e7f7a659::t_fc73f60bf4e216 30-33
+  s_ba9a00e7f7a659::t_c56204ac2ab513 85-88
+modelling/command-handling/repository/repository.md
+  s_ba9a00e7f7a659::t_aa3070c95278a6 49,52
+  s_ba9a00e7f7a659::t_bb34f1c7ca2ffa 24,27,30
+modules/amqp-support-rabbitmq/message-channel.md
+  s_ba9a00e7f7a659::t_681ad65faa9b42 64
+modelling/event-sourcing/event-sourcing-introduction/event-sourcing-aggregates/applying-events.md
+  s_ba9a00e7f7a659::t_7518b1d0d4aeb2 59,77
+modelling/command-handling/identifier-mapping.md
+  s_ba9a00e7f7a659::t_e09e1403d42d66 93,95
+modules/symfony/doctrine-orm.md
+  s_ba9a00e7f7a659::t_03164224a827f9 53
+modelling/event-sourcing/setting-up-projections/failure-handling.md
+  s_ba9a00e7f7a659::t_d2b53b80c4ef31 33
+modelling/message-driven-php-introduction.md
+  s_ba9a00e7f7a659::t_303c60d48922c2 42
+messaging/messaging-concepts/messaging-gateway.md
+  s_ba9a00e7f7a659::t_4775c63da91fdb 180,183,186
+other/contact-workshops-and-support.md
+  s_ba9a00e7f7a659::t_bb7c044c7938a7 10
+  s_ba9a00e7f7a659::t_fa861d81a697b2 21
+  s_ba9a00e7f7a659::t_f866365a97526e 43
+tutorial-php-ddd-cqrs-event-sourcing/php-domain-driven-design.md
+  s_ba9a00e7f7a659::t_64e72444ac562b 180
+quick-start-php-ddd-cqrs-event-sourcing/README.md
+  s_ba9a00e7f7a659::t_371e97ddd07148 24-27
+modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md
+  s_ba9a00e7f7a659::t_c0c4b2dfb5f4f0 13
+  s_ba9a00e7f7a659::t_e79cb8aa4da49d 143
+quick-start-php-ddd-cqrs-event-sourcing/asynchronous-php.md
+  s_ba9a00e7f7a659::t_f4e9110f3dd973 67
+modelling/asynchronous-handling/asynchronous-message-handlers.md
+  s_ba9a00e7f7a659::t_1f08a8d056937f 15
+  s_ba9a00e7f7a659::t_2cf61a7863339d 335
+  s_ba9a00e7f7a659::t_e13d540579d649 26
+install-php-service-bus.md
+  s_ba9a00e7f7a659::t_80aba967652afd 14
+  s_ba9a00e7f7a659::t_085b31002d2c28 48-51
+  s_ba9a00e7f7a659::t_9fcf000729f5e8 86-97
+  s_ba9a00e7f7a659::t_3818baba234923 168-190
+SUMMARY.md
+  s_ba9a00e7f7a659::t_dfbdcd8c0762e6 106
+  s_ba9a00e7f7a659::t_73b1fbbe3facf6 100
+quick-start-php-ddd-cqrs-event-sourcing/aggregates-and-sagas.md
+  s_ba9a00e7f7a659::t_8fc643bc437a41 9
+modelling/business-workflows/sagas.md
+  s_ba9a00e7f7a659::t_a70749ba26b796 90
+composing-building-blocks.md
+  s_ba9a00e7f7a659::t_23bffb5a517626 1371
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "46236612f04ff28eb0f95d4c5d69708d98eab35d",
+  "prompts": {},
+  "sessions": {
+    "s_0c6cb07c1d0c03": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9d90a706-055a-4d46-8ab4-15922ad55a99",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    },
+    "s_ba9a00e7f7a659": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46edf57b-0bac-4522-8db0-d1b514e13545",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
