@@ -1,0 +1,47 @@
+modules/redis-support.md
+  s_ea0ec93ef0586f::t_aea7432eb5bb72 154-163
+modelling/event-sourcing/setting-up-projections/README.md
+  s_ea0ec93ef0586f::t_00e1d1450ba7e4 27-32
+modelling/command-handling/business-interface/README.md
+  s_ea0ec93ef0586f::t_cdbd7ed6dbc8ce 20-30
+modelling/business-workflows/README.md
+  s_ea0ec93ef0586f::t_1dea3fb9ddbbf1 111-116,119
+composing-building-blocks.md
+  s_ea0ec93ef0586f::t_c27c618835047f 1419-1429
+modules/amazon-sqs-support.md
+  s_ea0ec93ef0586f::t_6182d8a0b3c6cc 154-163
+modules/kafka-support/README.md
+  s_ea0ec93ef0586f::t_3a371600b402cd 22-25,28
+modelling/recovering-tracing-and-monitoring/README.md
+  s_ea0ec93ef0586f::t_7f4186d2e9011a 27
+modules/symfony/README.md
+  s_ea0ec93ef0586f::t_2ebd1ef09556d6 32-33
+modelling/event-sourcing/setting-up-projections/emitting-events.md
+  s_ea0ec93ef0586f::t_a655a4573f883a 352
+modelling/command-handling/saga.md
+  s_ea0ec93ef0586f::t_6e54d38d75413e 52-62
+other/ai-integration.md
+  s_ea0ec93ef0586f::t_9c314c4299bb1f 192,194-196
+modules/amqp-support-rabbitmq/README.md
+  s_ea0ec93ef0586f::t_640ea54f38dab7 11-14,18
+modelling/event-sourcing/setting-up-projections/projections-with-state.md
+  s_ea0ec93ef0586f::t_de475192722179 199
+modelling/command-handling/README.md
+  s_ea0ec93ef0586f::t_f38b5c454af4d9 31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "0bdde118f51fd055df8279a1993c2fc79f6a8365",
+  "prompts": {},
+  "sessions": {
+    "s_ea0ec93ef0586f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2bd42edf-99e3-4c57-b239-8f2aa533c377",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
