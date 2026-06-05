@@ -151,3 +151,13 @@ class ConsumerConfiguration
 $consumerConfiguration = SqsMessageConsumerConfiguration::createDirectExchange()
                 ->withDeclareOnStartup(false) // do not try to declare queue before consuming first message;
 ```
+
+## Materials
+
+### Demo implementation
+
+* [Message Broker demo — RabbitMQ, Kafka, SQS, Redis](https://github.com/ecotoneframework/quickstart-examples/tree/main/MessageBroker)
+
+### Links
+
+* [Message Brokers in PHP: From Hundreds of Lines to Just a Few](https://blog.ecotone.tech/message-brokers-in-php-few-lines-integration/) \[Article]

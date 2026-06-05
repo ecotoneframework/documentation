@@ -108,8 +108,15 @@ The three are not exclusive — a Saga can dispatch into a Stateless Workflow, a
 
 ## Materials
 
+### Demo implementation
+
+* [Synchronous Stateless Workflow](https://github.com/ecotoneframework/quickstart-examples/tree/main/Workflows/SynchronousStateless)
+* [Asynchronous Stateless Workflow](https://github.com/ecotoneframework/quickstart-examples/tree/main/Workflows/AsynchronousStateless)
+* [Saga (Stateful Workflow)](https://github.com/ecotoneframework/quickstart-examples/tree/main/Workflows/Saga)
+
 ### Links
 
+* [What If 80% of Your Workflow Code Shouldn't Exist?](https://blog.ecotone.tech/three-different-ways-to-build-workflows/) \[Article]
 * [Building workflows in PHP using Orchestrator](https://blog.ecotone.tech/building-workflows-in-php/) \[Article]
 * [Building workflows in PHP with pipe and filter architecture](https://blog.ecotone.tech/building-workflows-in-php-with-ecotone/) \[Article]
 * [Durable Execution in PHP](../../solutions/durable-execution.md) — when "durable workflows" or Temporal comes up

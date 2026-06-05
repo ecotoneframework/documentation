@@ -24,6 +24,12 @@ You will find extensive article series on Ecotone's Projection System on the blo
 4. [**Stop Subscribing to Domain Events**](https://blog.ecotone.tech/stop-subscribing-to-domain-events/)
 5. [**Evolve Live Projections Without Downtime**](https://blog.ecotone.tech/evolve-live-projections-without-downtime/)
 
+Runnable demo implementations:
+
+* [Keeping State between runs](https://github.com/ecotoneframework/quickstart-examples/tree/main/StatefulProjection)
+* [Emitting Events from Projections](https://github.com/ecotoneframework/quickstart-examples/tree/main/EmittingEventsFromProjection)
+* [Partitioned (Streaming) Projection](https://github.com/ecotoneframework/quickstart-examples/tree/main/EventProjecting/PartitionedProjection)
+
 ## What is a Projection?
 
 A **Projection** reads events from an **Event Stream** (the append-only log) and builds a read-optimized view from them — a database table, a document, a cache entry. Think of it as a **materialized view** built from events.

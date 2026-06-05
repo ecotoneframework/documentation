@@ -196,4 +196,4 @@ Ecotone takes care of persisting and loading the state between batches automatic
 
 ## Demo
 
-[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/master/StatefulProjection)
+[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/main/StatefulProjection)

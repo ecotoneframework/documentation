@@ -349,4 +349,4 @@ Custom streams created via `linkTo` are not automatically deleted — they may b
 
 ## Demo
 
-[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/master/EmittingEventsFromProjection)
+[Example implementation using Ecotone Lite.](https://github.com/ecotoneframework/quickstart-examples/tree/main/EmittingEventsFromProjection)

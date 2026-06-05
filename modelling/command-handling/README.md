@@ -28,7 +28,7 @@ You may be interested in theory - [DDD and CQRS](../message-driven-php-introduct
 
 * [Dispatching and handling Commands](https://github.com/ecotoneframework/quickstart-examples/tree/main/CQRS)
 * [Dispatching and handling Events](https://github.com/ecotoneframework/quickstart-examples/tree/main/EventHandling)
-* [Business Interface](https://github.com/ecotoneframework/quickstart-examples/tree/main/WorkingWithAggregateDirectly)
+* [Business Interface](https://github.com/ecotoneframework/quickstart-examples/tree/main/BusinessInterface)
 
 ### Links
 

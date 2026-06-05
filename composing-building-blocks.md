@@ -1416,3 +1416,14 @@ Each composition pattern is documented in depth on its own page.
 * [Recovering, Tracing, Monitoring](modelling/recovering-tracing-and-monitoring/) — error channels, retries, and OpenTelemetry
 
 The composition model is the same at every scale. Start with a single handler on day one, and the same attributes carry you through a distributed system on year three — **without the orchestration code**.
+
+## Materials
+
+### Demo implementation
+
+* [Composing Ecotone's Building Blocks together](https://github.com/ecotoneframework/quickstart-examples/tree/main/BuildingBlocks)
+
+### Links
+
+* [Building Blocks — Exploring Aggregates, Sagas and Event Sourcing](https://blog.ecotone.tech/building-blocks-exploring-aggregates-sagas-event-sourcing/) \[Article]
+* [Robust and Developer Friendly Architecture in PHP](https://blog.ecotone.tech/building-resilient-and-scalable-systems-by-default/) \[Article]

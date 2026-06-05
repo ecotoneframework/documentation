@@ -49,3 +49,14 @@ For deciding between a Saga and the simpler workflow primitives:
 {% content-ref url="../business-workflows/" %}
 [business-workflows](../business-workflows/)
 {% endcontent-ref %}
+
+## Materials
+
+### Demo implementation
+
+* [Saga (Stateful Workflow)](https://github.com/ecotoneframework/quickstart-examples/tree/main/Workflows/Saga)
+
+### Links
+
+* [Building Blocks — Exploring Aggregates, Sagas and Event Sourcing](https://blog.ecotone.tech/building-blocks-exploring-aggregates-sagas-event-sourcing/) \[Article]
+* [What If 80% of Your Workflow Code Shouldn't Exist?](https://blog.ecotone.tech/three-different-ways-to-build-workflows/) \[Article]

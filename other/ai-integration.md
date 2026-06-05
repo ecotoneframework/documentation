@@ -189,7 +189,8 @@ Ecotone documentation integrates with:
 
 ## Materials
 
-## Links
+### Links
 
-* [Vibe coding Enterprise PHP Applications](https://blog.ecotone.tech/vibe-coding-enterprise-php-applications/)
-* [Ecotone Agentic Skills on your command](https://blog.ecotone.tech/building-event-sourcing-ddd-cqrs-with-agentic-skills-in-php/)
+* [Vibe coding Enterprise PHP Applications](https://blog.ecotone.tech/vibe-coding-enterprise-php-applications/) \[Article]
+* [Ecotone Agentic Skills on your command](https://blog.ecotone.tech/building-event-sourcing-ddd-cqrs-with-agentic-skills-in-php/) \[Article]
+* [AI Isn't the Problem — Your Architecture Is](https://blog.ecotone.tech/ai-isnt-the-problem-your-architecture-is/) \[Article]

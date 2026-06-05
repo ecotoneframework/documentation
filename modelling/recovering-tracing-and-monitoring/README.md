@@ -24,7 +24,7 @@ To find out more about different use-cases, read related section about [Handling
 
 ### Links
 
-* [Async Failure Recovery: Queue vs Streaming Channel Strategies](https://blog.ecotone.tech/async-failure-recovery-queue-vs-streaming-channel-strategies/) {Article]
+* [Async Failure Recovery: Queue vs Streaming Channel Strategies](https://blog.ecotone.tech/async-failure-recovery-queue-vs-streaming-channel-strategies/) \[Article]
 * [Read in depth material about resiliency in Messaging Systems using Ecotone](https://blog.ecotone.tech/building-reactive-message-driven-systems-in-php/) \[Article]
 * [Resilient Messaging with Laravel](https://blog.ecotone.tech/ddd-and-messaging-with-laravel-and-ecotone/) \[Article]
 * [Making your application stable with Outbox Pattern](https://blog.ecotone.tech/implementing-outbox-pattern-in-php-symfony-laravel-ecotone/) \[Article]

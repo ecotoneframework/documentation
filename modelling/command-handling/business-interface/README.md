@@ -17,3 +17,14 @@ This works for sending commands, executing queries, and operating on databases �
 {% content-ref url="working-with-database/" %}
 [working-with-database](working-with-database/)
 {% endcontent-ref %}
+
+## Materials
+
+### Demo implementation
+
+* [Business Interface — Service Activator, Routing and Asynchronous](https://github.com/ecotoneframework/quickstart-examples/tree/main/BusinessInterface)
+
+### Links
+
+* [Message Based — Business Oriented Interfaces](https://blog.ecotone.tech/message-based-business-oriented-interfaces/) \[Article]
+* [Working with Databases using DDD Mindset](https://blog.ecotone.tech/working-with-databases-using-ddd-mindset/) \[Article]
