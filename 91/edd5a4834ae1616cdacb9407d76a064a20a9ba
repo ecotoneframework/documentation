@@ -1,0 +1,22 @@
+why-ecotone.md
+  s_9c20cce11b8cae::t_aeb5682468847c 35
+  s_9c20cce11b8cae::t_d387bb9ffb34d8 111
+  s_9c20cce11b8cae::t_57fc6d2db24fd1 101
+  s_9c20cce11b8cae::t_6e25d4f9290031 27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "91edd5a4834ae1616cdacb9407d76a064a20a9ba",
+  "prompts": {},
+  "sessions": {
+    "s_9c20cce11b8cae": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "03f4e42c-ea27-4d8f-b271-f740dfa412e5",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
