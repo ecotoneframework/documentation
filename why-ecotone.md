@@ -24,7 +24,7 @@ composer require ecotone/laravel    # or ecotone/symfony-bundle
 
 ## One Package That Grows With Your System
 
-The core promise of Ecotone: **no forced architectural migrations as your domain grows**. Every other PHP choice commits to a ceiling on day one. Spatie laravel-event-sourcing has no sagas. EventSauce assembles everything around it. Patchlevel has no outbox or distributed bus. Symfony Messenger is dispatch-only; aggregates, ES, sagas, and outbox are all separate library decisions.
+The core promise of Ecotone: **no forced architectural migrations as your domain grows**. Assemble the same capabilities from separate single-purpose libraries and each one commits you to a ceiling — plus the work of stitching outbox, sagas, distribution, and a shared retry / dedup / PII story across them yourself. Ecotone keeps them in one model on the same messaging foundation.
 
 With Ecotone, you start with `#[CommandHandler]` on day one. You add `#[Asynchronous]` when you need async. You add `#[Saga]` when you need a stateful workflow. You add `#[EventSourcingAggregate]` when audit and replay become requirements. You add `#[DistributedBus]` when your system splits into services.
 
@@ -32,15 +32,7 @@ With Ecotone, you start with `#[CommandHandler]` on day one. You add `#[Asynchro
 
 ## Patterns Proven in Other Ecosystems — Now on PHP
 
-Ecotone is built on [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/), the same foundation behind:
-
-| Ecosystem | Pattern-driven architecture layer |
-|-----------|-----------------------------------|
-| **Java** | Spring Integration, Axon Framework |
-| **.NET** | NServiceBus, MassTransit, Wolverine |
-| **PHP** | **Ecotone** |
-
-The patterns are decades-tested in banking, telecom, and logistics systems. Ecotone brings them to PHP as attribute-driven code on your existing Laravel or Symfony application — so your team writes POPOs, and Ecotone applies the patterns.
+Ecotone is built on [Enterprise Integration Patterns](https://www.enterpriseintegrationpatterns.com/) — the same foundation behind the mature, pattern-driven architecture layers long established in the Java and .NET ecosystems. The patterns are decades-tested in banking, telecom, and logistics systems. Ecotone brings them to PHP as attribute-driven code on your existing Laravel or Symfony application — so your team writes POPOs, and Ecotone applies the patterns.
 
 ## What You Get, Mapped to Problems
 
@@ -106,7 +98,7 @@ Ecotone plugs into your existing framework without requiring changes to your app
 
 ### Laravel
 
-Laravel's queue runs jobs, not business processes — anything resembling aggregates, sagas, workflows, or event sourcing ends up stitched together from separate libraries. Ecotone fills that layer directly: works with **Eloquent** for aggregate persistence, **Laravel Queues** for async message channels, and **Laravel Octane** for high-performance scenarios. Configuration via your standard Laravel config files.
+Ecotone adds the architecture layer on top of your Laravel app and works with what you already use: **Eloquent** for aggregate persistence, **Laravel Queues** for async message channels, and **Laravel Octane** for high-performance scenarios. Configuration via your standard Laravel config files.
 
 ```bash
 composer require ecotone/laravel
@@ -116,7 +108,7 @@ composer require ecotone/laravel
 
 ### Symfony
 
-Symfony Messenger handles dispatch — aggregates, sagas, event sourcing, and transactional outbox are left to you. Ecotone fills that layer directly: works with **Doctrine ORM** for aggregate persistence, **Symfony Messenger Transport** for async message channels, and standard **Bundle configuration**. Ecotone auto-discovers your attributes in the `src` directory.
+Ecotone adds the architecture layer on top of your Symfony app and works with what you already use: **Doctrine ORM** for aggregate persistence, **Symfony Messenger Transport** for async message channels, and standard **Bundle configuration**. Ecotone auto-discovers your attributes in the `src` directory.
 
 ```bash
 composer require ecotone/symfony-bundle
