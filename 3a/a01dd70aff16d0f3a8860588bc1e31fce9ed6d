@@ -1,0 +1,24 @@
+messaging/multi-tenancy-support/README.md
+  s_5b08def20fc92f::t_e4816788343868 12
+  s_5b08def20fc92f::t_0bdbf46be3cac8 11,13-14
+enterprise.md
+  s_5b08def20fc92f::t_e309835e2bada0 35
+  s_5b08def20fc92f::t_2f4a2108ab8fe4 24
+  s_5b08def20fc92f::t_c45c6d381fad6e 36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3aa01dd70aff16d0f3a8860588bc1e31fce9ed6d",
+  "prompts": {},
+  "sessions": {
+    "s_5b08def20fc92f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c8ba4ac0-9f52-4518-8295-815dcea19156",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
