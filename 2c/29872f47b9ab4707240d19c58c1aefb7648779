@@ -1,0 +1,38 @@
+modules/tempest/database-connection-dbal-module.md
+  s_fc33ff94f9a77a::t_c93ad0b26ac9cd 1-76
+modules/tempest/tempest-configuration.md
+  s_fc33ff94f9a77a::t_11565d65261868 1-83
+install-php-service-bus.md
+  s_fc33ff94f9a77a::t_75191c5e4421db 222-223
+  s_fc33ff94f9a77a::t_43055cc521698c 100-129,131-134
+  s_fc33ff94f9a77a::t_b3dd568ab06459 2,7,9,14
+  s_fc33ff94f9a77a::t_58accddc79ab88 130
+modules/tempest/README.md
+  s_fc33ff94f9a77a::t_4b06db735ff84a 1-26
+modules/tempest/tempest-models-as-aggregates.md
+  s_fc33ff94f9a77a::t_d751384f37462b 84
+  s_fc33ff94f9a77a::t_39902c974c2b54 1-83
+SUMMARY.md
+  s_fc33ff94f9a77a::t_4b1f4f1250e48f 204-207
+modules/overview.md
+  s_fc33ff94f9a77a::t_7c39eedee2edb7 2
+README.md
+  s_fc33ff94f9a77a::t_3734fd9bc79523 96-99
+  s_fc33ff94f9a77a::t_dafb41e7119863 15,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "2c29872f47b9ab4707240d19c58c1aefb7648779",
+  "prompts": {},
+  "sessions": {
+    "s_fc33ff94f9a77a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "138a9c3f-744d-47db-8bec-20dcad66c0e7",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
