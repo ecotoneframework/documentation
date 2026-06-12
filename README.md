@@ -12,10 +12,10 @@ description: >-
 
 Ecotone gives you a set of composable building blocks on a single messaging foundation. You write the business logic; Ecotone is the wiring — connecting it in a decoupled way whether steps run synchronously or asynchronously, within one application or across many. Your business logic stays the first-class citizen while the infrastructure is abstracted away — which is what keeps even the most complex systems simple to build.
 
-It runs on the Laravel or Symfony you already use — your ORM, routing, and deployment stay. What Ecotone adds is the architecture layer.
+It runs on the Laravel, Symfony or Tempest you already use — your ORM, routing, and deployment stay. What Ecotone adds is the architecture layer.
 
 ```bash
-composer require ecotone/laravel    # or ecotone/symfony-bundle
+composer require ecotone/laravel    # or ecotone/symfony-bundle, ecotone/tempest
 ```
 
 ***
@@ -92,6 +92,10 @@ Runs in regulated production since 2017 — payment gateways, certification auth
 **Symfony** — works with Doctrine ORM and Symfony Messenger transports; Bundle auto-configuration, attributes auto-discovered in `src`.\
 `composer require ecotone/symfony-bundle`\
 → [Symfony Quick Start](quick-start-php-ddd-cqrs-event-sourcing/symfony-ddd-cqrs-demo-application/) · [Symfony Module docs](modules/symfony/)
+
+**Tempest** — works with Tempest active-record models as Aggregates and your Tempest database connection; zero-config, attributes auto-discovered from your app's PSR-4 roots (requires PHP 8.4+).\
+`composer require ecotone/tempest`\
+→ [Tempest Module docs](modules/tempest/)
 
 **Any PHP framework** — Ecotone Lite runs on any PSR-11 container.\
 `composer require ecotone/ecotone`\

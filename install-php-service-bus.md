@@ -1,17 +1,17 @@
 ---
-description: Installing Ecotone for Symfony, Laravel or Stand Alone
+description: Installing Ecotone for Symfony, Laravel, Tempest or Stand Alone
 ---
 
 # Installation
 
-Ecotone is the PHP architecture layer that grows with your system without rewrites. One Composer package adds CQRS, event sourcing, sagas, projections, outbox, EIP routing, and distributed messaging to Laravel or Symfony via declarative PHP attributes — no rewrite, no bespoke glue.
+Ecotone is the PHP architecture layer that grows with your system without rewrites. One Composer package adds CQRS, event sourcing, sagas, projections, outbox, EIP routing, and distributed messaging to Laravel, Symfony or Tempest via declarative PHP attributes — no rewrite, no bespoke glue.
 
-Pick your stack below. Symfony and Laravel get dedicated integration packages with auto-configuration; any other framework (or no framework) runs on **Ecotone Lite** through a PSR-11 container.
+Pick your stack below. Symfony, Laravel and Tempest get dedicated integration packages with auto-configuration; any other framework (or no framework) runs on **Ecotone Lite** through a PSR-11 container.
 
 ## Prerequisites
 
 Before installing Ecotone, ensure you have:
-- PHP 8.2 or higher
+- PHP 8.2 or higher (the Tempest integration requires PHP 8.4+)
 - Composer installed
 - A properly configured PHP project with PSR-4 autoloading
 
@@ -93,6 +93,41 @@ This creates `config/ecotone.php`, where you can configure namespaces, cache, se
 
 {% hint style="info" %}
 **Next steps for Laravel:** reuse a connection from `config/database.php` ([Doctrine DBAL connection](modules/laravel/database-connection-dbal-module.md)), use an [Eloquent model as an Aggregate](modules/laravel/eloquent.md), or run handlers asynchronously on your existing [Laravel queues](modules/laravel/laravel-queues.md).
+{% endhint %}
+
+***
+
+## Install for Tempest
+
+{% hint style="warning" %}
+The Tempest integration requires **PHP 8.4+** (Tempest's own requirement).
+{% endhint %}
+
+**Step 1:** Install the Ecotone Tempest Package
+
+{% hint style="success" %}
+composer require [ecotone/](https://packagist.org/packages/ecotone/)tempest
+{% endhint %}
+
+**Step 2:** Verify Installation
+
+Tempest auto-discovers the package — no bundle/provider registration is needed. Run this command to check Ecotone is installed:
+
+```bash
+./tempest ecotone:list
+```
+
+{% hint style="warning" %}
+By default Ecotone auto-discovers Attributes in your Tempest application's PSR-4 roots (for example **`App\`**). \
+If you follow a different structure, use the [**"namespaces"**](modules/tempest/tempest-configuration.md#namespaces) configuration to tell Ecotone where to look.
+{% endhint %}
+
+**Step 3 (optional):** Configure Ecotone
+
+Ecotone works with zero configuration. To set the service name, licence key, serialization or error channel, create a discovered `ecotone.config.php` returning an `EcotoneConfig` object — see [Tempest Configuration](modules/tempest/tempest-configuration.md).
+
+{% hint style="info" %}
+**Next steps for Tempest:** reuse your [Tempest database connection](modules/tempest/database-connection-dbal-module.md) (including multi-tenant), use a [Tempest model as an Aggregate](modules/tempest/tempest-models-as-aggregates.md), or run handlers asynchronously over a [message broker channel](modelling/asynchronous-handling/) (DBAL, AMQP, Redis, Kafka, SQS).
 {% endhint %}
 
 ***
@@ -184,6 +219,8 @@ By default these are created automatically on first use. To create them explicit
 php bin/console ecotone:migration:database:setup --initialize
 # Laravel
 php artisan ecotone:migration:database:setup --initialize
+# Tempest
+./tempest ecotone:migration:database:setup --initialize
 ```
 
 Pass `--sql` instead of `--initialize` to print the `CREATE TABLE` statements, so you can paste them into your own Doctrine Migrations or Laravel migration.

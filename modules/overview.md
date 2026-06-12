@@ -1,5 +1,5 @@
 ---
-description: Overview of Ecotone modules for Laravel, Symfony, and message brokers
+description: Overview of Ecotone modules for Laravel, Symfony, Tempest, and message brokers
 ---
 
 # Overview
