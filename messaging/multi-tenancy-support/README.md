@@ -8,6 +8,10 @@ description: Multi-Tenancy Ecotone, Symfony, Laravel, DDD, CQRS, Event Sourcing
 Works with: **Laravel**, **Symfony**, and **Standalone PHP**
 {% endhint %}
 
+{% hint style="warning" %}
+Multi-Tenancy (header-based database connection routing) is an **Enterprise** feature that is **free to use as part of the Ecotone 1.x release** — it requires no licence today. With the next major release it comes fully under the Enterprise licence. Per-tenant *channel* routing ([Dynamic Message Channels](../../modelling/asynchronous-handling/dynamic-message-channels.md)) and custom tenant resolvers are already Enterprise.
+{% endhint %}
+
 ## The Problem
 
 Adding a new tenant means configuring new queues, new database connections, and custom routing. A slow tenant's queue backlog delays everyone else's messages. Your multi-tenancy logic is tangled into business code instead of being handled at the infrastructure level.

@@ -21,7 +21,7 @@ Ecotone Enterprise is for when your system outgrows single-tenant, single-servic
 | Outbox Pattern | Yes | Yes |
 | Interceptors (Middlewares) | Yes | Yes |
 | Testing Support | Yes | Yes |
-| Multi-Tenancy | Yes | Yes |
+| Multi-Tenancy (Connection Routing) | Free in 1.x¹ | Yes |
 | OpenTelemetry | Yes | Yes |
 | Orchestrators | | Yes |
 | Distributed Bus with Service Map | | Yes |
@@ -31,6 +31,8 @@ Ecotone Enterprise is for when your system outgrows single-tenant, single-servic
 | Kafka Integration | | Yes |
 | Command Bus Instant Retries | | Yes |
 | Gateway-Level Deduplication | | Yes |
+
+¹ **Multi-Tenancy** (header-based database connection routing, with automatic tenant propagation) is an Enterprise feature that is free to use as part of the Ecotone 1.x release, so it requires no licence today. With the next major release it comes fully under the Enterprise licence. Per-tenant *channel* routing (Dynamic Message Channels) and custom tenant resolvers are already Enterprise.
 
 ## Ecotone Plans
 
