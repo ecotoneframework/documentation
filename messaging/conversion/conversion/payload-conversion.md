@@ -49,3 +49,31 @@ Ecotone provides [JMS Converter Module](../../../modules/jms-converter.md), whic
 {% hint style="success" %}
 Packages like [JMS Converter](../../../modules/jms-converter.md) will change your default serialization configuration to JSON by default. No custom configuration is needed.
 {% endhint %}
+
+## Default Content Type for consumed Messages
+
+When Message is consumed, Ecotone reads its **contentType** header to know from which Media Type the payload should be deserialized. However Messages produced by external systems (e.g. published to a Kafka topic by non-Ecotone application) may come without contentType header at all. In such case Ecotone assumes the payload is already in PHP format and skips deserialization, which for typed parameters ends up with lack of converter exception.
+
+For such integrations we can state explicitly what format is expected, using **ContentType** attribute on given endpoint:
+
+```php
+#[ContentType('application/json')]
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders']
+)]
+public function handle(Order $payload): void
+{
+    // payload without contentType header will be deserialized from JSON
+}
+```
+
+If Message already carries contentType header, it stays untouched — the attribute works as a default. If we want to always enforce given Media Type, we can mark it to replace the existing one:
+
+```php
+#[ContentType('application/json', replaceIfExists: true)]
+```
+
+{% hint style="info" %}
+ContentType attribute is transport agnostic — it can be used on any endpoint: Kafka Consumers, Asynchronous Command and Event Handlers, and others.
+{% endhint %}

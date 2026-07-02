@@ -94,6 +94,30 @@ public function handle(Order $payload): void
 
 Read more about Conversion in [related section](../../messaging/conversion/conversion/).
 
+### Default Content Type
+
+Messages published by external systems may come without contentType header, and then Ecotone does not know from which format the payload should be deserialized. If our Topic follows known format, we can state it explicitly using ContentType attribute:
+
+```php
+#[ContentType('application/json')]
+#[KafkaConsumer(
+    endpointId: 'orderConsumers', 
+    topics: ['orders']
+)]
+public function handle(Order $payload): void
+{
+    // do something
+}
+```
+
+If Message already carries contentType header, it stays untouched — the attribute works as a default. To always enforce given Media Type, we can use **replaceIfExists** flag:
+
+```php
+#[ContentType('application/json', replaceIfExists: true)]
+```
+
+Read more about Default Content Type in [related section](../../messaging/conversion/conversion/payload-conversion.md#default-content-type-for-consumed-messages).
+
 ## Instant Retry&#x20;
 
 In case of failure we may try to recover instantly. To do so we can provide **InstantRetry** attribute:
