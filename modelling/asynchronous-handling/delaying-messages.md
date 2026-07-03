@@ -55,6 +55,23 @@ public function cancelOrderIfExpired(OrderWasPlaced $event): void
 }
 ```
 
+### Using Closures (Enterprise)
+
+On PHP 8.5+ the delay can be calculated with a **Closure** instead of Expression Language string, keeping full type safety and IDE support:
+
+```php
+#[Delayed(expression: static function (#[Payload] OrderWasPlaced $event): \DateTimeInterface {
+    return $event->dueDate;
+})]
+#[Asynchronous("orders")]
+#[EventHandler(endpointId: "cancelOrder")]
+public function cancelOrderIfExpired(OrderWasPlaced $event): void
+{
+}
+```
+
+The Closure parameters resolve like in regular Message Handler (`#[Payload]`, `#[Header]`, `#[Reference]` and more). Read more in [Closures as Expressions](../../messaging/conversion/closures-as-expressions.md).
+
 ## Message Delay
 
 We may send an Message and tell Ecotone to delay it using **deliveryDelay** Message Header:

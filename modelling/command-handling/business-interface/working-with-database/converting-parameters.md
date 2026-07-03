@@ -164,6 +164,30 @@ In case of Method and Class Level Dbal Parameters we get access to passed parame
 public function registerUsingMethodParameters(int $personId, string $name): void;
 ```
 
+### Using Closures (Enterprise)
+
+On PHP 8.5+ Dbal Parameters can be evaluated with a **Closure** instead of Expression Language string. Closure parameters are bound **by name to the Business Method parameters** - and to `$payload` for parameter level Dbal Parameter:
+
+```php
+#[DbalWrite('INSERT INTO persons VALUES (:personId, :fullName)')]
+#[DbalParameter(name: 'fullName', expression: static function (string $firstName, string $lastName): string {
+    return $firstName . ' ' . $lastName;
+})]
+public function register(int $personId, string $firstName, string $lastName): void;
+```
+
+```php
+#[DbalWrite('INSERT INTO persons VALUES (:personId, :name)')]
+public function registerLowerCased(
+    int $personId,
+    #[DbalParameter(expression: static function (PersonName $payload): string {
+        return $payload->toLowerCase();
+    })] PersonName $name
+): void;
+```
+
+Closure parameters with default values are used when no matching Business Method parameter exists. Read more in [Closures as Expressions](../../../../messaging/conversion/closures-as-expressions.md).
+
 ### Using Class Level Dbal Parameters
 
 As we can use method level, we can also use class level Dbal Parameters. In case of Class level parameters, they will be applied to all the method within interface.

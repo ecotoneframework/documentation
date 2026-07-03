@@ -116,6 +116,24 @@ public function placeOrder(
 }
 ```
 
+### Fetching with Closures
+
+On PHP 8.5+ the identifier can be resolved with a **Closure** instead of Expression Language string, keeping full type safety and IDE support:
+
+```php
+#[CommandHandler]
+public function placeOrder(
+    PlaceOrder $command,
+    #[Fetch(static function (#[Payload] PlaceOrder $command): string {
+        return $command->userId;
+    })] User $user
+): void {
+    // do something    
+}
+```
+
+The Closure parameters resolve like in regular Message Handler (`#[Payload]`, `#[Header]`, `#[Reference]` and more). Read more in [Closures as Expressions](../../../messaging/conversion/closures-as-expressions.md).
+
 ### Accessing Message Headers
 
 We can also use Message Headers to fetch our related Aggregate instance:

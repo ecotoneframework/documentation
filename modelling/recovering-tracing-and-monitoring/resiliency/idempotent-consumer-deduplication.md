@@ -109,6 +109,26 @@ final class PaymentHandler
 }
 ```
 
+### Deduplication with Closures (Enterprise)
+
+On PHP 8.5+ the deduplication key can be derived with a **Closure** instead of Expression Language string, keeping full type safety and IDE support:
+
+```php
+final class PaymentHandler
+{
+    #[Deduplicated(expression: static function (#[Payload] ReceivePayment $command, #[Reference] PaymentIdMapper $paymentIdMapper): string {
+        return $paymentIdMapper->map($command->paymentId);
+    })]
+    #[CommandHandler(endpointId: "receivePaymentChangesEndpoint")]
+    public function receivePaymentChanges(ReceivePayment $command): void
+    {
+        // handle 
+    }
+}
+```
+
+The Closure parameters resolve like in regular Message Handler (`#[Payload]`, `#[Header]`, `#[Reference]` and more). Read more in [Closures as Expressions](../../../messaging/conversion/closures-as-expressions.md).
+
 ## Deduplication with Command Bus
 
 Deduplicate messages at the Command Bus level to protect every handler behind that bus automatically -- without per-handler deduplication code.

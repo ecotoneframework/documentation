@@ -51,6 +51,23 @@ public function sendWelcomeNotificationWhen(UserWasRegistered $event): void
 }
 ```
 
+### Using Closures (Enterprise)
+
+On PHP 8.5+ the Time to Live can be calculated with a **Closure** instead of Expression Language string:
+
+```php
+#[TimeToLive(expression: static function (#[Header('expirationTime')] int $expirationTime): int {
+    return $expirationTime;
+})]
+#[Asynchronous("notifications")]
+#[EventHandler(endpointId: "welcomeEmail")]
+public function sendWelcomeNotificationWhen(UserWasRegistered $event): void
+{
+}
+```
+
+The Closure parameters resolve like in regular Message Handler (`#[Payload]`, `#[Header]`, `#[Reference]` and more). Read more in [Closures as Expressions](../../messaging/conversion/closures-as-expressions.md).
+
 ## Message Time to Live
 
 We may send an Message and tell Ecotone to set Time to Live using **timeToLive** Message Header:

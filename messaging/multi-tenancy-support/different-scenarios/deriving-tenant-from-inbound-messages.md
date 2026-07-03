@@ -83,6 +83,23 @@ public function handle(string $payload, #[Headers] array $headers): void
 
 `topicTenantMap` is just a regular service in your container. You can hold the mapping in configuration, in a database table, or anywhere else.
 
+## Resolving Tenant with Closures
+
+On PHP 8.5+ the tenant can be derived with a **Closure** instead of Expression Language string, keeping full type safety and IDE support:
+
+```php
+#[KafkaConsumer('orders', topics: ['orders_topic_1', 'orders_topic_2'])]
+#[WithTenantResolver(expression: static function (#[Header('kafka_topic')] string $topic, #[Reference] TopicTenantMap $topicTenantMap): string {
+    return $topicTenantMap->lookup($topic);
+})]
+public function handle(string $payload, #[Headers] array $headers): void
+{
+    // ...
+}
+```
+
+The Closure parameters resolve like in regular Message Handler (`#[Payload]`, `#[Header]`, `#[Reference]` and more). Read more in [Closures as Expressions](../../conversion/closures-as-expressions.md).
+
 ## Explicit Tenant Header Wins
 
 If the inbound message _already_ carries the tenant header (for example, an upstream Kafka producer sets it explicitly), the resolver does **not** override it. Explicit headers always take precedence. This makes `#[WithTenantResolver]` safe to add even when only _some_ of your incoming messages need translation.

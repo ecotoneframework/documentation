@@ -174,6 +174,7 @@
   * [Inbound/Outbound Channel Adapter](messaging/messaging-concepts/inbound-outbound-channel-adapter.md)
 * [Method Invocation And Conversion](messaging/conversion/README.md)
   * [Method Invocation](messaging/conversion/method-invocation.md)
+  * [Closures as Expressions](messaging/conversion/closures-as-expressions.md)
   * [Conversion](messaging/conversion/conversion/README.md)
     * [Payload Conversion](messaging/conversion/conversion/payload-conversion.md)
     * [Headers Conversion](messaging/conversion/conversion/headers-conversion.md)

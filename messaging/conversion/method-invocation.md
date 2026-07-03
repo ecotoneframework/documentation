@@ -220,3 +220,20 @@ It contains following configuration:
 
 * `name` (Optional) - Defines the configuration parameter name, otherwise variable name is taken.
 
+## Closures as Expressions (Enterprise)
+
+On PHP 8.5+ every `expression` property shown above (`Payload`, `Header`, `Reference`) accepts a **Closure** as type-safe, IDE-friendly alternative to Expression Language:
+
+```php
+#[CommandHandler]
+public function changePrice(
+    ChangeProductPriceCommand $command,
+    #[Header('executorId', expression: static function (string $value, #[Reference] UserService $userService): string {
+        return $userService->normalize($value);
+    })] string $executorId,
+): void {}
+```
+
+The Closure is executed like a regular Message Handler - its parameters resolve via `#[Payload]`, `#[Header]`, `#[Headers]`, `#[Reference]`, `#[ConfigurationVariable]`, and special variables like `value` bind by parameter name.\
+Read more in [Closures as Expressions](closures-as-expressions.md).
+
