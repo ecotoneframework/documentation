@@ -1,0 +1,40 @@
+modelling/asynchronous-handling/delaying-messages.md
+  s_d24dc3ed11e1f9::t_bb4dadead2212c 58-74
+modelling/command-handling/repository/repository.md
+  s_d24dc3ed11e1f9::t_2c175bd5771485 119-136
+modelling/command-handling/business-interface/working-with-database/converting-parameters.md
+  s_d24dc3ed11e1f9::t_1f1d0d00840f9e 167-190
+messaging/conversion/closures-as-expressions.md
+  s_d24dc3ed11e1f9::t_75b5cccdfafda5 1-56,82-85,90-100,103-197,199-200
+  s_d24dc3ed11e1f9::t_53c2028dff62a7 57-81
+  s_d24dc3ed11e1f9::t_d087714613c335 86-89,101-102
+  s_d24dc3ed11e1f9::t_1ee5b622082c50 198
+modelling/asynchronous-handling/time-to-live.md
+  s_d24dc3ed11e1f9::t_933ade312088a5 54-70
+SUMMARY.md
+  s_d24dc3ed11e1f9::t_35854591fb878b 177
+modelling/recovering-tracing-and-monitoring/resiliency/idempotent-consumer-deduplication.md
+  s_d24dc3ed11e1f9::t_0bdb3b9d931a3f 112-131
+messaging/multi-tenancy-support/different-scenarios/deriving-tenant-from-inbound-messages.md
+  s_d24dc3ed11e1f9::t_2c175bd5771485 86-102
+enterprise.md
+  s_d24dc3ed11e1f9::t_35854591fb878b 34
+messaging/conversion/method-invocation.md
+  s_d24dc3ed11e1f9::t_bb4dadead2212c 223-239
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.9",
+  "base_commit_sha": "c45703bc25c906c2a2e551c797a1dac51bff3d4c",
+  "prompts": {},
+  "sessions": {
+    "s_d24dc3ed11e1f9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6db88ad3-ec31-4a8f-a44e-e648948c9657",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
