@@ -258,7 +258,7 @@ $messagingSystem->runConsoleCommand(
 {% endtabs %}
 
 {% hint style="success" %}
-Headers passed this way are propagated for the whole execution, so they also reach infrastructure that resolves context from Message Headers - for example the [Multi-Tenant connection](multi-tenancy-support/), which picks the active tenant from the configured tenant header. This makes it possible to run tenant-aware Console Commands, e.g. `--header="tenant:tenant_a"`.
+Headers passed this way are propagated for the whole execution, so they also reach infrastructure that resolves context from Message Headers - for example the [Multi-Tenant connection](multi-tenancy-support/), which picks the active tenant from the configured tenant header. This makes it possible to run tenant-aware Console Commands, e.g. `--header="tenant:tenant_a"`. See [Tenant-Aware Console Commands](multi-tenancy-support/different-scenarios/tenant-aware-console-commands.md) for a full example.
 {% endhint %}
 
 ## Database Transaction

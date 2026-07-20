@@ -49,7 +49,7 @@ artisan ecotone:deadletter:list --header="tenant:tenant_a"
 {% tab title="Lite" %}
 ```php
 $list = $messagingSystem->runConsoleCommand("ecotone:deadletter:list", [
-    'tenant' => ["tenant:tenant_a"]
+    'header' => ["tenant:tenant_a"]
 ]);
 ```
 {% endtab %}

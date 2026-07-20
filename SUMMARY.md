@@ -159,6 +159,7 @@
     * [Deriving Tenant from Inbound Messages](messaging/multi-tenancy-support/different-scenarios/deriving-tenant-from-inbound-messages.md)
     * [Events and Tenant Propagation](messaging/multi-tenancy-support/different-scenarios/events-and-tenant-propagation.md)
     * [Multi-Tenant aware Dead Letter](messaging/multi-tenancy-support/different-scenarios/multi-tenant-aware-dead-letter.md)
+    * [Tenant-Aware Console Commands](messaging/multi-tenancy-support/different-scenarios/tenant-aware-console-commands.md)
   * [Advanced Queuing Strategies](messaging/multi-tenancy-support/advanced-queuing-strategies.md)
 * [Document Store](messaging/document-store.md)
 * [Console Commands](messaging/console-commands.md)

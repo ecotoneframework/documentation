@@ -4,7 +4,7 @@ description: Multi-tenancy scenarios and advanced configurations
 
 # Different Scenarios
 
-Once tenant resolution is configured, real systems run into a wider set of needs: tenants on different databases, tenants derived from inbound payloads, propagating tenant context across asynchronous events, and isolating dead letters per tenant. The pages below cover each scenario.
+Once tenant resolution is configured, real systems run into a wider set of needs: tenants on different databases, tenants derived from inbound payloads, propagating tenant context across asynchronous events, isolating dead letters per tenant, and running Console Commands for a chosen tenant. The pages below cover each scenario.
 
 {% content-ref url="hooking-into-tenant-switch.md" %}
 [hooking-into-tenant-switch.md](hooking-into-tenant-switch.md)
@@ -28,4 +28,8 @@ Once tenant resolution is configured, real systems run into a wider set of needs
 
 {% content-ref url="multi-tenant-aware-dead-letter.md" %}
 [multi-tenant-aware-dead-letter.md](multi-tenant-aware-dead-letter.md)
+{% endcontent-ref %}
+
+{% content-ref url="tenant-aware-console-commands.md" %}
+[tenant-aware-console-commands.md](tenant-aware-console-commands.md)
 {% endcontent-ref %}
