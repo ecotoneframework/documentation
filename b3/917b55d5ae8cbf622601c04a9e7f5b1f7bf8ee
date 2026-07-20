@@ -1,0 +1,31 @@
+messaging/multi-tenancy-support/different-scenarios/README.md
+  s_b3ba74b2464fec::t_2ba8f8d97b2aa3 32-35
+  s_b3ba74b2464fec::t_726a9733dbdac8 7
+messaging/multi-tenancy-support/different-scenarios/tenant-aware-console-commands.md
+  s_b3ba74b2464fec::t_aeb8c4c181c3af 1-8,10-12,14-19,21-22,24-75,77-111
+  s_b3ba74b2464fec::t_0aea3013259076 9
+  s_b3ba74b2464fec::t_1318359a47057c 13,20,23
+  s_b3ba74b2464fec::t_5e64812d9290ff 76
+messaging/multi-tenancy-support/different-scenarios/multi-tenant-aware-dead-letter.md
+  s_b3ba74b2464fec::t_3bbea73c07cf8c 52
+SUMMARY.md
+  s_b3ba74b2464fec::t_add1a72a8e736a 162
+messaging/console-commands.md
+  s_b3ba74b2464fec::t_f4ce3f83a1f69f 261
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "b3917b55d5ae8cbf622601c04a9e7f5b1f7bf8ee",
+  "prompts": {},
+  "sessions": {
+    "s_b3ba74b2464fec": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5801e5ce-8bab-49b2-807c-c8819874f200",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
