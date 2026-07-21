@@ -1,0 +1,21 @@
+messaging/console-commands.md
+  s_9131f461bc62a0::t_5ee2f747aabbec 278-343,345-348,350,355-356
+  s_9131f461bc62a0::t_891973265bef52 344,349,351-354
+  s_9131f461bc62a0::t_e382f9f9caee7a 58-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "62142fd90ad87c2483711fabfcf9d9e4f0958ea0",
+  "prompts": {},
+  "sessions": {
+    "s_9131f461bc62a0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "02748de5-8174-4104-bfb2-24d992fd9fc7",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
