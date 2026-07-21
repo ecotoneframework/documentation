@@ -55,6 +55,20 @@ $messagingSystem->runConsoleCommand(
 Ecotone will register method parameters as Command arguments.
 {% endhint %}
 
+## Command Description
+
+We may provide description for our Console Command, which will be visible in the Command listing of given framework (`bin/console list`, `php artisan list`):
+
+```php
+class EmailSender
+{
+    #[ConsoleCommand('sendEmail', 'Sends email of given type to provided address')]
+    public function execute(string $email, string $type): void
+    {
+    }
+}
+```
+
 ## Commands with Options
 
 We register new Console Command using _ConsoleCommand_ attribute:
@@ -260,6 +274,85 @@ $messagingSystem->runConsoleCommand(
 {% hint style="success" %}
 Headers passed this way are propagated for the whole execution, so they also reach infrastructure that resolves context from Message Headers - for example the [Multi-Tenant connection](multi-tenancy-support/), which picks the active tenant from the configured tenant header. This makes it possible to run tenant-aware Console Commands, e.g. `--header="tenant:tenant_a"`. See [Tenant-Aware Console Commands](multi-tenancy-support/different-scenarios/tenant-aware-console-commands.md) for a full example.
 {% endhint %}
+
+## Writing to the Console
+
+To write output from our Console Command, we type hint for _ConsoleWriter_. Ecotone will inject writer connected to the console of given framework - Symfony Console, Laravel Artisan or Tempest Console. This way our Command stays decoupled from framework specific classes, yet output lands in the actual console with native formatting:
+
+```php
+use Ecotone\Messaging\Console\ConsoleWriter;
+
+class EmailSender
+{
+    #[ConsoleCommand('sendEmail')]
+    public function execute(string $email, ConsoleWriter $writer): void
+    {
+        $writer->info("Sending email to {$email}");
+        
+        $writer->success('Email was sent');
+        $writer->warning('Email provider is close to rate limit');
+        $writer->error('Email could not be sent');
+    }
+}
+```
+
+_info_, _success_, _warning_ and _error_ write colored messages (cyan, green, yellow, red), while _write_ and _writeln_ write plain text.
+
+{% hint style="success" %}
+In Ecotone Lite output is written directly to the standard output as plain text.
+{% endhint %}
+
+### Tables
+
+We may render table using column headers and rows:
+
+```php
+#[ConsoleCommand('listEmails')]
+public function execute(ConsoleWriter $writer): void
+{
+    $writer->table(
+        ['Email', 'Status'],
+        [
+            ['test@example.com', 'sent'],
+            ['other@example.com', 'pending'],
+        ]
+    );
+}
+```
+
+### Progress Bars
+
+For long running Commands we may show the progress:
+
+```php
+#[ConsoleCommand('sendNewsletter')]
+public function execute(ConsoleWriter $writer): void
+{
+    $subscribers = $this->subscribers();
+
+    $progressBar = $writer->progressBar(count($subscribers));
+    foreach ($subscribers as $subscriber) {
+        $this->send($subscriber);
+        $progressBar->advance();
+    }
+    $progressBar->finish();
+}
+```
+
+### Testing Console Output
+
+During flow testing output is collected in memory, so we can simply assert against it:
+
+```php
+$ecotoneLite = EcotoneLite::bootstrapFlowTesting([EmailSender::class], [new EmailSender()]);
+
+$ecotoneLite->runConsoleCommand('sendEmail', ['email' => 'test@example.com']);
+
+$this->assertSame(
+    ['Email was sent'],
+    $ecotoneLite->getInMemoryConsoleWriter()->getSuccessLines()
+);
+```
 
 ## Database Transaction
 
