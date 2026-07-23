@@ -82,3 +82,39 @@ You can use routing for your Message Handlers or direct Message Classes — what
 Because a Tempest model is a state-stored Aggregate, Ecotone persists it automatically through the `TempestRepository` when a Command Handler returns or mutates it — no repository wiring is required.
 
 You can additionally declare a [DBAL Business Interface](../../modelling/command-handling/business-interface/working-with-database/) (`#[DbalQuery]` / `#[DbalWrite]`) for read-side queries over the same connection.
+
+## Recording Events from your Model
+
+Tempest's ORM persists the model's properties to columns. Ecotone's generic `WithEvents` trait keeps recorded events in a private property, which Tempest would try to map to a `recordedEvents` column. Declare your own recorded-events property marked with Tempest's `#[Virtual]` attribute instead, and release the events with `#[AggregateEvents]`:
+
+```php
+use Ecotone\Modelling\Attribute\Aggregate;
+use Ecotone\Modelling\Attribute\AggregateEvents;
+use Tempest\Database\IsDatabaseModel;
+use Tempest\Database\Virtual;
+
+#[Aggregate]
+final class Order
+{
+    use IsDatabaseModel;
+
+    #[Virtual]
+    private array $recordedEvents = [];
+
+    private function recordThat(object $event): void
+    {
+        $this->recordedEvents[] = $event;
+    }
+
+    #[AggregateEvents]
+    public function releaseEvents(): array
+    {
+        $events = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $events;
+    }
+}
+```
+
+With this in place, events recorded in your Command Handlers are published to Event Handlers after the aggregate is saved — `#[Virtual]` keeps the property out of the database mapping.

@@ -207,6 +207,8 @@
   * [Tempest Configuration](modules/tempest/tempest-configuration.md)
   * [Database Connection (DBAL Module)](modules/tempest/database-connection-dbal-module.md)
   * [Tempest Models as Aggregates](modules/tempest/tempest-models-as-aggregates.md)
+  * [Asynchronous Processing and Workers](modules/tempest/asynchronous-tempest.md)
+  * [Testing](modules/tempest/testing.md)
 * [Ecotone Lite](modules/ecotone-lite/README.md)
   * [Logging](modules/ecotone-lite/logging.md)
   * [Database Connection (DBAL Module)](modules/ecotone-lite/database-connection-dbal-module.md)
