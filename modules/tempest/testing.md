@@ -4,7 +4,7 @@ description: Testing Ecotone messaging in Tempest applications
 
 # Testing
 
-Messaging behavior — including asynchronous, delayed and failing flows — is testable in-process with [Ecotone Lite](../../modelling/testing-support/), without booting Tempest, a database or a broker. Tests run in milliseconds.
+Messaging behavior — including asynchronous, delayed and failing flows — is testable in-process with [Ecotone Lite](../../modelling/testing-support/), without booting Tempest, a database or a broker. Tests run in milliseconds. Every pattern on this page runs in the [live demo application](https://github.com/ecotoneframework/tempest-ecotone-demo) test suite.
 
 ## Test Mode and the Production Cache
 

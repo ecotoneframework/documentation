@@ -42,6 +42,12 @@ Combined with a [durable channel](asynchronous-tempest.md), this is asynchronous
 
 ## Materials
 
+### Live demo application
+
+A full e-commerce shop built on Tempest + Ecotone — browsable UI, CQRS, a Tempest model as the Aggregate, async workers, event sourcing with a projection, an email workflow ending in a local Mailpit inbox, retries with a replayable dead letter, delayed messages, and the outbox running by construction:
+
+* [ecotoneframework/tempest-ecotone-demo](https://github.com/ecotoneframework/tempest-ecotone-demo) — `docker compose up` and click through it; the README walks the messaging piece by piece, including a failure drill you can run yourself.
+
 ### Demo implementation
 
 * [Tempest Projection (Database Read Model)](https://github.com/ecotoneframework/quickstart-examples/tree/main/Tempest/Projection/DatabaseReadModel)

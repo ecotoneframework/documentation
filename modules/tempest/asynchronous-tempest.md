@@ -132,6 +132,10 @@ The dead-letter tooling is available natively in Tempest's console:
 
 After deploying a fix, `replay` re-runs the parked message through its normal handler path — nothing is lost, and recovery is a console command instead of manual database surgery.
 
+{% hint style="success" %}
+All of the above runs in the [live demo application](https://github.com/ecotoneframework/tempest-ecotone-demo) — including a scripted failure drill: break a mailbox, watch the retries and the dead-letter parking, then replay the message from `./tempest`.
+{% endhint %}
+
 ## Serialization of Collections
 
 For asynchronous handling and event sourcing, messages are serialized. When using the [JMS Converter](../jms-converter.md), type collections with DTO docblocks — `@param OrderLine[] $items` on a plain readonly class — rather than array shapes (`array<array{...}>`), which the serializer does not support.
