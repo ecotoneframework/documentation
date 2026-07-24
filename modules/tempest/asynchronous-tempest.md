@@ -76,18 +76,62 @@ use Ecotone\Modelling\Attribute\EventHandler;
 
 #[Delayed(new TimeSpan(seconds: 30))]
 #[Asynchronous('notifications')]
-#[EventHandler(endpointId: 'review_request.on_shipment_dispatched')]
-public function requestReview(ShipmentWasDispatched $event, Mailer $mailer): void
+#[EventHandler(endpointId: 'review_request.on_shipment_dispatched', outputChannelName: 'notification.enrich')]
+public function requestReview(ShipmentWasDispatched $event): EmailNotification
 {
-    $mailer->send(new GenericEmail(
+    return new EmailNotification(
+        orderId: $event->orderId,
         subject: sprintf('How was order #%s?', $event->orderId),
-        to: $event->customerEmail,
-        html: sprintf('<p>Hi %s, tell us how it went.</p>', $event->customerName),
-    ));
+        html: '<p>Your package is on its way. Tell us how it went.</p>',
+    );
 }
 ```
 
-Note the handler injects Tempest's own `Mailer` — Tempest services resolve directly into handler parameters, so asynchronous emails are one attribute away.
+The handler composes only the content — enrichment and sending come from the pipeline it targets with `outputChannelName` (see below).
+
+## Enriching Messages on the Way
+
+Pipeline steps can enrich the message HEADERS while the payload passes through untouched — with `changingHeaders: true`, the returned array is merged into the headers. This keeps event handlers content-only: the recipient's account details are added where they are known, and the send step is one prepared building block any notification can flow through:
+
+```php
+final readonly class AccountDetailsEnricher
+{
+    #[InternalHandler(
+        inputChannelName: 'notification.enrich',
+        outputChannelName: 'email.send',
+        changingHeaders: true,
+    )]
+    public function enrich(EmailNotification $notification): array
+    {
+        $order = Order::findById((int) $notification->orderId);
+
+        return [
+            'customerEmail' => $order->customer_email ?? '',
+            'customerName' => $order->customer_name ?? '',
+        ];
+    }
+}
+```
+
+The send step reads the payload plus the enriched headers with `#[Header]` parameters — and injects Tempest's own `Mailer`, since Tempest services resolve directly into handler parameters:
+
+```php
+use Ecotone\Messaging\Attribute\Parameter\Header;
+
+#[InternalHandler(inputChannelName: 'email.send')]
+public function send(
+    EmailNotification $notification,
+    #[Header('customerEmail')] ?string $customerEmail,
+    #[Header('customerName')] ?string $customerName,
+    Mailer $mailer,
+): void {
+    $mailer->send(new GenericEmail(
+        subject: $notification->subject,
+        to: $customerEmail,
+        html: sprintf('<p>Hi %s!</p>', $customerName) . $notification->html,
+    ));
+}
+```
 
 ## Retries and Dead Letter
 

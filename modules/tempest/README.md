@@ -27,7 +27,7 @@ use Tempest\Mail\GenericEmail;
 use Tempest\Mail\Mailer;
 
 #[Asynchronous('notifications')]
-#[EventHandler(endpointId: 'order_confirmation.send')]
+#[EventHandler(endpointId: 'order_confirmation.notify')]
 public function sendConfirmation(OrderWasPlaced $event, Mailer $mailer): void
 {
     $mailer->send(new GenericEmail(

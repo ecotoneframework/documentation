@@ -33,9 +33,10 @@ $mailer = new class implements Mailer {
 };
 
 $ecotone = EcotoneLite::bootstrapFlowTesting(
-    classesToResolve: [OrderConfirmationWorkflow::class],
+    classesToResolve: [OrderConfirmationWorkflow::class, EnrichingStub::class],
     containerOrAvailableServices: [
         new OrderConfirmationWorkflow(),
+        new EnrichingStub(),
         Mailer::class => $mailer,
     ],
     enableAsynchronousProcessing: [
@@ -43,6 +44,8 @@ $ecotone = EcotoneLite::bootstrapFlowTesting(
     ],
 );
 ```
+
+Pipeline steps are substitutable the same way services are: the production enricher looks account details up in the database, so the flow test registers a stub step instead — a plain class with the same input and output channels returning canned headers. You swap one step of the flow, not the flow itself.
 
 {% hint style="warning" %}
 When testing handlers that use `#[Delayed]`, create the in-memory channel with `delayable: true`. A plain queue channel ignores delays and delivers immediately, which silently turns a delayed-delivery test into a pass-through.
