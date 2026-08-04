@@ -1,0 +1,41 @@
+modules/dbal-support.md
+  s_5b26a31f78adda::t_017ab89a0835d6 50-60
+modelling/microservices-php/message-publisher.md
+  s_5b26a31f78adda::t_872122b6a616ce 56-67
+modelling/asynchronous-handling/asynchronous-message-publishing.md
+  s_5b26a31f78adda::t_de8ca297c51d43 1-142,144,146,152,154-160
+  s_5b26a31f78adda::t_b38dd33bbf7105 145,153
+  s_5b26a31f78adda::t_d11b8796e01243 143,147-151
+enterprise.md
+  s_5b26a31f78adda::t_80ebf6a7f81b7d 93-96,98
+  s_5b26a31f78adda::t_a1e44799a8001f 97
+  s_5b26a31f78adda::t_74fbd1e5afec8f 32
+modelling/asynchronous-handling/README.md
+  s_5b26a31f78adda::t_d66a907a47f39d 29-32
+modules/amqp-support-rabbitmq/message-channel.md
+  s_5b26a31f78adda::t_109d7c754ad8e5 42-52
+modules/amazon-sqs-support.md
+  s_5b26a31f78adda::t_6e075f8ecac5ac 89-99
+modules/redis-support.md
+  s_5b26a31f78adda::t_2bc7ec2f99d66c 89-99
+modules/kafka-support/message-channel.md
+  s_5b26a31f78adda::t_edd6785c7a6409 32-46
+SUMMARY.md
+  s_5b26a31f78adda::t_9f2080852ec94c 121
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "b4f1eced62531e251f7f8f083ceb42b8d205acdc",
+  "prompts": {},
+  "sessions": {
+    "s_5b26a31f78adda": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "13e75614-d9f6-4e26-a582-e86ff83479f1",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
