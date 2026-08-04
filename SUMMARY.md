@@ -118,7 +118,7 @@
 * [Asynchronous Handling and Scheduling](modelling/asynchronous-handling/README.md)
   * [Asynchronous Message Handlers](modelling/asynchronous-handling/asynchronous-message-handlers.md)
   * [Asynchronous Message Bus (Gateways)](modelling/asynchronous-handling/asynchronous-message-bus-gateways.md)
-  * [Asynchronous Message Publishing](modelling/asynchronous-handling/asynchronous-message-publishing.md)
+  * [Non-blocking Batched Delivery](modelling/asynchronous-handling/non-blocking-batched-delivery.md)
   * [Delaying Messages](modelling/asynchronous-handling/delaying-messages.md)
   * [Time to Live](modelling/asynchronous-handling/time-to-live.md)
   * [Message Priority](modelling/asynchronous-handling/message-priority.md)

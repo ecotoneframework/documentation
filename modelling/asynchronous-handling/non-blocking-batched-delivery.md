@@ -2,11 +2,11 @@
 description: Batched, promise-based message publishing that multiplies throughput while keeping delivery guarantees
 ---
 
-# Asynchronous Message Publishing
+# Non-blocking Batched Delivery
 
 When your application publishes messages to a Message Broker, each send is a full network round trip: serialize, write, and block until the Broker confirms. Publish a thousand messages and you pay for a thousand round trips, one after another.
 
-Asynchronous Message Publishing changes that equation. Messages are fired to the Broker without waiting for individual confirmations, multiple messages are combined into single Broker writes, and confirmations are collected once for the whole set - right before your transaction commits. The result is a multiplier on publishing throughput, without giving up a single delivery guarantee.
+Non-blocking Batched Delivery changes that equation. Messages are fired to the Broker without waiting for individual confirmations, multiple messages are combined into single Broker writes, and confirmations are collected once for the whole set - right before your transaction commits. The result is a multiplier on publishing throughput, without giving up a single delivery guarantee.
 
 **You'll know you need this when:**
 
@@ -16,7 +16,7 @@ Asynchronous Message Publishing changes that equation. Messages are fired to the
 * You want fire-and-forget publishing speed, yet nothing may be silently lost
 
 {% hint style="success" %}
-Asynchronous Message Publishing is available as part of **Ecotone Enterprise.**
+Non-blocking Batched Delivery is available as part of **Ecotone Enterprise.**
 {% endhint %}
 
 ## How it works
@@ -140,7 +140,7 @@ For the details of send-path resiliency, see [Resilient Sending](../recovering-t
 
 ## The Throughput Multiplier
 
-Publishing 1000 messages to a Broker, single synchronous sends vs batched Asynchronous Publishing, measured with Ecotone's benchmark suite (Intel Core Ultra 9 275HX, 64 GB RAM, PHP 8.5, Brokers running in local Docker):
+Publishing 1000 messages to a Broker, single synchronous sends vs batched Asynchronous Publishing, measured with Ecotone's benchmark suite on a local Docker setup:
 
 | Provider | 1000 synchronous sends | Batched Asynchronous Publishing | Multiplier |
 | --- | --- | --- | --- |

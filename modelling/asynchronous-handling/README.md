@@ -26,8 +26,8 @@ Ecotone makes any handler async with a single `#[Asynchronous]` attribute. Retri
 [asynchronous-message-bus-gateways.md](asynchronous-message-bus-gateways.md)
 {% endcontent-ref %}
 
-{% content-ref url="asynchronous-message-publishing.md" %}
-[asynchronous-message-publishing.md](asynchronous-message-publishing.md)
+{% content-ref url="non-blocking-batched-delivery.md" %}
+[non-blocking-batched-delivery.md](non-blocking-batched-delivery.md)
 {% endcontent-ref %}
 
 {% content-ref url="scheduling.md" %}

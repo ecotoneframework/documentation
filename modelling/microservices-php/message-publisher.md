@@ -64,4 +64,4 @@ $future = $publisher->asyncPublish($orderData);
 $future->resolve(); // awaits delivery confirmation
 ```
 
-Combined with `BatchMessage`, it allows publishing thousands of messages in single batched Broker operations. Read more in [Asynchronous Message Publishing](../asynchronous-handling/asynchronous-message-publishing.md).
+Combined with `BatchMessage`, it allows publishing thousands of messages in single batched Broker operations. Read more in [Non-blocking Batched Delivery](../asynchronous-handling/non-blocking-batched-delivery.md).

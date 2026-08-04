@@ -29,7 +29,7 @@ Ecotone Enterprise is for when your system outgrows single-tenant, single-servic
 | Partitioned Projections | | Yes |
 | Blue-Green Deployments | | Yes |
 | Kafka Integration | | Yes |
-| Asynchronous Message Publishing | | Yes |
+| Non-blocking, Batched Delivery | | Yes |
 | Command Bus Instant Retries | | Yes |
 | Gateway-Level Deduplication | | Yes |
 | Closures as Expressions (PHP 8.5) | | Yes |
@@ -94,7 +94,7 @@ RabbitMQ throughput is becoming a bottleneck, or multiple services need to consu
 
 A single request publishes many messages, and each one costs a full Broker round trip. Imports and high-volume workflows spend most of their time waiting on publishing, not processing.
 
-* [**Asynchronous Message Publishing**](modelling/asynchronous-handling/asynchronous-message-publishing.md) -- Batch messages into single Broker writes and defer confirmations until just before commit. Multiplies publishing throughput (up to ~13x for Kafka, ~10x for SQS in benchmarks) across RabbitMQ, Kafka, SQS, Redis and Database Channels -- while keeping every delivery guarantee: confirmed-before-commit, per-message failure attribution, and Error Channel routing.
+* [**Non-blocking Batched Delivery**](modelling/asynchronous-handling/non-blocking-batched-delivery.md) -- Batch messages into single Broker writes and defer confirmations until just before commit. Multiplies publishing throughput (up to ~13x for Kafka, ~10x for SQS in benchmarks) across RabbitMQ, Kafka, SQS, Redis and Database Channels -- while keeping every delivery guarantee: confirmed-before-commit, per-message failure attribution, and Error Channel routing.
 
 ### "Our production system needs to be resilient"
 

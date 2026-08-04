@@ -48,7 +48,7 @@ AmqpBackedMessageChannelBuilder::create("orders")
     ->withAsyncPublishing()
 ```
 
-Read more in [Asynchronous Message Publishing](../../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+Read more in [Non-blocking Batched Delivery](../../modelling/asynchronous-handling/non-blocking-batched-delivery.md).
 
 ### Customize Queue Name
 
