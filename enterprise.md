@@ -29,7 +29,7 @@ Ecotone Enterprise is for when your system outgrows single-tenant, single-servic
 | Partitioned Projections | | Yes |
 | Blue-Green Deployments | | Yes |
 | Kafka Integration | | Yes |
-| Asynchronous Message Publishing | | Yes |
+| Non-blocking, Batched Publishing | | Yes |
 | Command Bus Instant Retries | | Yes |
 | Gateway-Level Deduplication | | Yes |
 | Closures as Expressions (PHP 8.5) | | Yes |

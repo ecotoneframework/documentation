@@ -140,7 +140,7 @@ For the details of send-path resiliency, see [Resilient Sending](../recovering-t
 
 ## The Throughput Multiplier
 
-Publishing 1000 messages to a Broker, single synchronous sends vs batched Asynchronous Publishing, measured with Ecotone's benchmark suite (Intel Core Ultra 9 275HX, 64 GB RAM, PHP 8.5, Brokers running in local Docker):
+Publishing 1000 messages to a Broker, single synchronous sends vs batched Asynchronous Publishing, measured with Ecotone's benchmark suite on a local Docker setup:
 
 | Provider | 1000 synchronous sends | Batched Asynchronous Publishing | Multiplier |
 | --- | --- | --- | --- |
