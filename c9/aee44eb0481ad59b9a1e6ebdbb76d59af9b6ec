@@ -1,0 +1,22 @@
+modules/tempest/asynchronous-tempest.md
+  s_f22ddb5ad3484a::t_35d546a8ca2699 190-216
+  s_f22ddb5ad3484a::t_c6dde897c98b33 136-146
+  s_f22ddb5ad3484a::t_765d4c801ae7f7 217-230
+  s_f22ddb5ad3484a::t_d62e4286cdf3b8 231
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "c9aee44eb0481ad59b9a1e6ebdbb76d59af9b6ec",
+  "prompts": {},
+  "sessions": {
+    "s_f22ddb5ad3484a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "40459e15-188d-4298-a7a2-e17d249f26e6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
