@@ -47,6 +47,17 @@ DbalBackedMessageChannelBuilder::create("orders")
     ->withDefaultTimeToLive(1000) // limit TTL of messages
 ```
 
+### Asynchronous Publishing (Enterprise)
+
+Messages published within the same execution scope can be combined into single multi-row inserts, multiplying publishing throughput:
+
+```php
+DbalBackedMessageChannelBuilder::create("orders")
+    ->withAsyncPublishing()
+```
+
+Read more in [Asynchronous Message Publishing](../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+
 ## Transactions
 
 By default `Ecotone`enables transactions for all [Asynchronous Endpoints](../tutorial-php-ddd-cqrs-event-sourcing/php-asynchronous-processing.md) and Command Bus. You may use of [`Service Context`](../messaging/service-application-configuration.md) to turn off this configuration. You may also add more connections to be handled.

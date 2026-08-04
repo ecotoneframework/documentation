@@ -53,3 +53,15 @@ public function whenOrderWasPlaced(OrderWasPlaced $event, MessagePublisher $publ
     );
 }
 ```
+
+## Asynchronous Publishing (Enterprise)
+
+When the Publisher is configured with `withAsyncPublishing()`, it additionally exposes `asyncPublish`, which fires the message without blocking on Broker confirmation and returns a `Future`:
+
+```php
+$future = $publisher->asyncPublish($orderData);
+
+$future->resolve(); // awaits delivery confirmation
+```
+
+Combined with `BatchMessage`, it allows publishing thousands of messages in single batched Broker operations. Read more in [Asynchronous Message Publishing](../asynchronous-handling/asynchronous-message-publishing.md).

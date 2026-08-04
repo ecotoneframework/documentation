@@ -39,6 +39,17 @@ AmqpBackedMessageChannelBuilder::create("orders")
     ->withFinalFailureStrategy(FinalFailureStrategy:RESEND) // final failure strategy
 ```
 
+### Asynchronous Publishing (Enterprise)
+
+Messages published within the same execution scope can be batched into single broker writes with deferred publisher confirms, multiplying publishing throughput:
+
+```php
+AmqpBackedMessageChannelBuilder::create("orders")
+    ->withAsyncPublishing()
+```
+
+Read more in [Asynchronous Message Publishing](../../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+
 ### Customize Queue Name
 
 By default the queue name will follow channel name, which in above example will be "orders".\

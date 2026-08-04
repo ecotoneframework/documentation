@@ -86,6 +86,17 @@ SqsBackedMessageChannelBuilder::create("orders")
     ->withDefaultTimeToLive(1000) // limit TTL of messages
 ```
 
+### Asynchronous Publishing (Enterprise)
+
+Messages published within the same execution scope can be combined into SQS batch requests with overlapping in-flight deliveries, multiplying publishing throughput:
+
+```php
+SqsBackedMessageChannelBuilder::create("orders")
+    ->withAsyncPublishing()
+```
+
+Read more in [Asynchronous Message Publishing](../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+
 ## Message Publisher
 
 If you want to publish Message directly to Exchange, you may use of `Publisher.`

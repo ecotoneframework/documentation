@@ -86,6 +86,17 @@ RedisBackedMessageChannelBuilder::create("orders")
     ->withDefaultTimeToLive(1000) // limit TTL of messages
 ```
 
+### Asynchronous Publishing (Enterprise)
+
+Messages published within the same execution scope can be combined into single atomic Redis writes, multiplying publishing throughput:
+
+```php
+RedisBackedMessageChannelBuilder::create("orders")
+    ->withAsyncPublishing()
+```
+
+Read more in [Asynchronous Message Publishing](../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+
 ## Message Publisher
 
 If you want to publish Message directly to Exchange, you may use of `Publisher.`

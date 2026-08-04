@@ -29,6 +29,21 @@ From application perspective all we need to do, is to provide channel implementa
 Ecotone will take care of whole publishing and consuming part.&#x20;
 {% endhint %}
 
+### Asynchronous Publishing
+
+Messages published within the same execution scope can be pipelined to the Broker with deferred delivery reports, multiplying publishing throughput:
+
+```php
+#[ServiceContext] 
+public function orderChannel()
+{
+    return KafkaMessageChannelBuilder::create("orders")
+        ->withAsyncPublishing();
+}
+```
+
+Read more in [Asynchronous Message Publishing](../../modelling/asynchronous-handling/asynchronous-message-publishing.md).
+
 ### Customize Topic Name
 
 By default the queue name will follow channel name, which in above example will be "orders".\
