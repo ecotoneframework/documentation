@@ -1,0 +1,32 @@
+enterprise.md
+  s_5b26a31f78adda::t_74fbd1e5afec8f 32
+modules/tempest/asynchronous-tempest.md
+  s_f22ddb5ad3484a::t_c6dde897c98b33 136-146
+  s_f22ddb5ad3484a::t_35d546a8ca2699 190-216
+  s_f22ddb5ad3484a::t_765d4c801ae7f7 217-230
+  s_f22ddb5ad3484a::t_d62e4286cdf3b8 231
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.20",
+  "base_commit_sha": "25490b984b18eafac66447a25f6f5cb0679fada5",
+  "prompts": {},
+  "sessions": {
+    "s_5b26a31f78adda": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "13e75614-d9f6-4e26-a582-e86ff83479f1",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    },
+    "s_f22ddb5ad3484a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "40459e15-188d-4298-a7a2-e17d249f26e6",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
