@@ -1,8 +1,8 @@
 modules/tempest/asynchronous-tempest.md
-  s_f22ddb5ad3484a::t_35d546a8ca2699 190-216
-  s_f22ddb5ad3484a::t_c6dde897c98b33 136-146
   s_f22ddb5ad3484a::t_765d4c801ae7f7 217-230
+  s_f22ddb5ad3484a::t_35d546a8ca2699 190-216
   s_f22ddb5ad3484a::t_d62e4286cdf3b8 231
+  s_f22ddb5ad3484a::t_c6dde897c98b33 136-146
 ---
 {
   "schema_version": "authorship/3.0.0",
