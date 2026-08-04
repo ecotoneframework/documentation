@@ -133,6 +133,17 @@ public function send(
 }
 ```
 
+Headers do not only come from enrichers. Metadata passed to the bus travels with the message, and Ecotone propagates it to the events a handler records and onward to the (asynchronous) handlers those events reach:
+
+```php
+$this->commandBus->send(
+    new PlaceOrder(/* ... */),
+    ['simulateEmailFailure' => true],
+);
+```
+
+A step far downstream can then read it as a typed `#[Header]` parameter — `#[Header('simulateEmailFailure')] ?bool $simulateEmailFailure` — while none of the steps in between mention it. This is how request-scoped context (a correlation id, a tenant, a feature flag) reaches a background worker without being threaded through every payload on the way.
+
 ## Retries and Dead Letter
 
 A failing handler never blocks the channel or kills the worker. Configure retries with backoff and a database-backed [Dead Letter](../../modelling/recovering-tracing-and-monitoring/resiliency/dead-letter.md) with one `ServiceContext` method:
@@ -175,6 +186,48 @@ The dead-letter tooling is available natively in Tempest's console:
 ```
 
 After deploying a fix, `replay` re-runs the parked message through its normal handler path — nothing is lost, and recovery is a console command instead of manual database surgery.
+
+The same operations are available in your own application code — `DeadLetterGateway` can be injected into any Tempest controller or service, so a "parked messages" page with replay and delete buttons is a few lines on top of the interface the console commands use:
+
+```php
+use Ecotone\Dbal\Recoverability\DeadLetterGateway;
+
+final readonly class AlertsController
+{
+    public function __construct(private DeadLetterGateway $deadLetter) {}
+
+    #[Get('/alerts')]
+    public function index(): View
+    {
+        return view('./alerts.view.php', errors: $this->deadLetter->list(limit: 50, offset: 0));
+    }
+
+    #[Post('/alerts/{messageId}/replay')]
+    public function replay(string $messageId): Redirect
+    {
+        $this->deadLetter->reply($messageId);
+
+        return new Redirect('/alerts');
+    }
+}
+```
+
+Each entry is an `ErrorContext` carrying the message id, failure timestamp, exception class and message, file, line and stacktrace — enough for an operations screen without touching the database. `count()`, `show()`, `replyAll()`, `delete()` and `deleteAll()` complete the interface.
+
+A replayed message is not indistinguishable from a fresh one: Ecotone marks it with the `ecotone.dlq.message_replied` header, which a handler can read like any other header. That is useful when recovery should behave differently from the first attempt — skipping a step that already succeeded, relaxing a guard, or tagging the outcome as a recovery:
+
+```php
+use Ecotone\Messaging\Handler\Recoverability\ErrorContext;
+
+#[InternalHandler(inputChannelName: 'email.send')]
+public function send(
+    EmailNotification $notification,
+    #[Header(ErrorContext::DLQ_MESSAGE_REPLIED)] ?string $replayed,
+    Mailer $mailer,
+): void {
+    // $replayed is '1' when this message came back from the dead letter
+}
+```
 
 {% hint style="success" %}
 All of the above runs in the [live demo application](https://github.com/ecotoneframework/tempest-ecotone-demo) — including a scripted failure drill: break a mailbox, watch the retries and the dead-letter parking, then replay the message from `./tempest`.
