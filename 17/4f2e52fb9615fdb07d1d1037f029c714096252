@@ -1,0 +1,54 @@
+SUMMARY.md
+  s_2515a1cc82548a::t_bfc7e24c4aad28 122
+modelling/recovering-tracing-and-monitoring/resiliency/outbox-pattern.md
+  s_2515a1cc82548a::t_031914af5012f8 114-117
+why-ecotone.md
+  s_0a07e341330e27::t_d15d6b56be619f 9-10
+enterprise.md
+  s_2515a1cc82548a::t_9f2dd1561ec596 99
+  s_2515a1cc82548a::t_8eb7a272201fba 33
+README.md
+  s_0a07e341330e27::t_31faccd6175a4e 13
+composing-building-blocks.md
+  s_0a07e341330e27::t_7aed1f63a78d5d 9
+modelling/asynchronous-handling/non-blocking-batched-delivery.md
+  s_2515a1cc82548a::t_af2ca003cf3667 76
+  s_2515a1cc82548a::t_8b1f03e5bed9cf 43
+  s_2515a1cc82548a::t_79fe2d4fe1f695 59
+modelling/asynchronous-handling/high-throughput-outbox-forwarding.md
+  s_2515a1cc82548a::t_45593ac7c15db5 1-137
+modules/amazon-sqs-support.md
+  s_2515a1cc82548a::t_cea1a8000adc0d 95
+modules/amqp-support-rabbitmq/message-channel.md
+  s_2515a1cc82548a::t_3e5968f7a95b65 48
+modules/dbal-support.md
+  s_2515a1cc82548a::t_e6e1afcb30a335 56
+modules/kafka-support/message-channel.md
+  s_2515a1cc82548a::t_6f158fa54d87f0 41
+modules/redis-support.md
+  s_2515a1cc82548a::t_b13960eed48d9e 95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "174f2e52fb9615fdb07d1d1037f029c714096252",
+  "prompts": {},
+  "sessions": {
+    "s_0a07e341330e27": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4f046f6a-2666-445f-82dd-752a1ae83f99",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    },
+    "s_2515a1cc82548a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "961400fc-15fe-4d4b-8979-2f4cf5afca66",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Dariusz Gafka <dgafka.mail@gmail.com>"
+    }
+  }
+}
