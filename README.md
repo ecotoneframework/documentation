@@ -10,7 +10,7 @@ description: >-
 
 ## The PHP architecture layer that wires your system together — so you build features, not infrastructure
 
-Ecotone gives you a set of composable building blocks on a single messaging foundation. You write the business logic; Ecotone is the wiring — connecting it in a decoupled way whether steps run synchronously or asynchronously, within one application or across many. Your business logic stays the first-class citizen while the infrastructure is abstracted away — which is what keeps even the most complex systems simple to build.
+Ecotone gives you a set of composable building blocks on a single messaging foundation. You write the business logic; Ecotone is the wiring — connecting it in a decoupled way whether steps run synchronously or asynchronously, within one application or across many. Your business logic stays the first-class citizen while the infrastructure is abstracted away — which is what keeps even the most complex systems simple to build. Communication, reliability, and scalability are the layer's defaults — not code you write.
 
 It runs on the Laravel, Symfony or Tempest you already use — your ORM, routing, and deployment stay. What Ecotone adds is the architecture layer.
 

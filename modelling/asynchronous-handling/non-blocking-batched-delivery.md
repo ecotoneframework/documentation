@@ -40,7 +40,7 @@ Asynchronous Publishing is enabled on the Message Channel or Message Publisher l
 public function orderChannel()
 {
     return AmqpBackedMessageChannelBuilder::create("orders")
-                ->withAsyncPublishing();
+                ->withHighThroughputPublishing();
 }
 ```
 
@@ -56,7 +56,7 @@ public function messagePublisher()
 }
 ```
 
-The same `withAsyncPublishing()` method is available on `KafkaMessageChannelBuilder`, `SqsBackedMessageChannelBuilder`, `RedisBackedMessageChannelBuilder`, `DbalBackedMessageChannelBuilder` and their corresponding Message Publisher configurations.
+The same `withHighThroughputPublishing()` method is available on `KafkaMessageChannelBuilder`, `SqsBackedMessageChannelBuilder`, `RedisBackedMessageChannelBuilder` and `DbalBackedMessageChannelBuilder`; Message Publisher configurations use `withAsyncPublishing()`.
 
 ## Publishing from Business Code
 
@@ -73,7 +73,7 @@ public function placeOrder(PlaceOrder $command, EventBus $eventBus): void
 }
 ```
 
-All three Events are written to the Broker in a single batched operation, and their confirmations are awaited together before the Command Bus returns. Your business code stays exactly the same - enabling `withAsyncPublishing()` on the channel is the only change.
+All three Events are written to the Broker in a single batched operation, and their confirmations are awaited together before the Command Bus returns. Your business code stays exactly the same - enabling `withHighThroughputPublishing()` on the channel is the only change.
 
 ## Publishing with Futures
 

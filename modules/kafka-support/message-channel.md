@@ -38,7 +38,7 @@ Messages published within the same execution scope can be pipelined to the Broke
 public function orderChannel()
 {
     return KafkaMessageChannelBuilder::create("orders")
-        ->withAsyncPublishing();
+        ->withHighThroughputPublishing();
 }
 ```
 

@@ -92,7 +92,7 @@ Messages published within the same execution scope can be combined into SQS batc
 
 ```php
 SqsBackedMessageChannelBuilder::create("orders")
-    ->withAsyncPublishing()
+    ->withHighThroughputPublishing()
 ```
 
 Read more in [Non-blocking Batched Delivery](../modelling/asynchronous-handling/non-blocking-batched-delivery.md).

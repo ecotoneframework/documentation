@@ -6,6 +6,8 @@ description: Why Ecotone — the PHP architecture layer that grows with your sys
 
 ## Focus on business logic — Ecotone handles the wiring
 
+Every arrow in your architecture diagram is code someone has to write — routing, retries, queue workers, correlation, failure handling. Ecotone makes that layer a default, not a project.
+
 Ecotone gives you a set of building blocks that speed up everyday development behind one clear, understandable model. Because every building block rests on the same messaging foundation, Ecotone becomes the wiring: you write the business logic, and Ecotone connects it in a decoupled way — whether steps run synchronously or asynchronously, within a single application or across many. Your core business logic stays the first-class citizen while the wiring and infrastructure are abstracted away — which is what keeps even the most complex applications simple to build.
 
 It runs on the Laravel or Symfony you already use. You keep your ORM (Eloquent or Doctrine), your routing, your templates, your deployment. What Ecotone adds is the architecture layer — the discipline that keeps a system maintainable as complexity grows.

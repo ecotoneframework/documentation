@@ -6,7 +6,7 @@ description: >-
 
 # Composing Building Blocks
 
-Most PHP applications grow by accumulating glue: listener services, coordinator classes, job wrappers, cron jobs, status flags on entities. Each new feature adds another piece of code whose only job is to connect things that already exist.
+Every arrow in your architecture diagram is code someone has to write. Most PHP applications grow by accumulating exactly that glue: listener services, coordinator classes, job wrappers, cron jobs, status flags on entities. Each new feature adds another piece of code whose only job is to connect things that already exist.
 
 Ecotone's building blocks — Aggregates, Sagas, Command Handlers, Event Handlers, Internal Handlers, Routers, Splitters — **compose directly through attributes**. No orchestrator class sits in the middle. Adding a new feature almost always means adding only handler's logic, not writing wiring code.
 

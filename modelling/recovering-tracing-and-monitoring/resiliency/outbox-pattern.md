@@ -111,3 +111,7 @@ public function handle(OrderWasPlaced $event): void
     /** Do something */
 }
 ```
+
+### High Throughput Outbox Forwarding (Enterprise)
+
+A Combined Message Channel relays one message per poll cycle. When the outbox becomes the bottleneck, [High Throughput Outbox Forwarding](../../asynchronous-handling/high-throughput-outbox-forwarding.md) replaces the outbox consumer with a dedicated publishing process that drains messages in batches straight from the database and publishes them to the target Broker in bulk — 10 000 messages reach RabbitMQ or Kafka in under a second, with the same at-least-once delivery guarantees.
